@@ -1,0 +1,34 @@
+{
+  "name": "translate-maker",
+  "version": "0.0.2",
+  "description": "Translate your project like a boss. The official API for the www.translatemaker.com",
+  "main": "dist/index.js",
+  "keywords": [
+    "translate",
+    "locale",
+    "project",
+    "module",
+    "i18n",
+    "i10n",
+    "l20n"
+  ],
+  "files": [
+    "dist/",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TranslateMaker/translate-maker.git"
+  },
+  "author": "Zlatko Fedor <zlatkofedor@cherrysro.com>",
+  "license": "APACHE-2.0",
+  "bugs": {
+    "url": "https://github.com/TranslateMaker/translate-maker/issues"
+  },
+  "homepage": "https://github.com/TranslateMaker/translate-maker",
+  "devDependencies": {},
+  "dependencies": {}
+}
