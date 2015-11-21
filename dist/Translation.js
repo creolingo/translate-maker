@@ -38,6 +38,22 @@ var _lodashObjectGet = require('lodash/object/get');
 
 var _lodashObjectGet2 = _interopRequireDefault(_lodashObjectGet);
 
+var _lodashCollectionEvery = require('lodash/collection/every');
+
+var _lodashCollectionEvery2 = _interopRequireDefault(_lodashCollectionEvery);
+
+var _lodashCollectionSortBy = require('lodash/collection/sortBy');
+
+var _lodashCollectionSortBy2 = _interopRequireDefault(_lodashCollectionSortBy);
+
+var _lodashArrayFirst = require('lodash/array/first');
+
+var _lodashArrayFirst2 = _interopRequireDefault(_lodashArrayFirst);
+
+var _lodashCollectionFilter = require('lodash/collection/filter');
+
+var _lodashCollectionFilter2 = _interopRequireDefault(_lodashCollectionFilter);
+
 var VARIABLE_START = '$';
 
 var Translation = (function () {
@@ -127,11 +143,8 @@ var Translation = (function () {
       var value = this._value;
 
       if ((0, _lodashLangIsArray2['default'])(value)) {
-        // TODO fix it
-        return this._getValueFromArray(value, attrs);
-      }
-
-      if ((0, _lodashLangIsPlainObject2['default'])(value)) {
+        value = this._getValueFromArray(value, attrs);
+      } else if ((0, _lodashLangIsPlainObject2['default'])(value)) {
         // search default value
         var defaultChild = (0, _lodashCollectionFind2['default'])(this._children, function (child) {
           return child._isDefault;
@@ -140,6 +153,47 @@ var Translation = (function () {
       }
 
       return this._processAttrs(value, attrs);
+    }
+  }, {
+    key: '_getValueFromArray',
+    value: function _getValueFromArray(options, attrs) {
+      var pass = (0, _lodashCollectionFilter2['default'])(options, function (option) {
+        var isObject = (0, _lodashLangIsPlainObject2['default'])(option);
+        if (!isObject) {
+          return true;
+        }
+
+        // check variables
+        return (0, _lodashCollectionEvery2['default'])(Object.keys(option), function (variableName) {
+          if (!(0, _lodashStringStartsWith2['default'])(variableName, VARIABLE_START)) {
+            return true;
+          }
+
+          var path = variableName.substr(VARIABLE_START.length);
+          var currentValue = (0, _lodashObjectGet2['default'])(attrs, path);
+
+          return option[variableName] === currentValue;
+        });
+      });
+
+      // select option with more variables
+      var sorted = (0, _lodashCollectionSortBy2['default'])(pass, function (option) {
+        var isObject = (0, _lodashLangIsPlainObject2['default'])(option);
+        if (!isObject) {
+          return 0;
+        }
+
+        return -(0, _lodashCollectionFind2['default'])(Object.keys(option), function (variableName) {
+          return (0, _lodashStringStartsWith2['default'])(variableName, VARIABLE_START);
+        }).length;
+      });
+
+      var option = (0, _lodashArrayFirst2['default'])(sorted);
+      if (!option) {
+        return void 0;
+      }
+
+      return (0, _lodashLangIsPlainObject2['default'])(option) ? option.value : option;
     }
   }, {
     key: 'set',

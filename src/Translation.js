@@ -5,6 +5,10 @@ import find from 'lodash/collection/find';
 import reject from 'lodash/collection/reject';
 import trim from 'lodash/string/trim';
 import get from 'lodash/object/get';
+import every from 'lodash/collection/every';
+import sortBy from 'lodash/collection/sortBy';
+import first from 'lodash/array/first';
+import filter from 'lodash/collection/filter';
 
 const VARIABLE_START = '$';
 
@@ -77,20 +81,57 @@ export default class Translation {
       return this[path].get(null, attrs);
     }
 
-    const value = this._value;
+    let value = this._value;
 
     if (isArray(value)) {
-      // TODO fix it
-      return this._getValueFromArray(value, attrs);
-    }
-
-    if (isPlainObject(value)) {
+      value = this._getValueFromArray(value, attrs);
+    } else if (isPlainObject(value)) {
       // search default value
       const defaultChild = find(this._children, (child) => child._isDefault);
       return defaultChild ? defaultChild.get(attrs) : void 0;
     }
 
     return this._processAttrs(value, attrs);
+  }
+
+  _getValueFromArray(options, attrs) {
+    const pass = filter(options, (option) => {
+      const isObject = isPlainObject(option);
+      if (!isObject) {
+        return true;
+      }
+
+      // check variables
+      return every(Object.keys(option), (variableName) => {
+        if (!startsWith(variableName, VARIABLE_START)) {
+          return true;
+        }
+
+        const path = variableName.substr(VARIABLE_START.length);
+        const currentValue = get(attrs, path);
+
+        return option[variableName] === currentValue;
+      });
+    });
+
+    // select option with more variables
+    const sorted = sortBy(pass, (option) => {
+      const isObject = isPlainObject(option);
+      if (!isObject) {
+        return 0;
+      }
+
+      return -find(Object.keys(option), (variableName) => {
+        return startsWith(variableName, VARIABLE_START);
+      }).length;
+    });
+
+    const option = first(sorted);
+    if (!option) {
+      return void 0;
+    }
+
+    return isPlainObject(option) ? option.value : option;
   }
 
   set(name, value) {

@@ -36,15 +36,10 @@ describe('Translation', () => {
       },
       user: {
         crashed: [{
-          $gender1: Gender.MALE,
-          $gender2: Gender.FEMALE,
+          '$user1.gender': Gender.MALE,
+          '$user2.gender': Gender.FEMALE,
           value: '{$user1.firstName} spadol a {$user2.firstName} spadla',
-        }, {
-          // other, unknown
-          $gender1: Object.keys(Gender),
-          $gender2: Object.keys(Gender),
-          value: '{$user1.firstName} spadol/a a {$user2.firstName} spadol/a',
-        }],
+        }, '{$user1.firstName} spadol/a a {$user2.firstName} spadol/a'],
       }
     });
   });
@@ -95,5 +90,18 @@ describe('Translation', () => {
 
   it('get simple translation with default local translation by object', () => {
     translation.aboutDefault.get().should.equal('About Zlatik');
+  });
+
+  it('get array translation', () => {
+    translation.get('user.crashed', {
+      user1: {
+        gender: Gender.MALE,
+        firstName: 'Adam',
+      },
+      user2: {
+        firstName: 'Lisa',
+        gender: Gender.FEMALE,
+      }
+    }).should.equal('Adam spadol a Lisa spadla');
   });
 });
