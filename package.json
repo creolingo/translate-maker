@@ -1,7 +1,7 @@
 {
   "name": "translate-maker",
-  "version": "0.0.2",
-  "description": "Translate your project like a boss. The official API for the www.translatemaker.com",
+  "version": "0.0.3",
+  "description": "Translate your project like a boss. The official core for the www.translatemaker.com",
   "main": "dist/index.js",
   "keywords": [
     "translate",
@@ -10,7 +10,10 @@
     "module",
     "i18n",
     "i10n",
-    "l20n"
+    "l20n",
+    "react",
+    "angular",
+    "ember"
   ],
   "files": [
     "dist/",
@@ -18,17 +21,38 @@
     "README.md",
     "LICENSE"
   ],
-  "scripts": {},
+  "scripts": {
+    "omg": "babel-node ./src/index.js",
+    "prepublish": "npm run build",
+    "test": "babel-node ./node_modules/gulp/bin/gulp.js test",
+    "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
+    "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ."
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/TranslateMaker/translate-maker.git"
   },
   "author": "Zlatko Fedor <zlatkofedor@cherrysro.com>",
-  "license": "APACHE-2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/TranslateMaker/translate-maker/issues"
   },
   "homepage": "https://github.com/TranslateMaker/translate-maker",
-  "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "keymirror": "^0.1.1",
+    "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "babel": "^5.8.34",
+    "babel-eslint": "^4.1.5",
+    "eslint": "^1.10.1",
+    "eslint-config-airbnb": "^1.0.0",
+    "eslint-loader": "^1.1.1",
+    "eslint-plugin-react": "^3.10.0",
+    "gulp": "^3.9.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-babel": "^5.3.0",
+    "gulp-util": "^3.0.7",
+    "should": "^7.1.1"
+  }
 }

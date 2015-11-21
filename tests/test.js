@@ -40,10 +40,11 @@ describe('Translation', () => {
           $gender2: Gender.FEMALE,
           value: '{$user1.firstName} spadol a {$user2.firstName} spadla',
         }, {
-        // other, unknown
-        $gender1: [Gender.MALE, Gender.FEMALE]
-        '{$user1.firstName} spadol/a a {$user2.firstName} spadol/a']
-      }]
+          // other, unknown
+          $gender1: Object.keys(Gender),
+          $gender2: Object.keys(Gender),
+          value: '{$user1.firstName} spadol/a a {$user2.firstName} spadol/a',
+        }],
       }
     });
   });

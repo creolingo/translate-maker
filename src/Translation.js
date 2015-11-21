@@ -9,7 +9,7 @@ import get from 'lodash/object/get';
 const VARIABLE_START = '$';
 
 export default class Translation {
-  constructor(name, value , options = {}, root = this) {
+  constructor(name, value, options = {}, root = this) {
     const isDefault = name && startsWith(name, '_');
 
     this._name = isDefault ? name.substr(1) : name;
