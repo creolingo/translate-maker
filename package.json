@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Translate your project like a boss. The official core for the www.translatemaker.com",
   "main": "dist/index.js",
   "keywords": [

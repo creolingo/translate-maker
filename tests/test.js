@@ -1,5 +1,5 @@
 import should from 'should';
-import Translate from '../src';
+import Translate, { Plural } from '../src';
 import keymirror from 'keymirror';
 
 const Gender = keymirror({
@@ -69,6 +69,15 @@ describe('Translate', () => {
         value: 'Girl {$user1.name} working with girl {$user2.name}',
       }, {
         value: '{$user1.name} working with {$user2.name}'
+      }],
+      followers: [{
+        $plural: Plural.ZERO,
+        value: '{$user.name} has no followers'
+      }, {
+        $plural: Plural.ONE,
+        value: '{$user.name} has {$user.followers} follower'
+      }, {
+        value: '{$user.name} has {$user.followers} followers'
       }],
     });
   });
@@ -165,5 +174,17 @@ describe('Translate', () => {
     t.dot.notation.test.get({
       name: 'Zlatko',
     }).should.equal('Hello dot notation Zlatko');
+  });
+
+  it('should be able to use plural', () => {
+    const user = {
+      name: 'Zlatko',
+      followers: 15,
+    };
+
+    t.followers.get({
+      plural: t.plural(user.followers),
+      user,
+    }).should.equal('Zlatko has 15 followers');
   });
 });

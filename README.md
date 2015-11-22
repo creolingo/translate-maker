@@ -421,7 +421,7 @@ t.set({
     $plural: 'ONE',
     value: '{$user.name} has {$user.followers} follower'
   }, {
-    $plural: 'MORE',
+    $plural: 'OTHER',
     value: '{$user.name} has {$user.followers} followers'
   }]
 });
@@ -445,6 +445,7 @@ Plural function is using module CLDR which can have one of these values based on
 
 You can use predefined Plural constant instead of String representation
 
+```js
 import Translate, { Plural } from 'translate-maker';
 
 const t = new Translate();
@@ -456,7 +457,7 @@ t.set({
     $plural: Plural.ONE,
     value: '{$user.name} has {$user.followers} follower'
   }, {
-    $plural: Plural.MORE,
+    // default value
     value: '{$user.name} has {$user.followers} followers'
   }]
 });
@@ -464,6 +465,7 @@ t.set({
 
 You can use predefined Gender constant instead of String representation
 
+```js
 import Translate, { Gender } from 'translate-maker';
 
 const t = new Translate();
