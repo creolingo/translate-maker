@@ -1,5 +1,5 @@
 import should from 'should';
-import { Translation } from '../src';
+import Translate from '../src';
 import keymirror from 'keymirror';
 
 const Gender = keymirror({
@@ -8,21 +8,23 @@ const Gender = keymirror({
   OTHER: null,
 });
 
-describe('Translation', () => {
-  let translation = null;
+describe('Translate', () => {
+  let t = null;
 
   it('should be able to create instance', function(done) {
-    translation = new Translation();
+    t = new Translate({
+      locale: 'sk_SK',
+    });
     done();
   });
 
   it('set simple translation property', () => {
-    translation.set('varName', 'Adam');
-    translation.set('varName', 'Peter');
+    t.set('varName', 'Adam');
+    t.set('varName', 'Peter');
   });
 
   it('set complex translation properties', () => {
-    translation.set({
+    t.set({
       name: 'Zlatko {$lastName}', // external variable
       about: 'About { nameComplex.short.possessive }', // text with local nested variable,
       aboutDefault: 'About {  nameComplex   }', // text with local variable "name",
@@ -40,60 +42,87 @@ describe('Translation', () => {
           '$user2.gender': Gender.FEMALE,
           value: '{$user1.firstName} spadol a {$user2.firstName} spadla',
         }, '{$user1.firstName} spadol/a a {$user2.firstName} spadol/a'],
-      }
+      },
+      dayparts: {
+        _morning: 'morning',
+        afternoon: 'afternoon',
+        evening: 'evening',
+      },
+      'dot.notation.test': 'Hello dot notation {$name}',
+      greeting: 'Good {dayparts.$daypart} {$user.firstName}',
+      escaped: 'Good \\{dayparts.$daypartVariant} \\{$user.firstName}',
+      working: [{
+        '$user1.gender': 'MALE',
+        '$user2.gender': 'MALE',
+        value: 'Boy {$user1.name} working with boy {$user2.name}',
+      }, {
+        '$user1.gender': 'MALE',
+        '$user2.gender': 'FEMALE',
+        value: 'Boy {$user1.name} working with girl {$user2.name}',
+      }, {
+        '$user1.gender': 'FEMALE',
+        '$user2.gender': 'MALE',
+        value: 'Girl {$user1.name} working with boy {$user2.name}',
+      }, {
+        '$user1.gender': 'FEMALE',
+        '$user2.gender': 'FEMALE',
+        value: 'Girl {$user1.name} working with girl {$user2.name}',
+      }, {
+        value: '{$user1.name} working with {$user2.name}'
+      }],
     });
   });
-
+/*
   it('get simple translation', () => {
     translation.get('varName').should.equal('Peter');
   });
 
   it('get simple translation by object', () => {
     translation.varName.get().should.equal('Peter');
-  });
+  });*/
 
   it('get simple translation with variable', () => {
-    translation.get('name', { lastName: 'Fedor'}).should.equal('Zlatko Fedor');
+    t.get('name', { lastName: 'Fedor'}).should.equal('Zlatko Fedor');
   });
 
   it('get simple translation with variable by object', () => {
-    translation.name.get({ lastName: 'Fedor'}).should.equal('Zlatko Fedor');
+    t.name.get({ lastName: 'Fedor'}).should.equal('Zlatko Fedor');
   });
 
   it('get simple translation with complex variable', () => {
-    translation.get('nameComplex.long').should.equal('Zlatko Fedor');
+    t.get('nameComplex.long').should.equal('Zlatko Fedor');
   });
 
   it('get simple translation with complex variable by object', () => {
-    translation.nameComplex.long.get().should.equal('Zlatko Fedor');
+    t.nameComplex.long.get().should.equal('Zlatko Fedor');
   });
 
   it('get simple translation with default complex variable', () => {
-    translation.get('nameComplex.short').should.equal('Zlatik');
+    t.get('nameComplex.short').should.equal('Zlatik');
   });
 
   it('get simple translation with default complex variable by object', () => {
-    translation.nameComplex.short.get().should.equal('Zlatik');
+    t.nameComplex.short.get().should.equal('Zlatik');
   });
 
   it('get simple translation with local translation', () => {
-    translation.get('about').should.equal('About Zlatkove');
+    t.get('about').should.equal('About Zlatkove');
   });
 
   it('get simple translation with local translation by object', () => {
-    translation.about.get().should.equal('About Zlatkove');
+    t.about.get().should.equal('About Zlatkove');
   });
 
   it('get simple translation with default local translation', () => {
-    translation.get('aboutDefault').should.equal('About Zlatik');
+    t.get('aboutDefault').should.equal('About Zlatik');
   });
 
   it('get simple translation with default local translation by object', () => {
-    translation.aboutDefault.get().should.equal('About Zlatik');
+    t.aboutDefault.get().should.equal('About Zlatik');
   });
 
   it('get array translation', () => {
-    translation.get('user.crashed', {
+    t.get('user.crashed', {
       user1: {
         gender: Gender.MALE,
         firstName: 'Adam',
@@ -101,7 +130,40 @@ describe('Translation', () => {
       user2: {
         firstName: 'Lisa',
         gender: Gender.FEMALE,
-      }
+      },
     }).should.equal('Adam spadol a Lisa spadla');
+  });
+
+  it('get translation with variable and reference', () => {
+    t.greeting.get({
+      daypart: 'evening',
+      user: {
+        firstName: 'Zlatko',
+      },
+    }).should.equal('Good evening Zlatko');
+  });
+
+  it('should be able to escape variable notation', () => {
+    t.escaped.get().should.equal('Good {dayparts.$daypartVariant} {$user.firstName}');
+  });
+
+
+  it('should be able to use conditioned translation with complex variables', () => {
+    t.get('working', {
+      user1: {
+        gender: 'MALE',
+        name: 'Zlatko',
+      },
+      user2: {
+        gender: 'FEMALE',
+        name: 'Livia',
+      }
+    }).should.equal('Boy Zlatko working with girl Livia');
+  });
+
+  it('should be able to get translation by dot notation', () => {
+    t.dot.notation.test.get({
+      name: 'Zlatko',
+    }).should.equal('Hello dot notation Zlatko');
   });
 });

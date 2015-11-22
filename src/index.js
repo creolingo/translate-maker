@@ -1,3 +1,7 @@
+import Translate from './Translate';
 import Translation from './Translation';
+import Plural from './constants/Plural';
+import Gender from './constants/Gender';
 
-export { Translation };
+export { Plural, Gender };
+export default Translate;

@@ -10,23 +10,24 @@ import sortBy from 'lodash/collection/sortBy';
 import first from 'lodash/array/first';
 import filter from 'lodash/collection/filter';
 
+const ESCAPE_CHARACTER = '\\';
 const VARIABLE_START = '$';
+const VARIABLE_REGEX = /{([\s\S]+?)}/g;
 
 export default class Translation {
-  constructor(name, value, options = {}, root = this) {
+  constructor(root, name, value) {
     const isDefault = name && startsWith(name, '_');
 
     this._name = isDefault ? name.substr(1) : name;
     this._value = value;
-    this._options = options;
-    this._root = root;
+    this._root = root || this;
 
     this._isDefault = isDefault;
     this._children = [];
 
     if (isPlainObject(value)) {
       Object.keys(value).forEach((key) => {
-        this.set(key, value[key], options);
+        this.set(key, value[key]);
       });
     }
   }
@@ -35,28 +36,99 @@ export default class Translation {
     return this.get();
   }
 
+  _parseTranslation(value, callback) {
+    const parts = [];
+    let startIndex = 0;
+
+    while (true) {
+      const match = VARIABLE_REGEX.exec(value);
+      if (!match) {
+        break;
+      }
+
+      const [text, inside] = match;
+      const { index } = match;
+      const before = value.substr(startIndex, index - startIndex);
+
+      startIndex = index + text.length;
+
+      // check escape character
+      if (index > 0 && value[index - 1] === ESCAPE_CHARACTER) {
+        parts.push({
+          isVariable: false,
+          text: before.substr(0, before.length - ESCAPE_CHARACTER.length) + text,
+        });
+
+        continue;
+      }
+
+      if (before) {
+        parts.push({
+          isVariable: false,
+          text: before,
+        });
+      }
+
+      const variableName = trim(inside);
+      if (!variableName) {
+        continue;
+      }
+
+      const isExternal = variableName[0] === VARIABLE_START;
+
+      parts.push({
+        isVariable: true,
+        isExternal,
+        variable: isExternal ? variableName.substr(1) : variableName,
+      });
+    }
+
+    if (startIndex >= value.length) {
+      return parts;
+    }
+
+    parts.push({
+      isVariable: false,
+      text: value.substr(startIndex),
+    });
+
+    return parts;
+  }
+
   _processAttrs(value, attrs = {}) {
     if (!value) {
       return value;
     }
 
     const root = this._root;
+    const parts = this._parseTranslation(value);
 
-    return value.replace(/{([\s\S]+?)}/g, (m, key) => {
-      const name = trim(key);
-      if (!name) {
-        return void 0;
-      }
-
-      // TODO check variable
-      const isVariable = startsWith(name, VARIABLE_START);
+    return parts.map((part) => {
+      const { isVariable, text, variable, isExternal } = part;
       if (!isVariable) {
-        return root.get(name, attrs);
+        return text;
       }
 
-      const variable = name.substr(VARIABLE_START.length);
+      // reference
+      if (!isExternal) {
+        const pos = variable.indexOf(VARIABLE_START);
+        if (pos === -1) {
+          return root.get(variable, attrs);
+        }
+
+        const externalVariable = variable.substr(pos + VARIABLE_START.length);
+
+        const suffix = get(attrs, externalVariable);
+        const prefix = variable.substr(0, pos - 1);
+
+        const path = suffix ? `${prefix}.${suffix}` : prefix;
+
+        return root.get(path, attrs);
+      }
+
+      // external variable
       return get(attrs, variable);
-    });
+    }).join('');
   }
 
   get(path, attrs = {}) {
@@ -72,10 +144,16 @@ export default class Translation {
 
         const translation = this[name];
         if (!translation) {
+          // TODO get info about missing reference translation
           return void 0;
         }
 
         return translation.get(newPath, attrs);
+      }
+
+      if (!this[path]) {
+        // TODO get info about missing reference translation
+        return void 0;
       }
 
       return this[path].get(null, attrs);
@@ -121,7 +199,7 @@ export default class Translation {
         return 0;
       }
 
-      return -find(Object.keys(option), (variableName) => {
+      return -filter(Object.keys(option), (variableName) => {
         return startsWith(variableName, VARIABLE_START);
       }).length;
     });
@@ -134,15 +212,31 @@ export default class Translation {
     return isPlainObject(option) ? option.value : option;
   }
 
-  set(name, value) {
+  set(name, value, obj) {
     if (isPlainObject(name)) {
       Object.keys(name).forEach((key) => {
-        this.set(key, name[key]);
+        this.set(key, name[key], obj);
       });
       return this;
     }
 
-    const translation = new Translation(name, value, this._options, this._root);
+    // TODO add dot notation
+    const pos = name.indexOf('.');
+    if (pos !== -1) {
+      const prefix = name.substr(0, pos);
+      const suffix = name.substr(pos + 1);
+
+      const data = {
+        [prefix]: {
+          [suffix]: value,
+        },
+      };
+
+      this.set(data, null, obj);
+      return this;
+    }
+
+    const translation = new Translation(this._root, name, value);
     const key = translation._name;
 
     // remove old translation
@@ -155,7 +249,10 @@ export default class Translation {
     this._children.push(translation);
     this[key] = translation;
 
+    if (obj) {
+      obj[key] = translation;
+    }
+
     return this;
   }
 }
-

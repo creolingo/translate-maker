@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Translate your project like a boss. The official core for the www.translatemaker.com",
   "main": "dist/index.js",
   "keywords": [
@@ -40,7 +40,8 @@
   "homepage": "https://github.com/CherrySoftware/translate-maker",
   "dependencies": {
     "keymirror": "^0.1.1",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "cldr": "^3.2.0"
   },
   "devDependencies": {
     "babel": "^5.8.34",
