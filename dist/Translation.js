@@ -128,17 +128,27 @@ var Translation = (function () {
           });
         }
 
-        var variableName = (0, _lodashStringTrim2['default'])(inside);
-        if (!variableName) {
+        var _name = (0, _lodashStringTrim2['default'])(inside);
+        if (!_name) {
           continue;
         }
 
-        var isExternal = variableName[0] === VARIABLE_START;
+        var isExternal = (0, _lodashStringStartsWith2['default'])(_name, VARIABLE_START);
+        var variableName = isExternal ? _name.substr(VARIABLE_START.length) : _name;
+
+        if (!variableName) {
+          parts.push({
+            isVariable: false,
+            text: text
+          });
+
+          continue;
+        }
 
         parts.push({
           isVariable: true,
           isExternal: isExternal,
-          variable: isExternal ? variableName.substr(1) : variableName
+          variable: variableName
         });
       }
 
@@ -208,10 +218,10 @@ var Translation = (function () {
       if (path) {
         var pos = path.indexOf('.');
         if (pos !== -1) {
-          var _name = path.substr(0, pos);
+          var _name2 = path.substr(0, pos);
           var newPath = path.substr(pos + 1);
 
-          var translation = this[_name];
+          var translation = this[_name2];
           if (!translation) {
             // TODO get info about missing reference translation
             return void 0;

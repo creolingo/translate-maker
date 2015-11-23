@@ -1,4 +1,3 @@
-import 'blanket';
 import should from 'should';
 import Translate, { Plural } from '../src';
 import keymirror from 'keymirror';
