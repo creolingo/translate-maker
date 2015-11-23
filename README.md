@@ -1,9 +1,18 @@
 # Translate Maker
 
 Universal translation library. This module is core of the www.translatemaker.com
+
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
+
+[npm-image]: https://img.shields.io/npm/v/translate-maker.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/CherrySoftware/translate-maker
+[travis-image]: https://img.shields.io/travis/CherrySoftware/translate-maker/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/CherrySoftware/translate-maker
+[coveralls-image]: https://img.shields.io/coveralls/CherrySoftware/translate-maker/master.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/CherrySoftware/translate-maker?branch=master
+
 
 # Installation
 
