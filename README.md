@@ -16,6 +16,7 @@ npm install translate-maker
 - Variables
 - Conditioned translations (Plurals, Gender etc...)
 - Default translations
+- JSON structure
 
 
 # Usage
