@@ -16,6 +16,7 @@ gulp.task('pre-test', () => {
     .pipe(istanbul({
       dir: './coverage',
       instrumenter: Instrumenter,
+      includeUntested: true,
     }))
     // Force `require` to return covered files
     .pipe(istanbul.hookRequire());

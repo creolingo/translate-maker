@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Universal translation library",
   "main": "dist/index.js",
   "keywords": [
@@ -24,7 +24,6 @@
   "scripts": {
     "omg": "babel-node ./src/index.js",
     "prepublish": "npm run build",
-    "test2": "babel-node ./node_modules/gulp/bin/gulp.js test2",
     "test": "babel-node ./node_modules/gulp/bin/gulp.js test",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
     "coveralls": "babel-node ./node_modules/gulp/bin/gulp.js coveralls",
