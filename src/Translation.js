@@ -69,17 +69,29 @@ export default class Translation {
         });
       }
 
-      const variableName = trim(inside);
-      if (!variableName) {
+      const name = trim(inside);
+      if (!name) {
         continue;
       }
 
-      const isExternal = variableName[0] === VARIABLE_START;
+      const isExternal = startsWith(name, VARIABLE_START);
+      const variableName = isExternal
+        ? name.substr(VARIABLE_START.length)
+        : name;
+
+      if (!variableName) {
+        parts.push({
+          isVariable: false,
+          text: text,
+        });
+
+        continue;
+      }
 
       parts.push({
         isVariable: true,
         isExternal,
-        variable: isExternal ? variableName.substr(1) : variableName,
+        variable: variableName,
       });
     }
 

@@ -1,3 +1,4 @@
+import 'blanket';
 import should from 'should';
 import Translate, { Plural } from '../src';
 import keymirror from 'keymirror';
@@ -48,6 +49,8 @@ describe('Translate', () => {
         afternoon: 'afternoon',
         evening: 'evening',
       },
+      emptyVariable: 'This is empty {} variable',
+      emptyExternalVariable: 'This is empty {$} external variable',
       'dot.notation.test': 'Hello dot notation {$name}',
       greeting: 'Good {dayparts.$daypart} {$user.firstName}',
       escaped: 'Good \\{dayparts.$daypartVariant} \\{$user.firstName}',
@@ -186,5 +189,29 @@ describe('Translate', () => {
       plural: t.plural(user.followers),
       user,
     }).should.equal('Zlatko has 15 followers');
+  });
+
+  it('should be not able to get non existing translation', () => {
+    should(t.get('notation.test')).equal(void 0);
+  });
+
+  it('should be not able to get non existing translation', () => {
+    should(t.get('dot.notation.testNonExist')).equal(void 0);
+  });
+
+  it('should be not able to get null', () => {
+    should(t.get(null)).equal(void 0);
+  });
+
+  it('should be able to get translation by toString', () => {
+    (t.nameComplex + '').should.equal('Zlatik');
+  });
+
+  it('should not be able to get empty variable', () => {
+    should(t.get('emptyVariable')).equal('This is empty {} variable');
+  });
+
+  it('should not be able to get empty variable', () => {
+    should(t.get('emptyExternalVariable')).equal('This is empty {$} external variable');
   });
 });
