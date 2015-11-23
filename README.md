@@ -1,6 +1,9 @@
 # Translate Maker
 
 Universal translation library. This module is core of the www.translatemaker.com
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][coveralls-image]][coveralls-url]
 
 # Installation
 
