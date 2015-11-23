@@ -222,18 +222,18 @@ t.set({
   }
 });
 
+const user = {
+  name: 'Zlatko'
+};
+
 const result = t.get('greeting', {
-  user: {
-    name: 'Zlatko'
-  }
+  user: user
 });
 console.log(result); // => Good morning Zlatko
 
 // you can use object notation
 const result2 = t.greeting.evening.get({
-  user: {
-    name: 'Zlatko'
-  }
+  user: user
 });
 console.log(result2); // => Good evening Zlatko
 ```
@@ -256,20 +256,20 @@ t.set({
   greeting: 'Good {dayparts.$daypartVariant} {$user.name}',
 });
 
+const user = {
+  name: 'Zlatko'
+};
+
 const result = t.get('greeting', {
   daypartVariant: 'afternoon',
-  user: {
-    name: 'Zlatko'
-  }
+  user: user
 });
 console.log(result); // => Good afternoon Zlatko
 
 // you can use object notation
 const result2 = t.greeting.get({
   daypartVariant: 'evening',
-  user: {
-    name: 'Zlatko'
-  }
+  user: user
 });
 console.log(result2); // => Good evening Zlatko
 ```
@@ -291,11 +291,13 @@ t.set({
   greeting: 'Good \\{dayparts.$daypartVariant} \\{$user.name}',
 });
 
+const user = {
+  name: 'Zlatko'
+};
+
 const result = t.get('greeting', {
   daypartVariant: 'afternoon',
-  user: {
-    name: 'Zlatko'
-  }
+  user: user
 });
 console.log(result); // => Good {dayparts.$daypartVariant} {$user.name}
 ```
@@ -347,18 +349,18 @@ t.set({
   }],
 });
 
+const user = {
+  name: 'Zlatko'
+};
+
 const result = t.get('greeting', {
-  user: {
-    name: 'Zlatko'
-  }
+  user: user
 });
 console.log(result); // => Good morning Zlatko
 
 const result = t.get('greeting', {
   daypart: 'EVENING',
-  user: {
-    name: 'Zlatko'
-  }
+  user: user
 });
 console.log(result); // => Good evening Zlatko
 ```
@@ -393,15 +395,19 @@ t.set({
   }]
 });
 
+const user1 = {
+  name: 'Zlatko',
+  gender: 'MALE'
+};
+
+const user2 = {
+  gender: 'FEMALE',
+  name: 'Livia'
+};
+
 const result = t.get('working', {
-  user1: {
-    gender: 'MALE',
-    name: 'Zlatko'
-  },
-  user2: {
-    gender: 'FEMALE',
-    name: 'Livia'
-  }
+  user1: user1,
+  user2: user2
 });
 console.log(result); // => Boy Zlatko working with girl Livia
 ```
