@@ -1,7 +1,7 @@
 {
   "name": "translate-maker",
-  "version": "0.1.4",
-  "description": "Translate your project like a boss. The official core for the www.translatemaker.com",
+  "version": "0.1.5",
+  "description": "Universal translation library",
   "main": "dist/index.js",
   "keywords": [
     "translate",
