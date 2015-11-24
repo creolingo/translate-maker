@@ -126,7 +126,7 @@ console.log(result2); // => Good evening
 
 ### Default variants
 
-You can set one variant as default with underscore "_" at the begining.
+You can set one variant as default with underscore "_" at the beginning.
 ```js
 import Translate from 'translate-maker';
 
@@ -318,7 +318,7 @@ console.log(result); // => Good {dayparts.$daypartVariant} {$user.name}
 
 Sometimes you want to show different translation based on Gender, Plural, Tense or other enumerable variables.
 The logic is equivalent to the IF statement. The main difference is that you need to use array.
-Default option is option without variables. You can use number of variables as you want (In gender example we are using two external variables).
+Default option is option without variables. You can use as many variables as you want (For example we are using two external variables in gender).
 
 ```js
 import Translate from 'translate-maker';
@@ -426,7 +426,7 @@ console.log(result); // => Boy Zlatko working with girl Livia
 
 ### Plural example
 
-For this task you can use conditional translations as well. As you can see in the example below there is built in function name plural which is inside instance of the Translate. Maybe you are asking why you need to use function outside of the translation. This question has simple answer: flexibility. That mean you can use what do you want without any borders. Translate has only one build in method which is "plural" and it is depends on the current translation locale.
+For this task you can use conditional translations as well. As you can see in the example below there is built-in function named "plural" which is inside instance of the Translate. Maybe you are asking why you need to use function outside of the translation. This question has simple answer: flexibility. That mean you can use what do you want without any borders. Translate has only one build-in method which is "plural" and it depends on the current translation locale.
 
 ```js
 import Translate from 'translate-maker';
@@ -462,7 +462,7 @@ Plural function is using module CLDR which can have one of these values based on
 ['ZERO', 'ONE', 'TWO', 'FEW', 'MANY', 'OTHER']
 ```
 
-You can use predefined Plural constant instead of String representation
+You can use predefined constant named Plural instead of String representation
 
 ```js
 import Translate, { Plural } from 'translate-maker';
@@ -482,7 +482,7 @@ t.set({
 });
 ```
 
-You can use predefined Gender constant instead of String representation
+You can use predefined constant named Gender instead of String representation
 
 ```js
 import Translate, { Gender } from 'translate-maker';
