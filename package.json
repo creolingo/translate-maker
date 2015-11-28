@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Universal translation library",
   "main": "dist/index.js",
   "keywords": [
