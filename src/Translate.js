@@ -58,6 +58,8 @@ export default class Translate {
 
         this.setFilter(filterType, filter);
       });
+
+      return;
     }
 
     this._filters[type] = fn;

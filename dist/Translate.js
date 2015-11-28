@@ -120,6 +120,8 @@ var Translate = (function () {
 
           _this.setFilter(filterType, filter);
         });
+
+        return;
       }
 
       this._filters[type] = fn;
