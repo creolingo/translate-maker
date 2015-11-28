@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.1.9",
+  "version": "0.2.3",
   "description": "Universal translation library",
   "main": "dist/index.js",
   "keywords": [
@@ -11,6 +11,9 @@
     "i18n",
     "i10n",
     "l20n",
+    "intl",
+    "icu",
+    "cldr",
     "react",
     "angular",
     "ember"
@@ -22,7 +25,6 @@
     "LICENSE"
   ],
   "scripts": {
-    "omg": "babel-node ./src/index.js",
     "prepublish": "npm run build",
     "test": "babel-node ./node_modules/gulp/bin/gulp.js test",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
@@ -39,11 +41,6 @@
     "url": "https://github.com/CherrySoftware/translate-maker/issues"
   },
   "homepage": "https://github.com/CherrySoftware/translate-maker",
-  "config": {
-    "blanket": {
-      "pattern": "./tests/**/*.js"
-    }
-  },
   "dependencies": {
     "keymirror": "^0.1.1",
     "lodash": "^3.10.1",
@@ -62,6 +59,7 @@
     "gulp-util": "^3.0.7",
     "gulp-istanbul": "^0.10.2",
     "gulp-coveralls": "^0.1.4",
+    "gulp-peg": "^0.2.0",
     "should": "^7.1.1",
     "coveralls": "^2.11.4",
     "isparta": "^3.5.3"

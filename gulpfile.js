@@ -5,20 +5,29 @@ import istanbul from 'gulp-istanbul';
 import coveralls from 'gulp-coveralls';
 import path from 'path';
 import { Instrumenter } from 'isparta';
+import peg from 'gulp-peg';
 
 const babelConfig = {
   stage: 0,
 };
 
+gulp.task('compile-peg', () => {
+  return gulp.src(['src/**/*.peg'])
+    .pipe(peg({
+      exportVar: 'module.exports',
+    }).on('error', (err) => {
+      console.log(err);
+    }))
+    .pipe(gulp.dest('./src'))
+});
+
 gulp.task('pre-test', () => {
-  return gulp.src(['src/**/*.js'])
-    // Covering files
+  return gulp.src(['src/**/*.js', '!src/parser/**'])
     .pipe(istanbul({
       dir: './coverage',
       instrumenter: Instrumenter,
       includeUntested: true,
     }))
-    // Force `require` to return covered files
     .pipe(istanbul.hookRequire());
 });
 
@@ -29,9 +38,7 @@ gulp.task('test', ['pre-test'], () => {
       timeout: 20000,
       reporter: 'spec',
     }))
-    // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
-    // Enforce a coverage of at least 90%
     .pipe(istanbul.enforceThresholds({
       thresholds: {
         global: 90,
@@ -48,7 +55,7 @@ gulp.task('coveralls', ['test'], () => {
     .pipe(coveralls());
 });
 
-gulp.task('build', () => {
+gulp.task('build', ['compile-peg'], () => {
   return gulp.src('./src/**/*.{js,jsx}')
     .pipe(babel(babelConfig))
     .pipe(gulp.dest('./dist'));

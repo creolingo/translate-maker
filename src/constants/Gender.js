@@ -1,7 +1,5 @@
-import keymirror from 'keymirror';
-
-export default keymirror({
-  MALE: null,
-  FEMALE: null,
-  OTHER: null,
-});
+export default {
+  MALE: 'male',
+  FEMALE: 'female',
+  OTHER: 'other',
+};

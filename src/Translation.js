@@ -1,18 +1,12 @@
-import isArray from 'lodash/lang/isArray';
 import isPlainObject from 'lodash/lang/isPlainObject';
 import startsWith from 'lodash/string/startsWith';
 import find from 'lodash/collection/find';
 import reject from 'lodash/collection/reject';
-import trim from 'lodash/string/trim';
 import get from 'lodash/object/get';
-import every from 'lodash/collection/every';
-import sortBy from 'lodash/collection/sortBy';
-import first from 'lodash/array/first';
-import filter from 'lodash/collection/filter';
+import reduce from 'lodash/collection/reduce';
+import parser from './parser/parser';
 
-const ESCAPE_CHARACTER = '\\';
-const VARIABLE_START = '$';
-const VARIABLE_REGEX = /{([\s\S]+?)}/g;
+const EMPTY_TEXT = '';
 
 export default class Translation {
   constructor(root, name, value) {
@@ -36,111 +30,78 @@ export default class Translation {
     return this.get();
   }
 
-  _parseTranslation(value, callback) {
-    const parts = [];
-    let startIndex = 0;
+  resolveValue(item = {}, attrs = {}) {
+    const { type, path } = item;
+    const root = this._root;
 
-    while (true) {
-      const match = VARIABLE_REGEX.exec(value);
-      if (!match) {
-        break;
-      }
+    if (type === 'reference') {
+      return root.get(path, attrs);
+    } else if (type === 'variable') {
+      return get(attrs, path);
+    } else if (type === 'combination') {
+      const referencePath = path[0].path;
+      const variablePath = path[1].path;
 
-      const [text, inside] = match;
-      const { index } = match;
-      const before = value.substr(startIndex, index - startIndex);
+      const varToRef = get(attrs, variablePath);
 
-      startIndex = index + text.length;
+      const refPath = varToRef
+        ? `${referencePath}.${varToRef}`
+        : referencePath;
 
-      // check escape character
-      if (index > 0 && value[index - 1] === ESCAPE_CHARACTER) {
-        parts.push({
-          isVariable: false,
-          text: before.substr(0, before.length - ESCAPE_CHARACTER.length) + text,
-        });
-
-        continue;
-      }
-
-      if (before) {
-        parts.push({
-          isVariable: false,
-          text: before,
-        });
-      }
-
-      const name = trim(inside);
-      if (!name) {
-        continue;
-      }
-
-      const isExternal = startsWith(name, VARIABLE_START);
-      const variableName = isExternal
-        ? name.substr(VARIABLE_START.length)
-        : name;
-
-      if (!variableName) {
-        parts.push({
-          isVariable: false,
-          text: text,
-        });
-
-        continue;
-      }
-
-      parts.push({
-        isVariable: true,
-        isExternal,
-        variable: variableName,
-      });
+      return root.get(refPath, attrs);
     }
 
-    if (startIndex >= value.length) {
-      return parts;
-    }
-
-    parts.push({
-      isVariable: false,
-      text: value.substr(startIndex),
-    });
-
-    return parts;
+    return void 0;
   }
 
-  _processAttrs(value, attrs = {}) {
+  buildText(obj, attrs, smartValue) {
+    if (!obj || obj.type !== 'main') {
+      return void 0;
+    }
+
+    return obj.values.map((part) => {
+      const { filters } = part;
+      if (part.type === 'text') {
+        return part.value;
+      }
+
+      if (part.type === 'smart') {
+        return smartValue;
+      }
+
+      const value = this.resolveValue(part, attrs);
+      if (!filters || !filters.length) {
+        return value || EMPTY_TEXT;
+      }
+
+      return reduce(filters, (reducedValue, filter) => {
+        return this.applyFilter(reducedValue, part, attrs, filter);
+      }, value);
+    }).join('');
+  }
+
+  applyFilter(value, part, attrs, filter) {
+    const root = this._root;
+    const filterFn = root.getFilter(filter.type);
+    const args = filter.args || [];
+
+    return filterFn
+      ? filterFn.call(this, value, part, attrs, filter.metadata, ...args)
+      : value;
+  }
+
+  process(value, attrs = {}) {
     if (!value) {
       return value;
     }
 
-    const root = this._root;
-    const parts = this._parseTranslation(value);
-
-    return parts.map((part) => {
-      const { isVariable, text, variable, isExternal } = part;
-      if (!isVariable) {
-        return text;
-      }
-
-      // reference
-      if (!isExternal) {
-        const pos = variable.indexOf(VARIABLE_START);
-        if (pos === -1) {
-          return root.get(variable, attrs);
-        }
-
-        const externalVariable = variable.substr(pos + VARIABLE_START.length);
-
-        const suffix = get(attrs, externalVariable);
-        const prefix = variable.substr(0, pos - 1);
-
-        const path = suffix ? `${prefix}.${suffix}` : prefix;
-
-        return root.get(path, attrs);
-      }
-
-      // external variable
-      return get(attrs, variable);
-    }).join('');
+    try {
+      const data = parser.parse(value);
+      return this.buildText(data, attrs);
+    } catch (err) {
+      console.log(err.message);
+      return void 0;
+    }
   }
 
   get(path, attrs = {}) {
@@ -171,57 +132,14 @@ export default class Translation {
       return this[path].get(null, attrs);
     }
 
-    let value = this._value;
-
-    if (isArray(value)) {
-      value = this._getValueFromArray(value, attrs);
-    } else if (isPlainObject(value)) {
+    const value = this._value;
+    if (isPlainObject(value)) {
       // search default value
       const defaultChild = find(this._children, (child) => child._isDefault);
       return defaultChild ? defaultChild.get(attrs) : void 0;
     }
 
-    return this._processAttrs(value, attrs);
-  }
-
-  _getValueFromArray(options, attrs) {
-    const pass = filter(options, (option) => {
-      const isObject = isPlainObject(option);
-      if (!isObject) {
-        return true;
-      }
-
-      // check variables
-      return every(Object.keys(option), (variableName) => {
-        if (!startsWith(variableName, VARIABLE_START)) {
-          return true;
-        }
-
-        const path = variableName.substr(VARIABLE_START.length);
-        const currentValue = get(attrs, path);
-
-        return option[variableName] === currentValue;
-      });
-    });
-
-    // select option with more variables
-    const sorted = sortBy(pass, (option) => {
-      const isObject = isPlainObject(option);
-      if (!isObject) {
-        return 0;
-      }
-
-      return -filter(Object.keys(option), (variableName) => {
-        return startsWith(variableName, VARIABLE_START);
-      }).length;
-    });
-
-    const option = first(sorted);
-    if (!option) {
-      return void 0;
-    }
-
-    return isPlainObject(option) ? option.value : option;
+    return this.process(value, attrs);
   }
 
   set(name, value, obj) {

@@ -1,3 +1,12 @@
+0.2.4 / 2015-11-28
+==================
+
+ * ICU support
+ * added filters
+ * added metadata
+ * added arguments
+
+
 0.1.9 / 2015-11-23
 ==================
 

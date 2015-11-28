@@ -37,60 +37,65 @@ describe('Translate', () => {
         long: 'Zlatko Fedor',
       },
       user: {
-        crashed: [{
-          '$user1.gender': Gender.MALE,
-          '$user2.gender': Gender.FEMALE,
-          value: '{$user1.firstName} spadol a {$user2.firstName} spadla',
-        }, '{$user1.firstName} spadol/a a {$user2.firstName} spadol/a'],
+        crashedByGender: `{$gender, select,
+          ${Gender.MALE} {spadol}
+          ${Gender.FEMALE} {spadla}
+          ${Gender.OTHER} {spadol/a}
+        }`,
+        crashed: `{$user1.firstName} {user.crashedByGender, $user1.gender as gender} a {$user2.firstName} {user.crashedByGender, $user2.gender as gender}`,
       },
       dayparts: {
         _morning: 'morning',
         afternoon: 'afternoon',
         evening: 'evening',
       },
-      emptyVariable: 'This is empty {} variable',
-      emptyExternalVariable: 'This is empty {$} external variable',
+      emptyVariable: 'This is empty \\{\\} variable',
+      emptyExternalVariable: 'This is empty \\{$\\} external variable',
       'dot.notation.test': 'Hello dot notation {$name}',
       greeting: 'Good {dayparts.$daypart} {$user.firstName}',
-      escaped: 'Good \\{dayparts.$daypartVariant} \\{$user.firstName}',
-      working: [{
-        '$user1.gender': 'MALE',
-        '$user2.gender': 'MALE',
-        value: 'Boy {$user1.name} working with boy {$user2.name}',
-      }, {
-        '$user1.gender': 'MALE',
-        '$user2.gender': 'FEMALE',
-        value: 'Boy {$user1.name} working with girl {$user2.name}',
-      }, {
-        '$user1.gender': 'FEMALE',
-        '$user2.gender': 'MALE',
-        value: 'Girl {$user1.name} working with boy {$user2.name}',
-      }, {
-        '$user1.gender': 'FEMALE',
-        '$user2.gender': 'FEMALE',
-        value: 'Girl {$user1.name} working with girl {$user2.name}',
-      }, {
-        value: '{$user1.name} working with {$user2.name}'
-      }],
-      followers: [{
-        $plural: Plural.ZERO,
-        value: '{$user.name} has no followers'
-      }, {
-        $plural: Plural.ONE,
-        value: '{$user.name} has {$user.followers} follower'
-      }, {
-        value: '{$user.name} has {$user.followers} followers'
-      }],
+      escaped: 'Good \\{dayparts.$daypartVariant\\} \\{$user.firstName\\}',
+      gender: `{$gender, select, MALE {boy} FEMALE {girl}}`,
+      working: `{$user1.gender, select,
+        MALE {Boy}
+        FEMALE {Girl}
+      } {$user1.name} working with {$user2.gender, select,
+        MALE   {boy}
+        FEMALE {girl}
+      } {$user2.name}`,
+      working2: `{gender, $user1.gender as gender | capitalize} {$user1.name} working with {gender, $user2.gender as gender} {$user2.name}`,
+
+      followers: `{$user.name} has {$user.followers, plural,
+        ${Plural.ZERO} {no followers}
+        ${Plural.ONE} {{$user.followers} follower}
+        ${Plural.OTHER} {{$user.followers} followers}
+      }`,
+
+      followersSmart: `{$user.name} has {$user.followers, plural,
+        =0 {no followers}
+        =1 {# follower}
+           {# followers}
+      }`,
+      ICU: `{$gender_of_host, select,
+        female {{$num_guests, plural, offset:1
+            =0 {{$host} does not give a party.}
+            =1 {{$host} invites {$guest} to her party.}
+            =2 {{$host} invites {$guest} and one other person to her party.}
+            other {{$host} invites {$guest} and # other people to her party.}}}
+        male {{$num_guests, plural, offset:1
+            =0 {{$host} does not give a party.}
+            =1 {{$host} invites {$guest} to his party.}
+            =2 {{$host} invites {$guest} and one other person to his party.}
+            other {{$host} invites {$guest} and # other people to his party.}}}
+        other {{$num_guests, plural, offset:1
+            =0 {{$host} does not give a party.}
+            =1 {{$host} invites {$guest} to their party.}
+            =2 {{$host} invites {$guest} and one other person to their party.}
+            other {{$host} invites {$guest} and # other people to their party.}
+          }
+        }
+      }`,
     });
   });
-/*
-  it('get simple translation', () => {
-    translation.get('varName').should.equal('Peter');
-  });
-
-  it('get simple translation by object', () => {
-    translation.varName.get().should.equal('Peter');
-  });*/
 
   it('get simple translation with variable', () => {
     t.get('name', { lastName: 'Fedor'}).should.equal('Zlatko Fedor');
@@ -170,6 +175,17 @@ describe('Translate', () => {
         name: 'Livia',
       }
     }).should.equal('Boy Zlatko working with girl Livia');
+
+    t.get('working2', {
+      user1: {
+        gender: 'MALE',
+        name: 'Zlatko',
+      },
+      user2: {
+        gender: 'FEMALE',
+        name: 'Livia',
+      }
+    }).should.equal('Boy Zlatko working with girl Livia');
   });
 
   it('should be able to get translation by dot notation', () => {
@@ -185,10 +201,28 @@ describe('Translate', () => {
     };
 
     t.followers.get({
-      plural: t.plural(user.followers),
       user,
     }).should.equal('Zlatko has 15 followers');
   });
+
+  it('should be able to use plural with smart variable', () => {
+    const user = {
+      name: 'Zlatko',
+      followers: 15,
+    };
+
+    t.followersSmart.get({
+      user,
+    }).should.equal('Zlatko has 15 followers');
+
+    t.followersSmart.get({
+      user: {
+        name: 'Zlatko',
+        followers: 1,
+      },
+    }).should.equal('Zlatko has 1 follower');
+  });
+
 
   it('should be not able to get non existing translation', () => {
     should(t.get('notation.test')).equal(void 0);
@@ -212,5 +246,14 @@ describe('Translate', () => {
 
   it('should not be able to get empty variable', () => {
     should(t.get('emptyExternalVariable')).equal('This is empty {$} external variable');
+  });
+
+  it('should be able to pass ICU test', () => {
+    t.ICU.get({
+      gender_of_host: 'male',
+      num_guests: 3,
+      host: 'Zlatko',
+      guest: 'Livia',
+    }).should.equal('Zlatko invites Livia and 2 other people to his party.');
   });
 });

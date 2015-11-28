@@ -1,10 +1,8 @@
-import keymirror from 'keymirror';
-
-export default keymirror({
-  ZERO: null,
-  ONE: null,
-  TWO: null,
-  FEW: null,
-  MANY: null,
-  OTHER: null,
-});
+export default {
+  ZERO: 'zero',
+  ONE: 'one',
+  TWO: 'two',
+  FEW: 'few',
+  MANY: 'many',
+  OTHER: 'other',
+};
