@@ -32,6 +32,7 @@ npm install translate-maker
 - Conditioned translations (Plural, Gender etc...)
 - Filters capitalize, upperCase, lowerCase etc... and custom filters
 - Default translations
+- Integrates with [React](https://github.com/CherrySoftware/react-translate-maker) and [Angular](https://github.com/CherrySoftware/angular-translate-maker)
 
 # Usage
 
