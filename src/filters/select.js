@@ -13,6 +13,4 @@ export default function(value, part, attrs, metadata, options = {}) {
       return this.buildText(defaultOption.value, attrs);
     }
   }
-
-  return void 0;
 }

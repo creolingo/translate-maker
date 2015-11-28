@@ -29,8 +29,6 @@ exports['default'] = function (value, part, attrs, metadata) {
       return this.buildText(defaultOption.value, attrs);
     }
   }
-
-  return void 0;
 };
 
 module.exports = exports['default'];

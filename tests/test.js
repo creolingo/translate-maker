@@ -61,6 +61,7 @@ describe('Translate', () => {
       } {$user1.name} working with {$user2.gender, select,
         MALE   {boy}
         FEMALE {girl}
+               {boy or girl named}
       } {$user2.name}`,
       working2: `{gender, $user1.gender as gender | capitalize} {$user1.name} working with {gender, $user2.gender as gender} {$user2.name}`,
 
@@ -94,6 +95,10 @@ describe('Translate', () => {
           }
         }
       }`,
+      pluralWithoutPairs: `{$count, plural, 5, 6, 7}`,
+      badTranslation: `{this is very bad`,
+      customFilter: 'This is {$name | test}',
+      selectWithoutPairs: `{$count, select, 5, 6, 7}`
     });
   });
 
@@ -176,6 +181,16 @@ describe('Translate', () => {
       }
     }).should.equal('Boy Zlatko working with girl Livia');
 
+    t.get('working', {
+      user1: {
+        gender: 'MALE',
+        name: 'Zlatko',
+      },
+      user2: {
+        name: 'Livia',
+      }
+    }).should.equal('Boy Zlatko working with boy or girl named Livia');
+
     t.get('working2', {
       user1: {
         gender: 'MALE',
@@ -255,5 +270,26 @@ describe('Translate', () => {
       host: 'Zlatko',
       guest: 'Livia',
     }).should.equal('Zlatko invites Livia and 2 other people to his party.');
+  });
+
+  it('should not be able to translate plural without pairs', () => {
+    should(t.get('pluralWithoutPairs')).equal('');
+  });
+
+  it('should not be able to translate select without pairs', () => {
+    should(t.get('selectWithoutPairs')).equal('');
+  });
+
+  it('should not be able to translate bad translation', () => {
+    should(t.get('badTranslation')).equal(void 0);
+  });
+
+  it('should be able to use own filter', () => {
+    function test() {
+      return 'test';
+    }
+
+    t.setFilter('test', test);
+    should(t.get('customFilter')).equal('This is test');
   });
 });

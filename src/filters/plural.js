@@ -47,6 +47,4 @@ export default function(value, part, attrs, metadata, options = {}) {
       return this.buildText(defaultOption.value, attrs, smartValue);
     }
   }
-
-  return void 0;
 }

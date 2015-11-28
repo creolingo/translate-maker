@@ -100,12 +100,17 @@ eascapedString = eascapedString1 / eascapedString2
 key = eascapedString / paramString
 parseValue = _ '{' value:parse '}' { return value; }
 keyValueParse = _ key:key _ ':'? value:parseValue { return { key, value }; }
-keyValueParseArg = values:keyValueParse* other:parseValue? {
+
+keyValueParseOptional = other:parseValue {
+ return {
+   key: null,
+   value: other
+ };
+}
+
+keyValueParseWithOptional = values:keyValueParse+ other:keyValueParseOptional? {
   if (other) {
-    values.push({
-      key: null,
-      value: other
-    });
+    values.push(other);
   }
 
   return {
@@ -113,6 +118,15 @@ keyValueParseArg = values:keyValueParse* other:parseValue? {
     values
   };
 }
+
+keyValueParseJustOptional = other:parseValue {
+ return {
+   type: 'pairs',
+   values: [other]
+ };
+}
+
+keyValueParseArg = keyValueParseWithOptional / keyValueParseJustOptional
 
 // ------- PARAMETER ----------
 arg 'argument' = false

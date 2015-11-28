@@ -50,8 +50,6 @@ export default class Translation {
 
       return root.get(refPath, attrs);
     }
-
-    return void 0;
   }
 
   buildText(obj, attrs, smartValue) {

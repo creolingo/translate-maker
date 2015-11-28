@@ -95,8 +95,6 @@ var Translation = (function () {
 
         return root.get(refPath, attrs);
       }
-
-      return void 0;
     }
   }, {
     key: 'buildText',

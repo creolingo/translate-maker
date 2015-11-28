@@ -64,8 +64,6 @@ exports['default'] = function (value, part, attrs, metadata) {
       return this.buildText(defaultOption.value, attrs, smartValue);
     }
   }
-
-  return void 0;
 };
 
 module.exports = exports['default'];
