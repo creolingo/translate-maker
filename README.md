@@ -368,13 +368,7 @@ console.log(result); // => Boy Zlatko is working with girl Livia
 
 ### Combination of the conditional translation and reference translation
 
-<<<<<<< 33273558df89ff1ee1f92d49555aee38e6e9cfb0
-Sometimes you want to show different translation based on Gender, Plural, Tense or other enumerable variables.
-The logic is equivalent to the IF statement. The main difference is that you need to use array.
-Default option is option without variables. You can use as many variables as you want (For example we are using two external variables in gender).
-=======
 As you can see in the example above we are using gender selection twice. We can avoid duplication with reference translation. We are able to send into the nested translation different argments. Please take a look on the keyword "as".
->>>>>>> c3a26b663e6e8435c837ba4e9a8d7a426ad2b4c0
 
 ```js
 import Translate from 'translate-maker';
@@ -457,11 +451,7 @@ console.log(result); // => Boy Zlatko is working with girl Livia
 
 ### Plural example
 
-<<<<<<< 33273558df89ff1ee1f92d49555aee38e6e9cfb0
-For this task you can use conditional translations as well. As you can see in the example below there is built-in function named "plural" which is inside instance of the Translate. Maybe you are asking why you need to use function outside of the translation. This question has simple answer: flexibility. That mean you can use what do you want without any borders. Translate has only one build-in method which is "plural" and it depends on the current translation locale.
-=======
 For this task you can use conditional translations as well.
->>>>>>> c3a26b663e6e8435c837ba4e9a8d7a426ad2b4c0
 
 ```js
 import Translate from 'translate-maker';
@@ -514,13 +504,15 @@ console.log(result); // => Zlatko has 15 followers
 Plural function is using module CLDR which can have one of these values based on your current locale:
 ```js
 ['zero', 'one', 'two', 'few', 'many', 'other']
+```
 
 or you can use exact value
+
  =1 when value is equal 1
- =2' when value is equal 2
+ =2 when value is equal 2
  =3 when value is equal 3
  ...
-```
+
 
 You can use predefined constant named Plural instead of String representation
 
