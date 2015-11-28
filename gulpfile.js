@@ -15,10 +15,8 @@ gulp.task('compile-peg', () => {
   return gulp.src(['src/**/*.peg'])
     .pipe(peg({
       exportVar: 'module.exports',
-    }).on('error', (err) => {
-      console.log(err);
     }))
-    .pipe(gulp.dest('./src'))
+    .pipe(gulp.dest('./src'));
 });
 
 gulp.task('pre-test', () => {
@@ -44,11 +42,11 @@ gulp.task('test', ['pre-test'], () => {
         global: 89,
       },
     }));
- });
+});
 
 gulp.task('coveralls', ['test'], () => {
   if (!process.env.CI) {
-    return;
+    return void 0;
   }
 
   return gulp.src(path.join(__dirname, 'coverage/lcov.info'))

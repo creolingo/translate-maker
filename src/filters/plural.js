@@ -11,7 +11,7 @@ function getValue(data, key, defaultValue) {
   const items = data || [];
   const option = find(items, (item) => item.key === key);
 
-  return option ? option.value: defaultValue;
+  return option ? option.value : defaultValue;
 }
 
 export default function(value, part, attrs, metadata, options = {}) {
@@ -32,7 +32,7 @@ export default function(value, part, attrs, metadata, options = {}) {
         return false;
       }
 
-      const key = typeof pair.key === 'string' ? pair.key.toLowerCase(): pair.key;
+      const key = typeof pair.key === 'string' ? pair.key.toLowerCase() : pair.key;
       if (key[0] === '=') {
         const keyValue = parseInt(key.substr(1), 10);
         return keyValue === numberValue;
