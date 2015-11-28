@@ -1,6 +1,6 @@
 # Translate Maker
 
-Universal translation library. This module is core of the www.translatemaker.com
+Universal javascript translation library.
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
@@ -25,7 +25,8 @@ npm install translate-maker
 # Features
 
 - Build on standards ([ICU Message syntax](http://userguide.icu-project.org/formatparse/messages), [Unicode CLDR](http://cldr.unicode.org/))
-- Support 190+ languages
+- Support for 190+ languages
+- Runs in the browser and Node.js
 - JSON Structure
 - Nested and reference translations
 - Variables

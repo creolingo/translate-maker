@@ -9,6 +9,8 @@ import trunc from './filters/trunc';
 import escape from './filters/escape';
 import upperCase from './filters/upperCase';
 import lowerCase from './filters/lowerCase';
+import isPlainObject from 'lodash/lang/isPlainObject';
+import keys from 'lodash/object/keys';
 
 const defaultOptions = {
   locale: 'en',
@@ -50,6 +52,14 @@ export default class Translate {
   }
 
   setFilter(type, fn) {
+    if (isPlainObject(type)) {
+      keys(type).forEach((filterType) => {
+        const filter = type[filterType];
+
+        this.setFilter(filterType, filter);
+      });
+    }
+
     this._filters[type] = fn;
   }
 

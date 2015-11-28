@@ -56,6 +56,14 @@ var _filtersLowerCase = require('./filters/lowerCase');
 
 var _filtersLowerCase2 = _interopRequireDefault(_filtersLowerCase);
 
+var _lodashLangIsPlainObject = require('lodash/lang/isPlainObject');
+
+var _lodashLangIsPlainObject2 = _interopRequireDefault(_lodashLangIsPlainObject);
+
+var _lodashObjectKeys = require('lodash/object/keys');
+
+var _lodashObjectKeys2 = _interopRequireDefault(_lodashObjectKeys);
+
 var defaultOptions = {
   locale: 'en'
 };
@@ -104,6 +112,16 @@ var Translate = (function () {
   }, {
     key: 'setFilter',
     value: function setFilter(type, fn) {
+      var _this = this;
+
+      if ((0, _lodashLangIsPlainObject2['default'])(type)) {
+        (0, _lodashObjectKeys2['default'])(type).forEach(function (filterType) {
+          var filter = type[filterType];
+
+          _this.setFilter(filterType, filter);
+        });
+      }
+
       this._filters[type] = fn;
     }
   }, {
