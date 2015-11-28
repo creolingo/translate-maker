@@ -25,6 +25,7 @@ npm install translate-maker
 # Features
 
 - Build on standards ([ICU Message syntax](http://userguide.icu-project.org/formatparse/messages), [Unicode CLDR](http://cldr.unicode.org/))
+- Support 190+ languages
 - JSON Structure
 - Nested and reference translations
 - Variables

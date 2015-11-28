@@ -1,8 +1,17 @@
 import find from 'lodash/collection/find';
 import cldr from 'cldr';
 
+let cachePlural = null;
+
 function plural(locale, count) {
-  const fn = cldr.extractPluralRuleFunction(locale);
+  if (!cachePlural || cachePlural.locale !== locale) {
+    cachePlural = {
+      locale,
+      fn: cldr.extractPluralRuleFunction(locale),
+    };
+  }
+
+  const fn = cachePlural.fn;
 
   return fn(count);
 }

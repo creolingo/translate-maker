@@ -14,8 +14,17 @@ var _cldr = require('cldr');
 
 var _cldr2 = _interopRequireDefault(_cldr);
 
+var cachePlural = null;
+
 function plural(locale, count) {
-  var fn = _cldr2['default'].extractPluralRuleFunction(locale);
+  if (!cachePlural || cachePlural.locale !== locale) {
+    cachePlural = {
+      locale: locale,
+      fn: _cldr2['default'].extractPluralRuleFunction(locale)
+    };
+  }
+
+  var fn = cachePlural.fn;
 
   return fn(count);
 }
