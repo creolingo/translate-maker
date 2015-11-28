@@ -28,7 +28,8 @@ npm install translate-maker
 - JSON Structure
 - Nested and reference translations
 - Variables
-- Conditioned translations (Plurals, Gender etc...)
+- Conditioned translations (Plural, Gender etc...)
+- Filters capitalize, upperCase, lowerCase etc... and custom filters
 - Default translations
 
 # Usage
@@ -562,6 +563,136 @@ const result = t.get('working', {
 console.log(result); // => Boy Zlatko is working with girl Livia
 ```
 
+### Filters
+
+You can use one of the predefined filters:
+
+ * as
+ * [camelCase](https://lodash.com/docs#camelCase)
+ * [capitalize](https://lodash.com/docs#capitalize)
+ * [escape](https://lodash.com/docs#escape)
+ * lowerCase
+ * plural
+ * select {$gender | select, male {Boy}, female {Girl}, {Girl/Boy}}
+ * [trim](https://lodash.com/docs#trim)
+ * [trunc](https://lodash.com/docs#trunc) {$name | trunc, 6, '...'}
+ * upperCase
+
+Filter is simple function with arguments. We are supporting various argument types. Basic types are fully compatible with JSON. You can use ',' or space beatwean arguments.
+
+ * null (null)
+ * undefined (undefined)
+ * bool (true, false)
+ * string ('He\'s cool' or "He's cool")
+ * number (45, -5.2)
+ * references (daytypes.morning)
+ * variables ($user.name)
+ * key value (male {he is boy} or you can use default value without key {is boy or girl})
+
+You can use multiple filters as well. Please use character "|" between filters. First filter can be splitted by comma ",""
+
+```js
+t.set({
+  'hello': 'Hello {$user.name | trunc, 6 | capitalize}'
+});
+```
+
+Next syntax is same:
+
+ * Hello {$user.name | trunc, 6 | capitalize}
+ * Hello {$user.name | trunc  6 | capitalize}
+ * Hello {$user.name,  trunc, 6 | capitalize}
+ * Hello {$user.name,  trunc  6 | capitalize}
+
+### Own filters
+
+```js
+import Translate from 'translate-maker';
+
+function filter(value) {
+  return value + '***';
+}
+
+const t = new Translate();
+t.setFilter('star', filter);
+
+t.set({
+  'hello': 'Hello ${name | star}'
+});
+
+const result = t.get('hello', {
+  name: 'Zlatko'
+});
+
+console.log(result); // => Hello Zlatko***
+```
+
+### Complex own filter
+
+Each function has 4 fixed arguments. Others are optional.
+
+ * value (initial value)
+ * part (more information about current filter)
+ * attrs (attributes passed by the user)
+ * metadata (metadata assigned to the current translation)
+
+```js
+import trunc from 'lodash/string/trunc';
+
+function truncFilter(value, part, attrs, metadata, length = 30, omission = '...') {
+  return trunc(value, {
+    length,
+    omission,
+  });
+}
+```
+
+### Metadata
+
+Each filter can handle own metadata. For example you can see offset in next plural example.
+Structure of the metadata is key: value.
+
+```js
+import Translate from 'translate-maker';
+
+const t = new Translate();
+
+t.set({
+  following: `{$user.name} {$user.followers, plural, offset: 1
+    zero {follows nobody}
+    one  {follows {$follower.name}}
+         {follows {$follower.name} and # others}
+  }`
+});
+
+const user = {
+  name: 'Zlatko',
+  followers: 3,
+};
+
+const follower = {
+  name: 'Livia'
+};
+
+const result = t.get('following', {
+  user: user,
+  follower: follower
+});
+
+console.log('result'); // => Zlatko follows Livia and 2 others
+```
+
+Value can be:
+ * null (null)
+ * undefined (undefined)
+ * bool (true, false)
+ * string ('He\'s cool' or "He's cool")
+ * number (45, -5.2)
+ * references (daytypes.morning)
+ * variables ($user.name)
+
+There is no support for pairs as value.
+
 # Running Tests
 
 To run the test suite, first invoke the following command within the repo, installing the development dependencies:
@@ -575,4 +706,3 @@ Then run the tests:
 ```sh
 npm test
 ```
-

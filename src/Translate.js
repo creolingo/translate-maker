@@ -3,6 +3,12 @@ import capitalize from './filters/capitalize';
 import as from './filters/as';
 import select from './filters/select';
 import plural from './filters/plural';
+import camelCase from './filters/camelCase';
+import trim from './filters/trim';
+import trunc from './filters/trunc';
+import escape from './filters/escape';
+import upperCase from './filters/upperCase';
+import lowerCase from './filters/lowerCase';
 
 const defaultOptions = {
   locale: 'en',
@@ -20,6 +26,12 @@ export default class Translate {
       as,
       select,
       plural,
+      camelCase,
+      trim,
+      trunc,
+      escape,
+      upperCase,
+      lowerCase,
     };
 
     this._translation = new Translation(this);

@@ -11,23 +11,31 @@ var _lodashCollectionFind = require('lodash/collection/find');
 var _lodashCollectionFind2 = _interopRequireDefault(_lodashCollectionFind);
 
 exports['default'] = function (value, part, attrs, metadata) {
-  var options = arguments.length <= 4 || arguments[4] === undefined ? {} : arguments[4];
+  var defaultOption = null;
 
-  if (options.type === 'pairs') {
-    var pairs = options.values || [];
-    var option = (0, _lodashCollectionFind2['default'])(pairs, function (pair) {
-      return pair.key === value;
-    });
-    if (option) {
-      return this.buildText(option.value, attrs);
+  for (var _len = arguments.length, args = Array(_len > 4 ? _len - 4 : 0), _key = 4; _key < _len; _key++) {
+    args[_key - 4] = arguments[_key];
+  }
+
+  var option = (0, _lodashCollectionFind2['default'])(args, function (arg) {
+    if (arg.type !== 'pair') {
+      return false;
     }
 
-    var defaultOption = (0, _lodashCollectionFind2['default'])(pairs, function (pair) {
-      return pair.key === null;
-    });
-    if (defaultOption) {
-      return this.buildText(defaultOption.value, attrs);
+    if (!arg.key) {
+      defaultOption = arg;
+      return false;
     }
+
+    return arg.key === value;
+  });
+
+  if (option) {
+    return this.buildText(option.value, attrs, value);
+  }
+
+  if (defaultOption) {
+    return this.buildText(defaultOption.value, attrs, value);
   }
 };
 

@@ -98,7 +98,14 @@ describe('Translate', () => {
       pluralWithoutPairs: `{$count, plural, 5, 6, 7}`,
       badTranslation: `{this is very bad`,
       customFilter: 'This is {$name | test}',
-      selectWithoutPairs: `{$count, select, 5, 6, 7}`
+      selectWithoutPairs: `{$count, select, 5, 6, 7}`,
+      filter: {
+        trim: 'Trim this {$value | trim}',
+        trim2: 'Trim this {$value, trim}',
+        trunc: `Trunc this {$value | trunc, 7, '..'}`,
+        upperCase: 'This is {$value | upperCase }',
+        lowerCase: 'This is {$value | lowerCase }',
+      }
     });
   });
 
@@ -291,5 +298,33 @@ describe('Translate', () => {
 
     t.setFilter('test', test);
     should(t.get('customFilter')).equal('This is test');
+  });
+
+  it('should be able to use trim', () => {
+    should(t.get('filter.trim', {
+      value: '   text   ',
+    })).equal('Trim this text');
+
+    should(t.get('filter.trim2', {
+      value: '   text   ',
+    })).equal('Trim this text');
+  });
+
+  it('should be able to use trunc', () => {
+    should(t.get('filter.trunc', {
+      value: '123456789123456789',
+    })).equal('Trunc this 12345..');
+  });
+
+  it('should be able to use lowerCase', () => {
+    should(t.get('filter.lowerCase', {
+      value: 'LoWERCASe',
+    })).equal('This is lowercase');
+  });
+
+  it('should be able to use upperCase', () => {
+    should(t.get('filter.upperCase', {
+      value: 'upperCase',
+    })).equal('This is UPPERCASE');
   });
 });

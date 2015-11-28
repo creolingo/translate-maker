@@ -32,6 +32,30 @@ var _filtersPlural = require('./filters/plural');
 
 var _filtersPlural2 = _interopRequireDefault(_filtersPlural);
 
+var _filtersCamelCase = require('./filters/camelCase');
+
+var _filtersCamelCase2 = _interopRequireDefault(_filtersCamelCase);
+
+var _filtersTrim = require('./filters/trim');
+
+var _filtersTrim2 = _interopRequireDefault(_filtersTrim);
+
+var _filtersTrunc = require('./filters/trunc');
+
+var _filtersTrunc2 = _interopRequireDefault(_filtersTrunc);
+
+var _filtersEscape = require('./filters/escape');
+
+var _filtersEscape2 = _interopRequireDefault(_filtersEscape);
+
+var _filtersUpperCase = require('./filters/upperCase');
+
+var _filtersUpperCase2 = _interopRequireDefault(_filtersUpperCase);
+
+var _filtersLowerCase = require('./filters/lowerCase');
+
+var _filtersLowerCase2 = _interopRequireDefault(_filtersLowerCase);
+
 var defaultOptions = {
   locale: 'en'
 };
@@ -50,7 +74,13 @@ var Translate = (function () {
       capitalize: _filtersCapitalize2['default'],
       as: _filtersAs2['default'],
       select: _filtersSelect2['default'],
-      plural: _filtersPlural2['default']
+      plural: _filtersPlural2['default'],
+      camelCase: _filtersCamelCase2['default'],
+      trim: _filtersTrim2['default'],
+      trunc: _filtersTrunc2['default'],
+      escape: _filtersEscape2['default'],
+      upperCase: _filtersUpperCase2['default'],
+      lowerCase: _filtersLowerCase2['default']
     };
 
     this._translation = new _Translation2['default'](this);

@@ -24,4 +24,5 @@ var _constantsGender2 = _interopRequireDefault(_constantsGender);
 
 exports.Plural = _constantsPlural2['default'];
 exports.Gender = _constantsGender2['default'];
+exports.Translation = _Translation2['default'];
 exports['default'] = _Translate2['default'];

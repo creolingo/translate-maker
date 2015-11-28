@@ -30,39 +30,43 @@ function getValue(data, key, defaultValue) {
 }
 
 exports['default'] = function (value, part, attrs, metadata) {
-  var options = arguments.length <= 4 || arguments[4] === undefined ? {} : arguments[4];
-
   var root = this._root;
   var locale = root.getOptions().locale;
   var numberValue = Number(value);
   var pluralValue = plural(locale, numberValue);
   var offset = getValue(metadata, 'offset', 0);
-  var smartValue = numberValue - offset;
 
-  if (options.type === 'pairs') {
-    var pairs = options.values || [];
+  var smartValue = offset ? numberValue - offset : value;
 
-    var defaultOption = null;
-    var option = (0, _lodashCollectionFind2['default'])(pairs, function (pair) {
-      if (!pair.key) {
-        defaultOption = pair;
-        return false;
-      }
+  var defaultOption = null;
 
-      var key = typeof pair.key === 'string' ? pair.key.toLowerCase() : pair.key;
-      if (key[0] === '=') {
-        var keyValue = parseInt(key.substr(1), 10);
-        return keyValue === numberValue;
-      }
+  for (var _len = arguments.length, args = Array(_len > 4 ? _len - 4 : 0), _key = 4; _key < _len; _key++) {
+    args[_key - 4] = arguments[_key];
+  }
 
-      return key === pluralValue;
-    });
-
-    if (option) {
-      return this.buildText(option.value, attrs, smartValue);
-    } else if (defaultOption) {
-      return this.buildText(defaultOption.value, attrs, smartValue);
+  var option = (0, _lodashCollectionFind2['default'])(args, function (arg) {
+    if (arg.type !== 'pair') {
+      return false;
     }
+
+    if (!arg.key) {
+      defaultOption = arg;
+      return false;
+    }
+
+    var key = typeof arg.key === 'string' ? arg.key.toLowerCase() : arg.key;
+    if (key[0] === '=') {
+      var keyValue = parseInt(key.substr(1), 10);
+      return keyValue === numberValue;
+    }
+
+    return key === pluralValue;
+  });
+
+  if (option) {
+    return this.buildText(option.value, attrs, smartValue);
+  } else if (defaultOption) {
+    return this.buildText(defaultOption.value, attrs, smartValue);
   }
 };
 

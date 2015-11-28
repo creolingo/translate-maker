@@ -1,16 +1,25 @@
 import find from 'lodash/collection/find';
 
-export default function(value, part, attrs, metadata, options = {}) {
-  if (options.type === 'pairs') {
-    const pairs = options.values || [];
-    const option = find(pairs, (pair) => pair.key === value);
-    if (option) {
-      return this.buildText(option.value, attrs);
+export default function(value, part, attrs, metadata, ...args) {
+  let defaultOption = null;
+  const option = find(args, (arg) => {
+    if (arg.type !== 'pair') {
+      return false;
     }
 
-    const defaultOption = find(pairs, (pair) => pair.key === null);
-    if (defaultOption) {
-      return this.buildText(defaultOption.value, attrs);
+    if (!arg.key) {
+      defaultOption = arg;
+      return false;
     }
+
+    return arg.key === value;
+  });
+
+  if (option) {
+    return this.buildText(option.value, attrs, value);
+  }
+
+  if (defaultOption) {
+    return this.buildText(defaultOption.value, attrs, value);
   }
 }

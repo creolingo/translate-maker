@@ -98,35 +98,18 @@ eascapedString = eascapedString1 / eascapedString2
 
 // ------- KEY VALUE ----------
 key = eascapedString / paramString
-parseValue = _ '{' value:parse '}' { return value; }
-keyValueParse = _ key:key _ ':'? value:parseValue { return { key, value }; }
-
-keyValueParseOptional = other:parseValue {
- return {
-   key: null,
-   value: other
- };
-}
-
-keyValueParseWithOptional = values:keyValueParse+ other:keyValueParseOptional? {
-  if (other) {
-    values.push(other);
-  }
-
+parseValue = _ '{' value:parse '}' {
   return {
-    type: 'pairs',
-    values
+    type: 'pair',
+    key: null,
+    value
   };
 }
 
-keyValueParseJustOptional = other:parseValue {
- return {
-   type: 'pairs',
-   values: [other]
- };
+keyValueParse = _ key:key _ ':'? value:parseValue {
+  value.key = key;
+  return value;
 }
-
-keyValueParseArg = keyValueParseWithOptional / keyValueParseJustOptional
 
 // ------- PARAMETER ----------
 arg 'argument' = false
@@ -137,7 +120,7 @@ arg 'argument' = false
   / eascapedString
   / path
 
-argExt 'extended argument' = keyValueParseArg / arg
+argExt 'extended argument' = keyValueParse / parseValue / arg
 
 // ------- PARSE START --------
 parse = values:(stringFormat / smartVariable / logicFormat)* {
@@ -177,7 +160,7 @@ metaOther =  _ meta:meta { return meta; }
 metadata = meta:meta other:metaOther* { return [meta].concat(other); }
 
 // ------ ARG -------
-argExtOther = _ ',' _ arg:argExt { return arg; }
+argExtOther = _ ','? _ arg:argExt { return arg; }
 argsExt =  arg:argExt args:argExtOther* { return [arg].concat(args); }
 argsMetadata = _ ',' _ metadata:metadata? _ args:argsExt? { return { args, metadata }; }
 basicFormat = type:paramString argsMetadata:argsMetadata? {

@@ -148,7 +148,7 @@ var Translation = (function () {
         var data = _parserParser2['default'].parse(value);
         return this.buildText(data, attrs);
       } catch (err) {
-        console.log(err.message);
+        // TODO get info about unparsable translation text
         return void 0;
       }
     }
