@@ -1,0 +1,188 @@
+// ------- MAIN ----------
+start = parse
+
+// ------- BASIC ---------
+wsChar = [ \t\n\r]
+ws 'whitespace' = [ \t\n\r]+
+_ 'optionalWhitespace' = $(ws*)
+
+false = "false" { return false; }
+null  = "null"  { return null;  }
+undefined  = "undefined"  { return void 0;  }
+true  = "true"  { return true;  }
+
+// ------- NUMBERS --------
+number "number" = '-'? int frac? exp? { return parseFloat(text()); }
+
+digit = [0-9]
+hexDigit = [0-9a-f]i
+exp = [eE] ('-' / '+')? digit+
+frac = '.' digit+
+int = '0' / ([1-9] digit*)
+
+// ------- PROPERTIES VARIABLES --------
+propFirstChar = [a-z0-9_]i;
+propOtherChar = [a-z0-9-_]i
+property 'property' = $(propFirstChar propOtherChar*)
+
+referencePath 'reference' = path:$(property ('.' property)*) {
+ return {
+    type: 'reference',
+    path
+  };
+}
+
+variablePath 'variable' = '$'reference:referencePath {
+  return {
+    type: 'variable',
+    path: reference.path
+  };
+}
+
+referenceVariablePath = reference:referencePath '.' variable:variablePath {
+  return {
+    type: 'combination',
+    path: [reference, variable]
+  };
+}
+
+path = variablePath / referenceVariablePath / referencePath
+
+// ---------- STRING ---------
+newLine = '\\n' { return '\n' }
+tab = '\\t' { return '\t' }
+return = '\\r' { return '\r' }
+backslash = '\\\\' { return '\\' }
+
+escapedToReal = backslash / newLine / tab / return
+
+unicodeToString = '\\u' digits:$(hexDigit hexDigit hexDigit hexDigit) {
+  return String.fromCharCode(parseInt(digits, 16));
+}
+
+paramChar = [^{}:,# \t\n\r\\]
+  / backslash
+  / '\\{'  { return '\u007B'; }
+  / '\\}'  { return '\u007D'; }
+  / '\\#'  { return '\\#'; }
+  / unicodeToString
+
+visibleChar = paramChar / [:,]
+char = visibleChar / wsChar
+smartVariable = '#' {
+  return {
+    type: 'smart'
+  }
+}
+
+paramString = chars:paramChar+ { return chars.join(''); }
+visibleString = chars:visibleChar+ { return chars.join(''); }
+string = chars:char+ { return chars.join(''); }
+
+// ---------- ESCAPED STRING --------
+escapedChar1 = [^"\\]
+  / escapedToReal
+  / '\\"'  { return '"'; }
+  / unicodeToString
+
+eascapedString1 "string" = '"' chars:escapedChar1* '"' { return chars.join(""); }
+
+escapedChar2 = [^'\\]
+  / escapedToReal
+  / "\\'"  { return "'"; }
+  / unicodeToString;
+
+eascapedString2 "string" = "'" chars:escapedChar2* "'" { return chars.join(""); }
+
+eascapedString = eascapedString1 / eascapedString2
+
+// ------- KEY VALUE ----------
+key = eascapedString / paramString
+parseValue = _ '{' value:parse '}' { return value; }
+keyValueParse = _ key:key _ ':'? value:parseValue { return { key, value }; }
+keyValueParseArg = values:keyValueParse* other:parseValue? {
+  if (other) {
+    values.push({
+      key: null,
+      value: other
+    });
+  }
+
+  return {
+    type: 'pairs',
+    values
+  };
+}
+
+// ------- PARAMETER ----------
+arg 'argument' = false
+  / null
+  / undefined
+  / true
+  / number
+  / eascapedString
+  / path
+
+argExt 'extended argument' = keyValueParseArg / arg
+
+// ------- PARSE START --------
+parse = values:(stringFormat / smartVariable / logicFormat)* {
+  return {
+    type: 'main',
+    values
+  };
+}
+
+stringFormat = value:string {
+  return {
+    type: 'text',
+    value
+  };
+}
+
+// ---- AS ----
+as = from:path _ 'as' _ to:referencePath {
+  return {
+    from,
+    to: to.path
+  };
+}
+
+asOther = _ ',' _ as:as { return as; }
+asForm = first:as other:asOther* {
+  return {
+    type: 'as',
+    args: [first].concat(other)
+  };
+}
+
+// ---- METADATA ---
+value = eascapedString / visibleString
+meta = key:key _ ':' _ value:arg { return { key, value }; }
+metaOther =  _ meta:meta { return meta; }
+metadata = meta:meta other:metaOther* { return [meta].concat(other); }
+
+// ------ ARG -------
+argExtOther = _ ',' _ arg:argExt { return arg; }
+argsExt =  arg:argExt args:argExtOther* { return [arg].concat(args); }
+argsMetadata = _ ',' _ metadata:metadata? _ args:argsExt? { return { args, metadata }; }
+basicFormat = type:paramString argsMetadata:argsMetadata? {
+  return {
+    type,
+    args: argsMetadata && argsMetadata.args,
+    metadata: argsMetadata && argsMetadata.metadata
+  };
+}
+
+// ---- FILTER ----
+filter = asForm / basicFormat
+filterOther = _ '|' _ filter:filter { return filter; }
+filters = _ [,|] _ filter:filter other:filterOther* { return [filter].concat(other); }
+
+logicFormat = '{' _ path:path filters:filters? _ '}' {
+  return {
+    type: path.type,
+    path: path.path,
+    filters
+  };
+}
