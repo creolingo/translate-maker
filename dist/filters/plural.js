@@ -10,39 +10,9 @@ var _lodashCollectionFind = require('lodash/collection/find');
 
 var _lodashCollectionFind2 = _interopRequireDefault(_lodashCollectionFind);
 
-var _cldr = require('cldr');
+var _utilsGetPlural = require('../utils/getPlural');
 
-var _cldr2 = _interopRequireDefault(_cldr);
-
-var _cldrDataSupplementalPlurals = require('cldr-data/supplemental/plurals');
-
-var _cldrDataSupplementalPlurals2 = _interopRequireDefault(_cldrDataSupplementalPlurals);
-
-function test(locale) {
-  var language = locale;
-
-  // Your awesome pluralization logic
-  var pluralForm = _cldrDataSupplementalPlurals2['default'].supplemental["plurals-type-cardinal"][language];
-
-  return pluralForm;
-}
-
-console.log(test('sk'));
-
-var cachePlural = null;
-
-function plural(locale, count) {
-  if (!cachePlural || cachePlural.locale !== locale) {
-    cachePlural = {
-      locale: locale,
-      fn: _cldr2['default'].extractPluralRuleFunction(locale)
-    };
-  }
-
-  var fn = cachePlural.fn;
-
-  return fn(count);
-}
+var _utilsGetPlural2 = _interopRequireDefault(_utilsGetPlural);
 
 function getValue(data, key, defaultValue) {
   var items = data || [];
@@ -57,6 +27,8 @@ exports['default'] = function (value, part, attrs, metadata) {
   var root = this._root;
   var locale = root.getOptions().locale;
   var numberValue = Number(value);
+
+  var plural = (0, _utilsGetPlural2['default'])(locale, 'en');
   var pluralValue = plural(locale, numberValue);
   var offset = getValue(metadata, 'offset', 0);
 

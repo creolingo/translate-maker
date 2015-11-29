@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "description": "Universal translation library",
   "main": "dist/index.js",
   "keywords": [
@@ -44,7 +44,8 @@
   "dependencies": {
     "keymirror": "^0.1.1",
     "lodash": "^3.10.1",
-    "make-plural": "^3.0.3"
+    "make-plural": "^3.0.3",
+    "locale": "^0.0.20"
   },
   "devDependencies": {
     "babel": "^5.8.34",
