@@ -29,7 +29,7 @@ exports['default'] = function (value, part, attrs, metadata) {
   var numberValue = Number(value);
 
   var plural = (0, _utilsGetPlural2['default'])(locale, 'en');
-  var pluralValue = plural(locale, numberValue);
+  var pluralValue = plural(numberValue);
   var offset = getValue(metadata, 'offset', 0);
 
   var smartValue = offset ? numberValue - offset : value;
@@ -52,7 +52,7 @@ exports['default'] = function (value, part, attrs, metadata) {
 
     var key = typeof arg.key === 'string' ? arg.key.toLowerCase() : arg.key;
     if (key[0] === '=') {
-      var keyValue = parseInt(key.substr(1), 10);
+      var keyValue = Number(key.substr(1));
       return keyValue === numberValue;
     }
 
