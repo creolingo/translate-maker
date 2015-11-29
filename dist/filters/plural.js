@@ -14,6 +14,21 @@ var _cldr = require('cldr');
 
 var _cldr2 = _interopRequireDefault(_cldr);
 
+var _cldrDataSupplementalPlurals = require('cldr-data/supplemental/plurals');
+
+var _cldrDataSupplementalPlurals2 = _interopRequireDefault(_cldrDataSupplementalPlurals);
+
+function test(locale) {
+  var language = locale;
+
+  // Your awesome pluralization logic
+  var pluralForm = _cldrDataSupplementalPlurals2['default'].supplemental["plurals-type-cardinal"][language];
+
+  return pluralForm;
+}
+
+console.log(test('sk'));
+
 var cachePlural = null;
 
 function plural(locale, count) {

@@ -7,7 +7,7 @@ Universal javascript translation library.
 [![Test coverage][coveralls-image]][coveralls-url]
 
 [npm-image]: https://img.shields.io/npm/v/translate-maker.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/CherrySoftware/translate-maker
+[npm-url]: https://www.npmjs.com/translate-maker
 [travis-image]: https://img.shields.io/travis/CherrySoftware/translate-maker/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/CherrySoftware/translate-maker
 [coveralls-image]: https://img.shields.io/coveralls/CherrySoftware/translate-maker/master.svg?style=flat-square
@@ -695,6 +695,12 @@ Value can be:
  * variables ($user.name)
 
 There is no support for pairs as value.
+
+
+# Differences from the ICU MessageFormat syntax
+
+There is only one difference. External variables have $ prefix.
+
 
 # Running Tests
 

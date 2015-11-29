@@ -1,13 +1,31 @@
 import find from 'lodash/collection/find';
-import cldr from 'cldr';
+import plurals from 'make-plural/plurals';
 
 let cachePlural = null;
 
+function localeToLanguage(locale) {
+  if (!locale || locale.length <= 3) {
+    return locale;
+  }
+
+  if (locale.indexOf('_') !== -1) {
+    return locale.split('_')[0];
+  }
+
+  if (locale.indexOf(' ') !== -1) {
+    return locale.split(' ')[0];
+  }
+
+  return locale;
+}
+
 function plural(locale, count) {
   if (!cachePlural || cachePlural.locale !== locale) {
+    const language = localeToLanguage(locale);
+
     cachePlural = {
       locale,
-      fn: cldr.extractPluralRuleFunction(locale),
+      fn: plurals[language],
     };
   }
 
