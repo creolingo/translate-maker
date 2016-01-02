@@ -44,7 +44,7 @@ export default class Translate extends EventEmitter {
       return callback(new Error('Locale is undefined'));
     }
 
-    adapter.get(locale, namespace, (err, data) => {
+    adapter.get(locale, namespace, (err, data = {}) => {
       if (err) {
         return callback(err);
       }
