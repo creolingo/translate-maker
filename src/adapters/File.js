@@ -17,7 +17,7 @@ const defaultOptions = {
 };
 
 export default class File extends Adapter {
-  constructor(options) {
+  constructor(options = {}) {
     if (!options.path) {
       throw new Error('Path is not defined');
     }

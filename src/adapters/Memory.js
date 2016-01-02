@@ -1,12 +1,18 @@
 import Adapter from '../Adapter';
 
 const DEFAULT_NAMESPACE = 'default';
+const defaultOptions = {
+  locales: {},
+};
 
 export default class Memory extends Adapter {
-  constructor(options) {
-    super(options);
+  constructor(options = {}) {
+    super({
+      ...defaultOptions,
+      ...options,
+    });
 
-    this._locales = {};
+    this._locales = this._options.locales;
   }
 
   get(locale, namespace, callback) {
