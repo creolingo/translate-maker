@@ -200,6 +200,10 @@ var Translation = (function () {
     value: function set(name, value, obj) {
       var _this3 = this;
 
+      if (!name) {
+        throw new Error('Name is undefined');
+      }
+
       if ((0, _lodashLangIsPlainObject2['default'])(name)) {
         Object.keys(name).forEach(function (key) {
           _this3.set(key, name[key], obj);

@@ -38,6 +38,10 @@ npm install translate-maker
 - Resource adapters (File, Memory, XHR)
 - Integrates with [React](https://github.com/CherrySoftware/react-translate-maker) and [Angular](https://github.com/CherrySoftware/angular-translate-maker)
 
+# Support us
+
+Star this project on [GitHub][github-url].
+
 # Usage
 
 ### Basic
@@ -703,11 +707,6 @@ There is no support for pairs as value.
 # Differences from the ICU MessageFormat syntax
 
 There is only one difference. External variables have $ prefix.
-
-
-# Support us
-
-Star this project on [GitHub][github-url].
 
 
 # Running Tests

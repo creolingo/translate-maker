@@ -141,6 +141,10 @@ export default class Translation {
   }
 
   set(name, value, obj) {
+    if (!name) {
+      throw new Error('Name is undefined');
+    }
+
     if (isPlainObject(name)) {
       Object.keys(name).forEach((key) => {
         this.set(key, name[key], obj);
