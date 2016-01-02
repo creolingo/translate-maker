@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.2.18",
+  "version": "0.2.19",
   "description": "Universal translation library",
   "main": "dist/index.js",
   "keywords": [
@@ -50,10 +50,10 @@
   "devDependencies": {
     "babel": "^5.8.34",
     "babel-eslint": "^4.1.5",
-    "eslint": "^1.10.1",
-    "eslint-config-airbnb": "^1.0.0",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^0.1.1",
     "eslint-loader": "^1.1.1",
-    "eslint-plugin-react": "^3.10.0",
+    "eslint-plugin-react": "^3.13.1",
     "gulp": "^3.9.0",
     "gulp-mocha": "^2.2.0",
     "gulp-babel": "^5.3.0",
@@ -61,8 +61,9 @@
     "gulp-istanbul": "^0.10.2",
     "gulp-coveralls": "^0.1.4",
     "gulp-peg": "^0.2.0",
-    "should": "^7.1.1",
-    "coveralls": "^2.11.4",
-    "isparta": "^3.5.3"
+    "should": "^8.0.2",
+    "coveralls": "^2.11.6",
+    "isparta": "^3.5.3",
+    "cldr": "papandreou/node-cldr#4b4b0f5c2f9b54d5df5ac0e72ec7eac8ca7ef9d5"
   }
 }

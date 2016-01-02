@@ -207,7 +207,6 @@ var Translation = (function () {
         return this;
       }
 
-      // TODO add dot notation
       var pos = name.indexOf('.');
       if (pos !== -1) {
         var prefix = name.substr(0, pos);

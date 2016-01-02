@@ -8,6 +8,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -16,45 +18,9 @@ var _Translation = require('./Translation');
 
 var _Translation2 = _interopRequireDefault(_Translation);
 
-var _filtersCapitalize = require('./filters/capitalize');
+var _filters = require('./filters');
 
-var _filtersCapitalize2 = _interopRequireDefault(_filtersCapitalize);
-
-var _filtersAs = require('./filters/as');
-
-var _filtersAs2 = _interopRequireDefault(_filtersAs);
-
-var _filtersSelect = require('./filters/select');
-
-var _filtersSelect2 = _interopRequireDefault(_filtersSelect);
-
-var _filtersPlural = require('./filters/plural');
-
-var _filtersPlural2 = _interopRequireDefault(_filtersPlural);
-
-var _filtersCamelCase = require('./filters/camelCase');
-
-var _filtersCamelCase2 = _interopRequireDefault(_filtersCamelCase);
-
-var _filtersTrim = require('./filters/trim');
-
-var _filtersTrim2 = _interopRequireDefault(_filtersTrim);
-
-var _filtersTrunc = require('./filters/trunc');
-
-var _filtersTrunc2 = _interopRequireDefault(_filtersTrunc);
-
-var _filtersEscape = require('./filters/escape');
-
-var _filtersEscape2 = _interopRequireDefault(_filtersEscape);
-
-var _filtersUpperCase = require('./filters/upperCase');
-
-var _filtersUpperCase2 = _interopRequireDefault(_filtersUpperCase);
-
-var _filtersLowerCase = require('./filters/lowerCase');
-
-var _filtersLowerCase2 = _interopRequireDefault(_filtersLowerCase);
+var filters = _interopRequireWildcard(_filters);
 
 var _lodashLangIsPlainObject = require('lodash/lang/isPlainObject');
 
@@ -64,37 +30,96 @@ var _lodashObjectKeys = require('lodash/object/keys');
 
 var _lodashObjectKeys2 = _interopRequireDefault(_lodashObjectKeys);
 
+var _adaptersMemory = require('./adapters/Memory');
+
+var _adaptersMemory2 = _interopRequireDefault(_adaptersMemory);
+
 var defaultOptions = {
-  locale: 'en'
+  locale: null,
+  namespace: null,
+  adapter: new _adaptersMemory2['default']({}),
+  filters: filters
 };
 
 var Translate = (function () {
   function Translate() {
     var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+    var callback = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
 
     _classCallCheck(this, Translate);
 
-    this._options = _extends({}, defaultOptions, {
-      options: options
-    });
+    this._options = _extends({}, defaultOptions, options);
 
-    this._filters = {
-      capitalize: _filtersCapitalize2['default'],
-      as: _filtersAs2['default'],
-      select: _filtersSelect2['default'],
-      plural: _filtersPlural2['default'],
-      camelCase: _filtersCamelCase2['default'],
-      trim: _filtersTrim2['default'],
-      trunc: _filtersTrunc2['default'],
-      escape: _filtersEscape2['default'],
-      upperCase: _filtersUpperCase2['default'],
-      lowerCase: _filtersLowerCase2['default']
-    };
+    this._filters = _extends({}, this._options.filters);
 
     this._translation = new _Translation2['default'](this);
+
+    if (this._options.locale) {
+      this.load(callback);
+    } else if (callback) {
+      callback(null);
+    }
   }
 
   _createClass(Translate, [{
+    key: '_clear',
+    value: function _clear() {
+      // todo remove current translations
+      this._translation = new _Translation2['default'](this);
+    }
+  }, {
+    key: '_loadLocale',
+    value: function _loadLocale(locale, namespace) {
+      var _this = this;
+
+      var callback = arguments.length <= 2 || arguments[2] === undefined ? function () {} : arguments[2];
+
+      var adapter = this.getAdapter();
+      if (!locale) {
+        return callback(new Error('Locale is undefined'));
+      }
+
+      adapter.get(locale, namespace, function (err, data) {
+        if (err) {
+          return callback(err);
+        }
+
+        var options = _this.getOptions();
+        if (namespace && namespace !== options.namespace) {
+          _this.set(namespace, data);
+        } else {
+          _this.set(data);
+        }
+
+        callback(null, data);
+      });
+    }
+  }, {
+    key: 'load',
+    value: function load(namespace, callback) {
+      if (typeof namespace === 'function') {
+        return this.load(null, namespace);
+      }
+
+      var options = this.getOptions();
+      this._loadLocale(options.locale, namespace || options.namespace, callback);
+    }
+  }, {
+    key: 'setLocale',
+    value: function setLocale(locale, callback) {
+      var options = this.getOptions();
+      if (options.locale === locale) {
+        return;
+      }
+
+      this._options = _extends({}, this.getOptions(), {
+        locale: locale
+      });
+
+      this._clear();
+      this.load(callback);
+    }
+  }, {
     key: 'get',
     value: function get(path, attrs) {
       return this._translation.get(path, attrs);
@@ -105,6 +130,11 @@ var Translate = (function () {
       return this._translation.set(name, value, this);
     }
   }, {
+    key: 'getAdapter',
+    value: function getAdapter() {
+      return this.getOptions().adapter;
+    }
+  }, {
     key: 'getOptions',
     value: function getOptions() {
       return this._options;
@@ -112,13 +142,13 @@ var Translate = (function () {
   }, {
     key: 'setFilter',
     value: function setFilter(type, fn) {
-      var _this = this;
+      var _this2 = this;
 
       if ((0, _lodashLangIsPlainObject2['default'])(type)) {
         (0, _lodashObjectKeys2['default'])(type).forEach(function (filterType) {
           var filter = type[filterType];
 
-          _this.setFilter(filterType, filter);
+          _this2.setFilter(filterType, filter);
         });
 
         return;

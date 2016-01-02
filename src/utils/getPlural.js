@@ -6,7 +6,7 @@ const supported = new localeResolver.Locales(keys(plurals));
 
 let cachePlural = null;
 
-function localeToLanguage(locale, defaultValue) {
+export function localeToLanguage(locale, defaultValue) {
   const language = (new localeResolver.Locales(locale)).best(supported).toString();
 
   return language || defaultValue;

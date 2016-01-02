@@ -21,14 +21,13 @@ export default function(value, part, attrs, metadata, ...args) {
     ? numberValue - offset
     : value;
 
-
   let defaultOption = null;
   const option = find(args, (arg) => {
     if (arg.type !== 'pair') {
       return false;
     }
 
-    if (!arg.key) {
+    if (!arg.key || arg.key === 'other') {
       defaultOption = arg;
       return false;
     }

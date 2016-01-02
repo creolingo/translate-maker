@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+exports.localeToLanguage = localeToLanguage;
 exports['default'] = getPlural;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -43,5 +44,3 @@ function getPlural(locale) {
 
   return cachePlural.fn;
 }
-
-module.exports = exports['default'];

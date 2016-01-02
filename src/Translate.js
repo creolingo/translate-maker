@@ -1,42 +1,85 @@
 import Translation from './Translation';
-import capitalize from './filters/capitalize';
-import as from './filters/as';
-import select from './filters/select';
-import plural from './filters/plural';
-import camelCase from './filters/camelCase';
-import trim from './filters/trim';
-import trunc from './filters/trunc';
-import escape from './filters/escape';
-import upperCase from './filters/upperCase';
-import lowerCase from './filters/lowerCase';
+import * as filters from './filters';
 import isPlainObject from 'lodash/lang/isPlainObject';
 import keys from 'lodash/object/keys';
+import MemoryAdapter from './adapters/Memory';
 
 const defaultOptions = {
-  locale: 'en',
+  locale: null,
+  namespace: null,
+  adapter: new MemoryAdapter({}),
+  filters,
 };
 
 export default class Translate {
-  constructor(options = {}) {
+  constructor(options = {}, callback = () => {}) {
     this._options = {
       ...defaultOptions,
-      options,
+      ...options,
     };
 
     this._filters = {
-      capitalize,
-      as,
-      select,
-      plural,
-      camelCase,
-      trim,
-      trunc,
-      escape,
-      upperCase,
-      lowerCase,
+      ...this._options.filters,
     };
 
     this._translation = new Translation(this);
+
+    if (this._options.locale) {
+      this.load(callback);
+    } else if (callback) {
+      callback(null);
+    }
+  }
+
+  _clear() {
+    // todo remove current translations
+    this._translation = new Translation(this);
+  }
+
+  _loadLocale(locale, namespace, callback = () => {}) {
+    const adapter = this.getAdapter();
+    if (!locale) {
+      return callback(new Error('Locale is undefined'));
+    }
+
+    adapter.get(locale, namespace, (err, data) => {
+      if (err) {
+        return callback(err);
+      }
+
+      const options = this.getOptions();
+      if (namespace && namespace !== options.namespace) {
+        this.set(namespace, data);
+      } else {
+        this.set(data);
+      }
+
+      callback(null, data);
+    });
+  }
+
+  load(namespace, callback) {
+    if (typeof namespace === 'function') {
+      return this.load(null, namespace);
+    }
+
+    const options = this.getOptions();
+    this._loadLocale(options.locale, namespace || options.namespace, callback);
+  }
+
+  setLocale(locale, callback) {
+    const options = this.getOptions();
+    if (options.locale === locale) {
+      return;
+    }
+
+    this._options = {
+      ...this.getOptions(),
+      locale,
+    };
+
+    this._clear();
+    this.load(callback);
   }
 
   get(path, attrs) {
@@ -45,6 +88,10 @@ export default class Translate {
 
   set(name, value) {
     return this._translation.set(name, value, this);
+  }
+
+  getAdapter() {
+    return this.getOptions().adapter;
   }
 
   getOptions() {

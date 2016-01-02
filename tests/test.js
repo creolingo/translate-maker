@@ -1,112 +1,25 @@
 import should from 'should';
-import Translate, { Plural } from '../src';
+import Translate, { Plural, Gender, File } from '../src';
 import keymirror from 'keymirror';
-
-const Gender = keymirror({
-  MALE: null,
-  FEMALE: null,
-  OTHER: null,
-});
 
 describe('Translate', () => {
   let t = null;
 
-  it('should be able to create instance', function(done) {
+  it('should be able to create instance', (done) => {
     t = new Translate({
-      locale: 'sk_SK',
-    });
-    done();
+      adapter: new File({
+        path: __dirname + '/locales',
+      }),
+    }, done);
+  });
+
+  it('should be able to load locale', (done) => {
+    t.setLocale('sk_SK', done);
   });
 
   it('set simple translation property', () => {
     t.set('varName', 'Adam');
     t.set('varName', 'Peter');
-  });
-
-  it('set complex translation properties', () => {
-    t.set({
-      name: 'Zlatko {$lastName}', // external variable
-      about: 'About { nameComplex.short.possessive }', // text with local nested variable,
-      aboutDefault: 'About {  nameComplex   }', // text with local variable "name",
-      nameComplex: { // nested object
-        _short: {
-          objective: 'Zlatko', // default value
-          _subjective: 'Zlatik',
-          possessive: 'Zlatkove',
-        },
-        long: 'Zlatko Fedor',
-      },
-      user: {
-        crashedByGender: `{$gender, select,
-          ${Gender.MALE} {spadol}
-          ${Gender.FEMALE} {spadla}
-          ${Gender.OTHER} {spadol/a}
-        }`,
-        crashed: `{$user1.firstName} {user.crashedByGender, $user1.gender as gender} a {$user2.firstName} {user.crashedByGender, $user2.gender as gender}`,
-      },
-      dayparts: {
-        _morning: 'morning',
-        afternoon: 'afternoon',
-        evening: 'evening',
-      },
-      emptyVariable: 'This is empty \\{\\} variable',
-      emptyExternalVariable: 'This is empty \\{$\\} external variable',
-      'dot.notation.test': 'Hello dot notation {$name}',
-      greeting: 'Good {dayparts.$daypart} {$user.firstName}',
-      escaped: 'Good \\{dayparts.$daypartVariant\\} \\{$user.firstName\\}',
-      gender: `{$gender, select, MALE {boy} FEMALE {girl}}`,
-      working: `{$user1.gender, select,
-        MALE {Boy}
-        FEMALE {Girl}
-      } {$user1.name} working with {$user2.gender, select,
-        MALE   {boy}
-        FEMALE {girl}
-               {boy or girl named}
-      } {$user2.name}`,
-      working2: `{gender, $user1.gender as gender | capitalize} {$user1.name} working with {gender, $user2.gender as gender} {$user2.name}`,
-
-      followers: `{$user.name} has {$user.followers, plural,
-        ${Plural.ZERO} {no followers}
-        ${Plural.ONE} {{$user.followers} follower}
-        ${Plural.OTHER} {{$user.followers} followers}
-      }`,
-
-      followersSmart: `{$user.name} has {$user.followers, plural,
-        =0 {no followers}
-        =1 {# follower}
-           {# followers}
-      }`,
-      ICU: `{$gender_of_host, select,
-        female {{$num_guests, plural, offset:1
-            =0 {{$host} does not give a party.}
-            =1 {{$host} invites {$guest} to her party.}
-            =2 {{$host} invites {$guest} and one other person to her party.}
-            other {{$host} invites {$guest} and # other people to her party.}}}
-        male {{$num_guests, plural, offset:1
-            =0 {{$host} does not give a party.}
-            =1 {{$host} invites {$guest} to his party.}
-            =2 {{$host} invites {$guest} and one other person to his party.}
-            other {{$host} invites {$guest} and # other people to his party.}}}
-        other {{$num_guests, plural, offset:1
-            =0 {{$host} does not give a party.}
-            =1 {{$host} invites {$guest} to their party.}
-            =2 {{$host} invites {$guest} and one other person to their party.}
-            other {{$host} invites {$guest} and # other people to their party.}
-          }
-        }
-      }`,
-      pluralWithoutPairs: `{$count, plural, 5, 6, 7}`,
-      badTranslation: `{this is very bad`,
-      customFilter: 'This is {$name | test}',
-      selectWithoutPairs: `{$count, select, 5, 6, 7}`,
-      filter: {
-        trim: 'Trim this {$value | trim}',
-        trim2: 'Trim this {$value, trim}',
-        trunc: `Trunc this {$value | trunc, 7, '..'}`,
-        upperCase: 'This is {$value | upperCase }',
-        lowerCase: 'This is {$value | lowerCase }',
-      }
-    });
   });
 
   it('get simple translation with variable', () => {
@@ -179,18 +92,18 @@ describe('Translate', () => {
   it('should be able to use conditioned translation with complex variables', () => {
     t.get('working', {
       user1: {
-        gender: 'MALE',
+        gender: 'male',
         name: 'Zlatko',
       },
       user2: {
-        gender: 'FEMALE',
+        gender: 'female',
         name: 'Livia',
       }
     }).should.equal('Boy Zlatko working with girl Livia');
 
     t.get('working', {
       user1: {
-        gender: 'MALE',
+        gender: 'male',
         name: 'Zlatko',
       },
       user2: {
@@ -200,11 +113,11 @@ describe('Translate', () => {
 
     t.get('working2', {
       user1: {
-        gender: 'MALE',
+        gender: 'male',
         name: 'Zlatko',
       },
       user2: {
-        gender: 'FEMALE',
+        gender: 'female',
         name: 'Livia',
       }
     }).should.equal('Boy Zlatko working with girl Livia');
@@ -326,5 +239,13 @@ describe('Translate', () => {
     should(t.get('filter.upperCase', {
       value: 'upperCase',
     })).equal('This is UPPERCASE');
+  });
+
+  it('should be able to load namespace', (done) => {
+    t.load('widget', done);
+  });
+
+  it('should be able to use namespace translation', () => {
+    should(t.widget.test.get()).equal('widget test');
   });
 });

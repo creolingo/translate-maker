@@ -7,7 +7,7 @@ export default function(value, part, attrs, metadata, ...args) {
       return false;
     }
 
-    if (!arg.key) {
+    if (!arg.key || arg.key === 'other') {
       defaultOption = arg;
       return false;
     }

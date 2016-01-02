@@ -148,7 +148,6 @@ export default class Translation {
       return this;
     }
 
-    // TODO add dot notation
     const pos = name.indexOf('.');
     if (pos !== -1) {
       const prefix = name.substr(0, pos);
