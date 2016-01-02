@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "description": "Universal translation library",
   "main": "dist/index.js",
   "keywords": [
@@ -42,6 +42,7 @@
   },
   "homepage": "https://github.com/CherrySoftware/translate-maker",
   "dependencies": {
+    "events": "^1.1.0",
     "keymirror": "^0.1.1",
     "lodash": "^3.10.1",
     "make-plural": "^3.0.3",

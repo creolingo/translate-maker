@@ -8,11 +8,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x4, _x5, _x6) { var _again = true; _function: while (_again) { var object = _x4, property = _x5, receiver = _x6; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x4 = parent; _x5 = property; _x6 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _Translation = require('./Translation');
 
@@ -34,19 +38,29 @@ var _adaptersMemory = require('./adapters/Memory');
 
 var _adaptersMemory2 = _interopRequireDefault(_adaptersMemory);
 
+var _events = require('events');
+
+var _events2 = _interopRequireDefault(_events);
+
 var defaultOptions = {
-  locale: null,
-  namespace: null,
+  locale: null, // current locale
+  locales: null, // available locales
+  namespace: null, // current namespace
+  fallbacks: {},
   adapter: new _adaptersMemory2['default']({}),
   filters: filters
 };
 
-var Translate = (function () {
+var Translate = (function (_EventEmitter) {
+  _inherits(Translate, _EventEmitter);
+
   function Translate() {
     var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
     var callback = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
 
     _classCallCheck(this, Translate);
+
+    _get(Object.getPrototypeOf(Translate.prototype), 'constructor', this).call(this);
 
     this._options = _extends({}, defaultOptions, options);
 
@@ -109,7 +123,9 @@ var Translate = (function () {
     value: function setLocale(locale, callback) {
       var options = this.getOptions();
       if (options.locale === locale) {
-        return;
+        return callback(null);
+      } else if (options.locales && options.locales.indexOf(locale) === -1) {
+        return callback(new Error('Locale is not allowed. Setup locales'));
       }
 
       this._options = _extends({}, this.getOptions(), {
@@ -118,6 +134,8 @@ var Translate = (function () {
 
       this._clear();
       this.load(callback);
+
+      this.emit('locale', locale);
     }
   }, {
     key: 'get',
@@ -164,7 +182,7 @@ var Translate = (function () {
   }]);
 
   return Translate;
-})();
+})(_events2['default']);
 
 exports['default'] = Translate;
 module.exports = exports['default'];

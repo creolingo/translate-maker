@@ -3,16 +3,21 @@ import * as filters from './filters';
 import isPlainObject from 'lodash/lang/isPlainObject';
 import keys from 'lodash/object/keys';
 import MemoryAdapter from './adapters/Memory';
+import EventEmitter from 'events';
 
 const defaultOptions = {
-  locale: null,
-  namespace: null,
+  locale: null, // current locale
+  locales: null, // available locales
+  namespace: null, // current namespace
+  fallbacks: {},
   adapter: new MemoryAdapter({}),
   filters,
 };
 
-export default class Translate {
+export default class Translate extends EventEmitter {
   constructor(options = {}, callback = () => {}) {
+    super();
+
     this._options = {
       ...defaultOptions,
       ...options,
@@ -70,7 +75,9 @@ export default class Translate {
   setLocale(locale, callback) {
     const options = this.getOptions();
     if (options.locale === locale) {
-      return;
+      return callback(null);
+    } else if (options.locales && options.locales.indexOf(locale) === -1) {
+      return callback(new Error('Locale is not allowed. Setup locales'));
     }
 
     this._options = {
@@ -80,6 +87,8 @@ export default class Translate {
 
     this._clear();
     this.load(callback);
+
+    this.emit('locale', locale);
   }
 
   get(path, attrs) {
