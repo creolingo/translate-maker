@@ -2,6 +2,7 @@ import Translation from './Translation';
 import * as filters from './filters';
 import isPlainObject from 'lodash/lang/isPlainObject';
 import keys from 'lodash/object/keys';
+import forOwn from 'lodash/object/forOwn';
 import MemoryAdapter from './adapters/Memory';
 import EventEmitter from 'events';
 
@@ -23,16 +24,12 @@ export default class Translate extends EventEmitter {
       ...options,
     };
 
-    this._filters = {
-      ...this._options.filters,
-    };
-
     this._translation = new Translation(this);
 
     if (this._options.locale) {
       this.load(callback);
     } else if (callback) {
-      callback(null);
+      callback(null, {});
     }
   }
 
@@ -99,12 +96,12 @@ export default class Translate extends EventEmitter {
     return this._translation.set(name, value, this);
   }
 
-  getAdapter() {
-    return this.getOptions().adapter;
-  }
-
   getOptions() {
     return this._options;
+  }
+
+  getAdapter() {
+    return this.getOptions().adapter;
   }
 
   setFilter(type, fn) {
@@ -118,10 +115,10 @@ export default class Translate extends EventEmitter {
       return;
     }
 
-    this._filters[type] = fn;
+    this.getOptions().filters[type] = fn;
   }
 
   getFilter(type) {
-    return this._filters[type];
+    return this.getOptions().filters[type];
   }
 }

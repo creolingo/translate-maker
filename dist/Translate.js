@@ -34,6 +34,10 @@ var _lodashObjectKeys = require('lodash/object/keys');
 
 var _lodashObjectKeys2 = _interopRequireDefault(_lodashObjectKeys);
 
+var _lodashObjectForOwn = require('lodash/object/forOwn');
+
+var _lodashObjectForOwn2 = _interopRequireDefault(_lodashObjectForOwn);
+
 var _adaptersMemory = require('./adapters/Memory');
 
 var _adaptersMemory2 = _interopRequireDefault(_adaptersMemory);
@@ -64,14 +68,12 @@ var Translate = (function (_EventEmitter) {
 
     this._options = _extends({}, defaultOptions, options);
 
-    this._filters = _extends({}, this._options.filters);
-
     this._translation = new _Translation2['default'](this);
 
     if (this._options.locale) {
       this.load(callback);
     } else if (callback) {
-      callback(null);
+      callback(null, {});
     }
   }
 
@@ -148,14 +150,14 @@ var Translate = (function (_EventEmitter) {
       return this._translation.set(name, value, this);
     }
   }, {
-    key: 'getAdapter',
-    value: function getAdapter() {
-      return this.getOptions().adapter;
-    }
-  }, {
     key: 'getOptions',
     value: function getOptions() {
       return this._options;
+    }
+  }, {
+    key: 'getAdapter',
+    value: function getAdapter() {
+      return this.getOptions().adapter;
     }
   }, {
     key: 'setFilter',
@@ -172,12 +174,12 @@ var Translate = (function (_EventEmitter) {
         return;
       }
 
-      this._filters[type] = fn;
+      this.getOptions().filters[type] = fn;
     }
   }, {
     key: 'getFilter',
     value: function getFilter(type) {
-      return this._filters[type];
+      return this.getOptions().filters[type];
     }
   }]);
 
