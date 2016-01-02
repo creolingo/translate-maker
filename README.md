@@ -1,6 +1,7 @@
 # Translate Maker
 
 Universal javascript translation library.
+Star this project on [GitHub][github-url].
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
@@ -12,6 +13,7 @@ Universal javascript translation library.
 [travis-url]: https://travis-ci.org/CherrySoftware/translate-maker
 [coveralls-image]: https://img.shields.io/coveralls/CherrySoftware/translate-maker/master.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/CherrySoftware/translate-maker?branch=master
+[github-url]: https://github.com/CherrySoftware/translate-maker
 
 
 # Installation
@@ -33,6 +35,7 @@ npm install translate-maker
 - Conditioned translations (Plural, Gender etc...)
 - Filters capitalize, upperCase, lowerCase etc... and custom filters
 - Default translations
+- Resource adapters (File, Memory, XHR)
 - Integrates with [React](https://github.com/CherrySoftware/react-translate-maker) and [Angular](https://github.com/CherrySoftware/angular-translate-maker)
 
 # Usage
@@ -700,6 +703,11 @@ There is no support for pairs as value.
 # Differences from the ICU MessageFormat syntax
 
 There is only one difference. External variables have $ prefix.
+
+
+# Support us
+
+Star this project on [GitHub][github-url].
 
 
 # Running Tests
