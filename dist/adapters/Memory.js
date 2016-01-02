@@ -41,7 +41,7 @@ var Memory = (function (_Adapter) {
       var locales = this._locales;
       var data = locales[locale];
       if (!data || !data[namespace]) {
-        return callback(null, null);
+        return callback(null, void 0);
       }
 
       callback(null, data[namespace]);

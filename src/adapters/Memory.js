@@ -17,7 +17,7 @@ export default class Memory extends Adapter {
     const locales = this._locales;
     const data = locales[locale];
     if (!data || !data[namespace]) {
-      return callback(null, null);
+      return callback(null, void 0);
     }
 
     callback(null, data[namespace]);
