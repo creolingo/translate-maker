@@ -15,6 +15,8 @@ Star this project on [GitHub][github-url].
 [coveralls-url]: https://coveralls.io/r/CherrySoftware/translate-maker?branch=master
 [github-url]: https://github.com/CherrySoftware/translate-maker
 
+[combinations-hash]: https://github.com/CherrySoftware/translate-maker#combination-external-variables-and-references
+
 
 # Installation
 
@@ -707,7 +709,39 @@ There is no support for pairs as value.
 
 # Differences from the ICU MessageFormat syntax
 
-There is only one difference. External variables have $ prefix.
+There is only one difference. External variables have $ prefix. If you want to use full compatible ICU standard you can do that. Set option named mode to ICU. FYI: [combinations][combinations-hash] will stop to work because it is not compatible with ICU standard.
+
+```js
+import Translate, { Mode } from 'translate-maker';
+
+const t = new Translate({
+  mode: Mode.ICU,
+});
+
+t.set({
+  following: `{user.name} {user.followers, plural, offset: 1
+    zero {follows nobody}
+    one  {follows {follower.name}}
+         {follows {follower.name} and # others}
+  }`
+});
+
+const user = {
+  name: 'Zlatko',
+  followers: 3,
+};
+
+const follower = {
+  name: 'Livia'
+};
+
+const result = t.get('following', {
+  user: user,
+  follower: follower
+});
+
+console.log('result'); // => Zlatko follows Livia and 2 others
+```
 
 
 # Running Tests

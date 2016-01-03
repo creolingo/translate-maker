@@ -42,9 +42,9 @@ var _adaptersMemory = require('./adapters/Memory');
 
 var _adaptersMemory2 = _interopRequireDefault(_adaptersMemory);
 
-var _cacheMemory = require('./cache/Memory');
+var _cachesMemory = require('./caches/Memory');
 
-var _cacheMemory2 = _interopRequireDefault(_cacheMemory);
+var _cachesMemory2 = _interopRequireDefault(_cachesMemory);
 
 var _events = require('events');
 
@@ -59,7 +59,7 @@ var defaultOptions = {
   locales: null, // available locales
   namespace: null, // current namespace
   fallbacks: {},
-  cache: new _cacheMemory2['default']({}),
+  cache: new _cachesMemory2['default']({}),
   adapter: new _adaptersMemory2['default']({}),
   defaultAdapter: _adaptersMemory2['default'],
   dotNotation: true,
