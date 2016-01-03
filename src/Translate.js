@@ -79,7 +79,7 @@ export default class Translate extends EventEmitter {
     });
   }
 
-  load(namespace, callback) {
+  load(namespace, callback = () => {}) {
     if (typeof namespace === 'function') {
       return this.load(null, namespace);
     }
@@ -88,7 +88,7 @@ export default class Translate extends EventEmitter {
     this._loadLocale(options.locale, namespace || options.namespace, callback);
   }
 
-  setLocale(locale, callback) {
+  setLocale(locale, callback = () => {}) {
     const options = this.getOptions();
     if (options.locale === locale) {
       return callback(null);
