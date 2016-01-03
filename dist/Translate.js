@@ -50,6 +50,10 @@ var _events = require('events');
 
 var _events2 = _interopRequireDefault(_events);
 
+var _constantsMode = require('./constants/Mode');
+
+var _constantsMode2 = _interopRequireDefault(_constantsMode);
+
 var defaultOptions = {
   locale: null, // current locale
   locales: null, // available locales
@@ -59,6 +63,10 @@ var defaultOptions = {
   adapter: new _adaptersMemory2['default']({}),
   defaultAdapter: _adaptersMemory2['default'],
   dotNotation: true,
+  mode: _constantsMode2['default'].MAIN,
+  references: true,
+  variables: true,
+  combinations: true,
   filters: filters
 };
 

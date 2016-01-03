@@ -1,5 +1,5 @@
 import should from 'should';
-import Translate, { Plural, Gender, File } from '../src';
+import Translate, { Plural, Gender, Adapters, Mode } from '../src';
 import keymirror from 'keymirror';
 
 describe('Translate', () => {
@@ -7,7 +7,7 @@ describe('Translate', () => {
 
   it('should be able to create instance', (done) => {
     t = new Translate({
-      adapter: new File({
+      adapter: new Adapters.File({
         path: __dirname + '/locales',
       }),
     }, done);
@@ -263,6 +263,28 @@ describe('Translate', () => {
       }
 
       translate.test.get().should.equal('123');
+      done();
+    });
+  });
+
+  it('should be able to use ICU mode', (done) => {
+    const t = new Translate({
+      mode: Mode.ICU,
+      locale: 'sk',
+      adapter: {
+        sk: {
+          icu: 'ICU',
+          test: 'Hello {name} {$icu}',
+        }
+      },
+    }, (err , translate) => {
+      if (err) {
+        throw err;
+      }
+
+      translate.test.get({
+        name: 'Zlatko'
+      }).should.equal('Hello Zlatko ICU');
       done();
     });
   });

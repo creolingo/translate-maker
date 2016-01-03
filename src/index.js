@@ -1,12 +1,21 @@
 import Translate from './Translate';
 import Translation from './Translation';
+
 import Plural from './constants/Plural';
 import Gender from './constants/Gender';
-import Adapter from './adapters/Adapter';
-import File from './adapters/File';
-import Memory from './adapters/Memory';
+import Mode from './constants/Mode';
 
-export { Adapter, Plural, Gender, Translation };
-export { File, Memory };
+import * as Adapters from './adapters';
+import * as Caches from './caches';
 
+// export constants
+export { Plural, Gender, Mode };
+
+// export modules
+export { Adapters, Caches };
+
+// export classes
+export { Translation };
+
+// export main class
 export default Translate;

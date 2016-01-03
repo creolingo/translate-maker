@@ -4,8 +4,9 @@ import isPlainObject from 'lodash/lang/isPlainObject';
 import keys from 'lodash/object/keys';
 import forOwn from 'lodash/object/forOwn';
 import MemoryAdapter from './adapters/Memory';
-import MemoryCache from './cache/Memory';
+import MemoryCache from './caches/Memory';
 import EventEmitter from 'events';
+import Mode from './constants/Mode';
 
 const defaultOptions = {
   locale: null, // current locale
@@ -16,6 +17,10 @@ const defaultOptions = {
   adapter: new MemoryAdapter({}),
   defaultAdapter: MemoryAdapter,
   dotNotation: true,
+  mode: Mode.MAIN,
+  references: true,
+  variables: true,
+  combinations: true,
   filters,
 };
 

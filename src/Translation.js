@@ -6,6 +6,7 @@ import get from 'lodash/object/get';
 import reduce from 'lodash/collection/reduce';
 import forOwn from 'lodash/object/forOwn';
 import parser from './parser/parser';
+import Mode from './constants/Mode';
 
 const EMPTY_TEXT = '';
 
@@ -38,12 +39,24 @@ export default class Translation {
   resolveValue(item = {}, attrs = {}) {
     const { type, path } = item;
     const root = this._root;
+    const options = this.getOptions();
 
-    if (type === 'reference') {
+    if (options.mode === Mode.ICU) {
+      // ICU is without combinations
+      if (options.references && type === 'variable') {
+        return root.get(path, attrs);
+      } else if (options.variables && type === 'reference') {
+        return get(attrs, path);
+      }
+
+      return void 0;
+    }
+
+    if (options.references && type === 'reference') {
       return root.get(path, attrs);
-    } else if (type === 'variable') {
+    } else if (options.variables && type === 'variable') {
       return get(attrs, path);
-    } else if (type === 'combination') {
+    } else if (options.combinations && type === 'combination') {
       const referencePath = path[0].path;
       const variablePath = path[1].path;
 

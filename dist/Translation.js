@@ -46,6 +46,10 @@ var _parserParser = require('./parser/parser');
 
 var _parserParser2 = _interopRequireDefault(_parserParser);
 
+var _constantsMode = require('./constants/Mode');
+
+var _constantsMode2 = _interopRequireDefault(_constantsMode);
+
 var EMPTY_TEXT = '';
 
 var Translation = (function () {
@@ -89,12 +93,24 @@ var Translation = (function () {
       var path = item.path;
 
       var root = this._root;
+      var options = this.getOptions();
 
-      if (type === 'reference') {
+      if (options.mode === _constantsMode2['default'].ICU) {
+        // ICU is without combinations
+        if (options.references && type === 'variable') {
+          return root.get(path, attrs);
+        } else if (options.variables && type === 'reference') {
+          return (0, _lodashObjectGet2['default'])(attrs, path);
+        }
+
+        return void 0;
+      }
+
+      if (options.references && type === 'reference') {
         return root.get(path, attrs);
-      } else if (type === 'variable') {
+      } else if (options.variables && type === 'variable') {
         return (0, _lodashObjectGet2['default'])(attrs, path);
-      } else if (type === 'combination') {
+      } else if (options.combinations && type === 'combination') {
         var referencePath = path[0].path;
         var variablePath = path[1].path;
 
