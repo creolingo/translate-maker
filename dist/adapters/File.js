@@ -32,8 +32,9 @@ function getPath(options, namespace, fileName) {
 }
 
 var defaultOptions = {
+  path: void 0,
+  getFile: void 0,
   getPath: getPath,
-  getFile: null,
   ext: '.js'
 };
 
@@ -45,8 +46,8 @@ var File = (function (_Adapter) {
 
     _classCallCheck(this, File);
 
-    if (!options.path) {
-      throw new Error('Path is not defined');
+    if (!options.path && !options.getFile) {
+      throw new Error('You need to set path or getFile');
     }
 
     _get(Object.getPrototypeOf(File.prototype), 'constructor', this).call(this, _extends({}, defaultOptions, options));

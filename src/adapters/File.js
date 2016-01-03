@@ -12,15 +12,16 @@ function getPath(options, namespace, fileName) {
 }
 
 const defaultOptions = {
+  path: void 0,
+  getFile: void 0,
   getPath,
-  getFile: null,
   ext: '.js',
 };
 
 export default class File extends Adapter {
   constructor(options = {}) {
-    if (!options.path) {
-      throw new Error('Path is not defined');
+    if (!options.path && !options.getFile) {
+      throw new Error('You need to set path or getFile');
     }
 
     super({
