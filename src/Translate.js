@@ -106,9 +106,7 @@ export default class Translate extends EventEmitter {
 
   setFilter(type, fn) {
     if (isPlainObject(type)) {
-      keys(type).forEach((filterType) => {
-        const filter = type[filterType];
-
+      forOwn(type, (filter, filterType) => {
         this.setFilter(filterType, filter);
       });
 

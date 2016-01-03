@@ -167,9 +167,7 @@ var Translate = (function (_EventEmitter) {
       var _this2 = this;
 
       if ((0, _lodashLangIsPlainObject2['default'])(type)) {
-        (0, _lodashObjectKeys2['default'])(type).forEach(function (filterType) {
-          var filter = type[filterType];
-
+        (0, _lodashObjectForOwn2['default'])(type, function (filter, filterType) {
           _this2.setFilter(filterType, filter);
         });
 

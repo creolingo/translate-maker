@@ -20,9 +20,16 @@ var _Adapter2 = require('../Adapter');
 
 var _Adapter3 = _interopRequireDefault(_Adapter2);
 
-var DEFAULT_NAMESPACE = 'default';
+var _lodashObjectGet = require('lodash/object/get');
+
+var _lodashObjectGet2 = _interopRequireDefault(_lodashObjectGet);
+
+var _lodashObjectSet = require('lodash/object/set');
+
+var _lodashObjectSet2 = _interopRequireDefault(_lodashObjectSet);
+
 var defaultOptions = {
-  locales: {}
+  data: {}
 };
 
 var Memory = (function (_Adapter) {
@@ -35,40 +42,50 @@ var Memory = (function (_Adapter) {
 
     _get(Object.getPrototypeOf(Memory.prototype), 'constructor', this).call(this, _extends({}, defaultOptions, options));
 
-    this._locales = this._options.locales;
+    this._data = this._options.data || {};
   }
 
   _createClass(Memory, [{
+    key: 'getData',
+    value: function getData() {
+      return _extends({}, this._data);
+    }
+  }, {
+    key: 'getPath',
+    value: function getPath(locale, namespace) {
+      return namespace ? namespace + '.' + locale : locale;
+    }
+  }, {
     key: 'get',
     value: function get(locale, namespace, callback) {
       if (typeof namespace === 'function') {
-        return this.get(locale, DEFAULT_NAMESPACE, namespace);
+        return this.get(locale, void 0, namespace);
       }
 
-      var locales = this._locales;
-      var data = locales[locale];
-      if (!data || !data[namespace]) {
-        return callback(null, void 0);
+      if (!locale) {
+        return callback(new Error('Locale is undefined'));
       }
 
-      callback(null, data[namespace]);
+      var path = this.getPath(locale, namespace);
+
+      callback(null, (0, _lodashObjectGet2['default'])(this._data, path));
     }
   }, {
     key: 'set',
-    value: function set(locale, data, namespace, callback) {
+    value: function set(locale, value, namespace, callback) {
       if (typeof namespace === 'function') {
-        return this.set(locale, data, DEFAULT_NAMESPACE, namespace);
+        return this.set(locale, value, void 0, namespace);
       }
 
-      var locales = this._locales;
-      if (!locales[locale]) {
-        locales[locale] = {};
+      if (!locale) {
+        return callback(new Error('Locale is undefined'));
       }
 
-      var dataLocale = locales[locale];
-      dataLocale[namespace] = data;
+      var path = this.getPath(locale, namespace);
 
-      callback(null, data);
+      (0, _lodashObjectSet2['default'])(this._data, path, value);
+
+      callback(null);
     }
   }]);
 

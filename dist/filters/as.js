@@ -10,6 +10,10 @@ var _lodashObjectSet = require('lodash/object/set');
 
 var _lodashObjectSet2 = _interopRequireDefault(_lodashObjectSet);
 
+var _lodashCollectionForEach = require('lodash/collection/forEach');
+
+var _lodashCollectionForEach2 = _interopRequireDefault(_lodashCollectionForEach);
+
 exports['default'] = function (value, part, attrs, metadata) {
   var _this = this;
 
@@ -19,7 +23,7 @@ exports['default'] = function (value, part, attrs, metadata) {
     args[_key - 4] = arguments[_key];
   }
 
-  args.forEach(function (param) {
+  (0, _lodashCollectionForEach2['default'])(args, function (param) {
     var from = param.from;
     var to = param.to;
 

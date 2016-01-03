@@ -4,6 +4,7 @@ import find from 'lodash/collection/find';
 import reject from 'lodash/collection/reject';
 import get from 'lodash/object/get';
 import reduce from 'lodash/collection/reduce';
+import forOwn from 'lodash/object/forOwn';
 import parser from './parser/parser';
 
 const EMPTY_TEXT = '';
@@ -20,8 +21,8 @@ export default class Translation {
     this._children = [];
 
     if (isPlainObject(value)) {
-      Object.keys(value).forEach((key) => {
-        this.set(key, value[key]);
+      forOwn(value, (itemValue, key) => {
+        this.set(key, itemValue);
       });
     }
   }
@@ -146,8 +147,8 @@ export default class Translation {
     }
 
     if (isPlainObject(name)) {
-      Object.keys(name).forEach((key) => {
-        this.set(key, name[key], obj);
+      forOwn(name, (nameValue, key) => {
+        this.set(key, nameValue, obj);
       });
       return this;
     }

@@ -38,6 +38,10 @@ var _lodashCollectionReduce = require('lodash/collection/reduce');
 
 var _lodashCollectionReduce2 = _interopRequireDefault(_lodashCollectionReduce);
 
+var _lodashObjectForOwn = require('lodash/object/forOwn');
+
+var _lodashObjectForOwn2 = _interopRequireDefault(_lodashObjectForOwn);
+
 var _parserParser = require('./parser/parser');
 
 var _parserParser2 = _interopRequireDefault(_parserParser);
@@ -60,8 +64,8 @@ var Translation = (function () {
     this._children = [];
 
     if ((0, _lodashLangIsPlainObject2['default'])(value)) {
-      Object.keys(value).forEach(function (key) {
-        _this.set(key, value[key]);
+      (0, _lodashObjectForOwn2['default'])(value, function (itemValue, key) {
+        _this.set(key, itemValue);
       });
     }
   }
@@ -205,8 +209,8 @@ var Translation = (function () {
       }
 
       if ((0, _lodashLangIsPlainObject2['default'])(name)) {
-        Object.keys(name).forEach(function (key) {
-          _this3.set(key, name[key], obj);
+        (0, _lodashObjectForOwn2['default'])(name, function (nameValue, key) {
+          _this3.set(key, nameValue, obj);
         });
         return this;
       }
