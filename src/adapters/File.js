@@ -13,6 +13,7 @@ function getPath(options, namespace, fileName) {
 
 const defaultOptions = {
   getPath,
+  getFile: null,
   ext: '.js',
 };
 
@@ -34,7 +35,11 @@ export default class File extends Adapter {
     }
 
     const options = this.getOptions();
-    const fileName = `${locale}${options.ext}`;
+    if (options.getFile) {
+      return callback(null, options.getFile(locale, namespace));
+    }
+
+    const fileName = `${locale}${options.ext || ''}`;
     const filePath = options.getPath(options, namespace, fileName);
 
     const data = require(filePath);

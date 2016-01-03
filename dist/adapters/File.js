@@ -33,6 +33,7 @@ function getPath(options, namespace, fileName) {
 
 var defaultOptions = {
   getPath: getPath,
+  getFile: null,
   ext: '.js'
 };
 
@@ -59,7 +60,11 @@ var File = (function (_Adapter) {
       }
 
       var options = this.getOptions();
-      var fileName = '' + locale + options.ext;
+      if (options.getFile) {
+        return callback(null, options.getFile(locale, namespace));
+      }
+
+      var fileName = '' + locale + (options.ext || '');
       var filePath = options.getPath(options, namespace, fileName);
 
       var data = require(filePath);

@@ -34,7 +34,7 @@ npm install translate-maker
 - JSON Structure
 - Nested and reference translations
 - Variables
-- Conditioned translations (Plural, Gender etc...)
+- [Conditioned][combinations-hash] translations (Plural, Gender etc...)
 - Filters capitalize, upperCase, lowerCase etc... and custom filters
 - Default translations
 - Resource adapters (File, Memory, XHR)
@@ -742,6 +742,10 @@ const result = t.get('following', {
 
 console.log('result'); // => Zlatko follows Livia and 2 others
 ```
+
+# Browser compatibility
+
+- Internet Explorer 6+
 
 
 # Running Tests
