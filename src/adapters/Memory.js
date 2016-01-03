@@ -1,4 +1,4 @@
-import Adapter from '../Adapter';
+import Adapter from './Adapter';
 import get from 'lodash/object/get';
 import set from 'lodash/object/set';
 

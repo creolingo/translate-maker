@@ -1,4 +1,4 @@
-import Adapter from '../Adapter';
+import Adapter from './Adapter';
 
 function getPath(options, namespace, fileName) {
   if (!namespace) {
@@ -41,7 +41,7 @@ export default class File extends Adapter {
     callback(null, data);
   }
 
-  set(locale, namespace, callback) {
+  set(locale, value, namespace, callback) {
     throw new Error('File adapter is read only');
   }
 }

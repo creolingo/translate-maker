@@ -36,6 +36,7 @@ npm install translate-maker
 - Filters capitalize, upperCase, lowerCase etc... and custom filters
 - Default translations
 - Resource adapters (File, Memory, XHR)
+- Cache modules
 - Integrates with [React](https://github.com/CherrySoftware/react-translate-maker) and [Angular](https://github.com/CherrySoftware/angular-translate-maker)
 
 # Support us

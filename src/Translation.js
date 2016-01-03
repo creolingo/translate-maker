@@ -27,6 +27,10 @@ export default class Translation {
     }
   }
 
+  getOptions() {
+    return this._root.getOptions();
+  }
+
   toString() {
     return this.get();
   }
@@ -94,8 +98,15 @@ export default class Translation {
       return value;
     }
 
+    const cache = this.getOptions().cache;
+    if (cache.has(value)) {
+      const data = cache.get(value);
+      return this.buildText(data, attrs);
+    }
+
     try {
       const data = parser.parse(value);
+      cache.set(value, data);
       return this.buildText(data, attrs);
     } catch (err) {
       // TODO get info about unparsable translation text
@@ -109,8 +120,9 @@ export default class Translation {
     }
 
     if (path) {
+      const options = this.getOptions();
       const pos = path.indexOf('.');
-      if (pos !== -1) {
+      if (options.dotNotation && pos !== -1) {
         const name = path.substr(0, pos);
         const newPath = path.substr(pos + 1);
 
@@ -153,8 +165,9 @@ export default class Translation {
       return this;
     }
 
+    const options = this.getOptions();
     const pos = name.indexOf('.');
-    if (pos !== -1) {
+    if (options.dotNotation && pos !== -1) {
       const prefix = name.substr(0, pos);
       const suffix = name.substr(pos + 1);
 

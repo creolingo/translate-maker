@@ -42,6 +42,10 @@ var _adaptersMemory = require('./adapters/Memory');
 
 var _adaptersMemory2 = _interopRequireDefault(_adaptersMemory);
 
+var _cacheMemory = require('./cache/Memory');
+
+var _cacheMemory2 = _interopRequireDefault(_cacheMemory);
+
 var _events = require('events');
 
 var _events2 = _interopRequireDefault(_events);
@@ -51,7 +55,10 @@ var defaultOptions = {
   locales: null, // available locales
   namespace: null, // current namespace
   fallbacks: {},
+  cache: new _cacheMemory2['default']({}),
   adapter: new _adaptersMemory2['default']({}),
+  defaultAdapter: _adaptersMemory2['default'],
+  dotNotation: true,
   filters: filters
 };
 
@@ -66,7 +73,14 @@ var Translate = (function (_EventEmitter) {
 
     _get(Object.getPrototypeOf(Translate.prototype), 'constructor', this).call(this);
 
-    this._options = _extends({}, defaultOptions, options);
+    var DefaultAdapter = options.defaultAdapter;
+    var adapter = !(0, _lodashLangIsPlainObject2['default'])(options.adapter) ? options.adapter : new DefaultAdapter({
+      data: options.adapter
+    });
+
+    this._options = _extends({}, defaultOptions, options, {
+      adapter: adapter
+    });
 
     this._translation = new _Translation2['default'](this);
 
@@ -80,6 +94,9 @@ var Translate = (function (_EventEmitter) {
   _createClass(Translate, [{
     key: '_clear',
     value: function _clear() {
+      // clear cache
+      this.getOptions().cache.clear();
+
       // todo remove current translations
       this._translation = new _Translation2['default'](this);
     }

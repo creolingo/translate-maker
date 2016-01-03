@@ -71,6 +71,11 @@ var Translation = (function () {
   }
 
   _createClass(Translation, [{
+    key: 'getOptions',
+    value: function getOptions() {
+      return this._root.getOptions();
+    }
+  }, {
     key: 'toString',
     value: function toString() {
       return this.get();
@@ -148,8 +153,15 @@ var Translation = (function () {
         return value;
       }
 
+      var cache = this.getOptions().cache;
+      if (cache.has(value)) {
+        var data = cache.get(value);
+        return this.buildText(data, attrs);
+      }
+
       try {
         var data = _parserParser2['default'].parse(value);
+        cache.set(value, data);
         return this.buildText(data, attrs);
       } catch (err) {
         // TODO get info about unparsable translation text
@@ -166,8 +178,9 @@ var Translation = (function () {
       }
 
       if (path) {
+        var options = this.getOptions();
         var pos = path.indexOf('.');
-        if (pos !== -1) {
+        if (options.dotNotation && pos !== -1) {
           var _name = path.substr(0, pos);
           var newPath = path.substr(pos + 1);
 
@@ -215,8 +228,9 @@ var Translation = (function () {
         return this;
       }
 
+      var options = this.getOptions();
       var pos = name.indexOf('.');
-      if (pos !== -1) {
+      if (options.dotNotation && pos !== -1) {
         var prefix = name.substr(0, pos);
         var suffix = name.substr(pos + 1);
 

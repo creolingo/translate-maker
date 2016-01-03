@@ -4,6 +4,7 @@ import isPlainObject from 'lodash/lang/isPlainObject';
 import keys from 'lodash/object/keys';
 import forOwn from 'lodash/object/forOwn';
 import MemoryAdapter from './adapters/Memory';
+import MemoryCache from './cache/Memory';
 import EventEmitter from 'events';
 
 const defaultOptions = {
@@ -11,7 +12,10 @@ const defaultOptions = {
   locales: null, // available locales
   namespace: null, // current namespace
   fallbacks: {},
+  cache: new MemoryCache({}),
   adapter: new MemoryAdapter({}),
+  defaultAdapter: MemoryAdapter,
+  dotNotation: true,
   filters,
 };
 
@@ -19,9 +23,17 @@ export default class Translate extends EventEmitter {
   constructor(options = {}, callback = () => {}) {
     super();
 
+    const DefaultAdapter = options.defaultAdapter;
+    const adapter = !isPlainObject(options.adapter)
+      ? options.adapter
+      : new DefaultAdapter({
+        data: options.adapter,
+      });
+
     this._options = {
       ...defaultOptions,
       ...options,
+      adapter,
     };
 
     this._translation = new Translation(this);
@@ -34,6 +46,9 @@ export default class Translate extends EventEmitter {
   }
 
   _clear() {
+    // clear cache
+    this.getOptions().cache.clear();
+
     // todo remove current translations
     this._translation = new Translation(this);
   }

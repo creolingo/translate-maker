@@ -6,10 +6,6 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _Adapter = require('./Adapter');
-
-var _Adapter2 = _interopRequireDefault(_Adapter);
-
 var _Translate = require('./Translate');
 
 var _Translate2 = _interopRequireDefault(_Translate);
@@ -26,6 +22,10 @@ var _constantsGender = require('./constants/Gender');
 
 var _constantsGender2 = _interopRequireDefault(_constantsGender);
 
+var _adaptersAdapter = require('./adapters/Adapter');
+
+var _adaptersAdapter2 = _interopRequireDefault(_adaptersAdapter);
+
 var _adaptersFile = require('./adapters/File');
 
 var _adaptersFile2 = _interopRequireDefault(_adaptersFile);
@@ -34,7 +34,7 @@ var _adaptersMemory = require('./adapters/Memory');
 
 var _adaptersMemory2 = _interopRequireDefault(_adaptersMemory);
 
-exports.Adapter = _Adapter2['default'];
+exports.Adapter = _adaptersAdapter2['default'];
 exports.Plural = _constantsPlural2['default'];
 exports.Gender = _constantsGender2['default'];
 exports.Translation = _Translation2['default'];
