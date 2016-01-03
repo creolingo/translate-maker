@@ -248,4 +248,22 @@ describe('Translate', () => {
   it('should be able to use namespace translation', () => {
     should(t.widget.test.get()).equal('widget test');
   });
+
+  it('should be able to init default adapter with data', (done) => {
+    const t = new Translate({
+      locale: 'sk',
+      adapter: {
+        sk: {
+          test: '123',
+        }
+      },
+    }, (err , translate) => {
+      if (err) {
+        throw err;
+      }
+
+      translate.test.get().should.equal('123');
+      done();
+    });
+  });
 });

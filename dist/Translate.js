@@ -66,6 +66,8 @@ var Translate = (function (_EventEmitter) {
   _inherits(Translate, _EventEmitter);
 
   function Translate() {
+    var _this = this;
+
     var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
     var callback = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
 
@@ -73,21 +75,27 @@ var Translate = (function (_EventEmitter) {
 
     _get(Object.getPrototypeOf(Translate.prototype), 'constructor', this).call(this);
 
-    var DefaultAdapter = options.defaultAdapter;
-    var adapter = !(0, _lodashLangIsPlainObject2['default'])(options.adapter) ? options.adapter : new DefaultAdapter({
-      data: options.adapter
-    });
+    this._options = _extends({}, defaultOptions, options);
 
-    this._options = _extends({}, defaultOptions, options, {
-      adapter: adapter
-    });
+    var _options = this._options;
+    var locale = _options.locale;
+    var adapter = _options.adapter;
+    var DefaultAdapter = _options.defaultAdapter;
+
+    if ((0, _lodashLangIsPlainObject2['default'])(adapter)) {
+      this._options.adapter = new DefaultAdapter({
+        data: adapter
+      });
+    }
 
     this._translation = new _Translation2['default'](this);
 
-    if (this._options.locale) {
-      this.load(callback);
+    if (locale) {
+      this.load(function (err) {
+        return callback(err, _this);
+      });
     } else if (callback) {
-      callback(null, {});
+      callback(null, this);
     }
   }
 
@@ -103,7 +111,7 @@ var Translate = (function (_EventEmitter) {
   }, {
     key: '_loadLocale',
     value: function _loadLocale(locale, namespace) {
-      var _this = this;
+      var _this2 = this;
 
       var callback = arguments.length <= 2 || arguments[2] === undefined ? function () {} : arguments[2];
 
@@ -119,11 +127,11 @@ var Translate = (function (_EventEmitter) {
           return callback(err);
         }
 
-        var options = _this.getOptions();
+        var options = _this2.getOptions();
         if (namespace && namespace !== options.namespace) {
-          _this.set(namespace, data);
+          _this2.set(namespace, data);
         } else {
-          _this.set(data);
+          _this2.set(data);
         }
 
         callback(null, data);
@@ -181,11 +189,11 @@ var Translate = (function (_EventEmitter) {
   }, {
     key: 'setFilter',
     value: function setFilter(type, fn) {
-      var _this2 = this;
+      var _this3 = this;
 
       if ((0, _lodashLangIsPlainObject2['default'])(type)) {
         (0, _lodashObjectForOwn2['default'])(type, function (filter, filterType) {
-          _this2.setFilter(filterType, filter);
+          _this3.setFilter(filterType, filter);
         });
 
         return;

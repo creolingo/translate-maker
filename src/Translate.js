@@ -23,25 +23,24 @@ export default class Translate extends EventEmitter {
   constructor(options = {}, callback = () => {}) {
     super();
 
-    const DefaultAdapter = options.defaultAdapter;
-    const adapter = !isPlainObject(options.adapter)
-      ? options.adapter
-      : new DefaultAdapter({
-        data: options.adapter,
-      });
-
     this._options = {
       ...defaultOptions,
       ...options,
-      adapter,
     };
+
+    const { locale, adapter, defaultAdapter: DefaultAdapter } = this._options
+    if (isPlainObject(adapter)) {
+      this._options.adapter = new DefaultAdapter({
+        data: adapter,
+      });
+    }
 
     this._translation = new Translation(this);
 
-    if (this._options.locale) {
-      this.load(callback);
+    if (locale) {
+      this.load((err) => callback(err, this));
     } else if (callback) {
-      callback(null, {});
+      callback(null, this);
     }
   }
 
