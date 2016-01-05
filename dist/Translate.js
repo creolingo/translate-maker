@@ -70,6 +70,8 @@ var defaultOptions = {
   filters: filters
 };
 
+// TODO add || syntax
+
 var Translate = (function (_EventEmitter) {
   _inherits(Translate, _EventEmitter);
 
@@ -91,9 +93,8 @@ var Translate = (function (_EventEmitter) {
     var DefaultAdapter = _options.defaultAdapter;
 
     if ((0, _lodashLangIsPlainObject2['default'])(adapter)) {
-      this._options.adapter = new DefaultAdapter({
-        data: adapter
-      });
+      var newAdapter = this._options.adapter = new DefaultAdapter();
+      newAdapter.rehydrate(adapter);
     }
 
     this._translation = new _Translation2['default'](this);
@@ -187,7 +188,7 @@ var Translate = (function (_EventEmitter) {
         var _ret = (function () {
           var translated = {};
           (0, _lodashObjectForOwn2['default'])(path, function (value, key) {
-            translated[key] = _this3.get(value, attrs, defaultValue);
+            translated[key] = _this3.get(value, attrs, defaultValue, value);
           });
 
           return {
@@ -198,7 +199,7 @@ var Translate = (function (_EventEmitter) {
         if (typeof _ret === 'object') return _ret.v;
       }
 
-      return this._translation.get(path, attrs, defaultValue);
+      return this._translation.get(path, attrs, defaultValue, path);
     }
   }, {
     key: 'set',

@@ -13,11 +13,7 @@ export default class Memory extends Adapter {
       ...options,
     });
 
-    this._data = this._options.data || {};
-  }
-
-  getData() {
-    return { ...this._data };
+    this._data = {};
   }
 
   getPath(locale, namespace) {
@@ -54,5 +50,13 @@ export default class Memory extends Adapter {
     set(this._data, path, value);
 
     callback(null);
+  }
+
+  dehydrate() {
+    return { ...this._data };
+  }
+
+  rehydrate(state) {
+    this._data = state;
   }
 }

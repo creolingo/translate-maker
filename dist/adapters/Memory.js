@@ -42,15 +42,10 @@ var Memory = (function (_Adapter) {
 
     _get(Object.getPrototypeOf(Memory.prototype), 'constructor', this).call(this, _extends({}, defaultOptions, options));
 
-    this._data = this._options.data || {};
+    this._data = {};
   }
 
   _createClass(Memory, [{
-    key: 'getData',
-    value: function getData() {
-      return _extends({}, this._data);
-    }
-  }, {
     key: 'getPath',
     value: function getPath(locale, namespace) {
       return namespace ? namespace + '.' + locale : locale;
@@ -86,6 +81,16 @@ var Memory = (function (_Adapter) {
       (0, _lodashObjectSet2['default'])(this._data, path, value);
 
       callback(null);
+    }
+  }, {
+    key: 'dehydrate',
+    value: function dehydrate() {
+      return _extends({}, this._data);
+    }
+  }, {
+    key: 'rehydrate',
+    value: function rehydrate(state) {
+      this._data = state;
     }
   }]);
 

@@ -52,8 +52,6 @@ var _constantsMode2 = _interopRequireDefault(_constantsMode);
 
 var EMPTY_TEXT = '';
 
-// TODO add or syntax
-
 function resolveVariable(obj, path) {
   var value = (0, _lodashObjectGet2['default'])(obj, path);
 
@@ -106,8 +104,8 @@ var Translation = (function () {
       return this.get();
     }
   }, {
-    key: 'resolveValue',
-    value: function resolveValue() {
+    key: '_resolveValue',
+    value: function _resolveValue() {
       var item = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
       var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
       var type = item.type;
@@ -143,8 +141,8 @@ var Translation = (function () {
       }
     }
   }, {
-    key: 'buildText',
-    value: function buildText(obj, attrs, smartValue) {
+    key: '_buildText',
+    value: function _buildText(obj, attrs, smartValue) {
       var _this2 = this;
 
       if (!obj || obj.type !== 'main') {
@@ -162,19 +160,19 @@ var Translation = (function () {
           return smartValue;
         }
 
-        var value = _this2.resolveValue(part, attrs);
+        var value = _this2._resolveValue(part, attrs);
         if (!filters || !filters.length) {
           return value || EMPTY_TEXT;
         }
 
         return (0, _lodashCollectionReduce2['default'])(filters, function (reducedValue, filter) {
-          return _this2.applyFilter(reducedValue, part, attrs, filter);
+          return _this2._applyFilter(reducedValue, part, attrs, filter);
         }, value);
       }).join('');
     }
   }, {
-    key: 'applyFilter',
-    value: function applyFilter(value, part, attrs, filter) {
+    key: '_applyFilter',
+    value: function _applyFilter(value, part, attrs, filter) {
       var root = this._root;
       var filterFn = root.getFilter(filter.type);
       var args = filter.args || [];
@@ -182,9 +180,9 @@ var Translation = (function () {
       return filterFn ? filterFn.call.apply(filterFn, [this, value, part, attrs, filter.metadata].concat(_toConsumableArray(args))) : value;
     }
   }, {
-    key: 'process',
-    value: function process(value) {
-      var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    key: '_process',
+    value: function _process(value, attrs, path) {
+      if (attrs === undefined) attrs = {};
 
       if (!value) {
         return value;
@@ -193,33 +191,33 @@ var Translation = (function () {
       var cache = this.getOptions().cache;
       if (cache.has(value)) {
         var data = cache.get(value);
-        return this.buildText(data, attrs);
+        return this._buildText(data, attrs);
       }
 
       try {
         var data = _parserParser2['default'].parse(value);
         cache.set(value, data);
-        return this.buildText(data, attrs);
+        return this._buildText(data, attrs);
       } catch (err) {
-        // TODO get info about unparsable translation text
+        this._root.emit('err', err, path, value, attrs);
         return void 0;
       }
     }
   }, {
     key: 'get',
-    value: function get(path, attrs, defaultValue) {
+    value: function get(path, attrs, defaultValue, fullPath) {
       if (attrs === undefined) attrs = {};
 
       if (typeof attrs === 'string') {
-        return this.get(path, {}, attrs);
+        return this.get(path, {}, attrs, fullPath);
       }
 
       if (typeof defaultValue === 'undefined') {
-        return this.get(path, attrs, 'Missing translation for path: ' + path);
+        return this.get(path, attrs, 'Missing translation for path: ' + path, fullPath);
       }
 
       if ((0, _lodashLangIsPlainObject2['default'])(path)) {
-        return this.get(null, path, defaultValue);
+        return this.get(null, path, defaultValue, fullPath);
       }
 
       if (path) {
@@ -231,19 +229,19 @@ var Translation = (function () {
 
           var translation = this[_name];
           if (!translation) {
-            // TODO get info about missing reference translation
-            return this.process(defaultValue, attrs);
+            this._root.emit('missing', fullPath, attrs, defaultValue);
+            return this._process(defaultValue, attrs, fullPath);
           }
 
-          return translation.get(newPath, attrs, defaultValue);
+          return translation.get(newPath, attrs, defaultValue, fullPath);
         }
 
         if (!this[path]) {
-          // TODO get info about missing reference translation
-          return this.process(defaultValue, attrs);
+          this._root.emit('missing', fullPath, attrs, defaultValue);
+          return this._process(defaultValue, attrs, fullPath);
         }
 
-        return this[path].get(null, attrs, defaultValue);
+        return this[path].get(null, attrs, defaultValue, fullPath);
       }
 
       var value = this._value;
@@ -255,7 +253,7 @@ var Translation = (function () {
         return defaultChild ? defaultChild.get(attrs) : void 0;
       }
 
-      return this.process(value, attrs);
+      return this._process(value, attrs, fullPath);
     }
   }, {
     key: 'set',

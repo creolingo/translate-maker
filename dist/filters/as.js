@@ -27,12 +27,12 @@ exports['default'] = function (value, part, attrs, metadata) {
     var from = param.from;
     var to = param.to;
 
-    var paramValue = _this.resolveValue(from, attrs);
+    var paramValue = _this._resolveValue(from, attrs);
 
     (0, _lodashObjectSet2['default'])(params, to, paramValue);
   });
 
-  return this.resolveValue(part, params);
+  return this._resolveValue(part, params);
 };
 
 module.exports = exports['default'];

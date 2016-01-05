@@ -16,10 +16,10 @@ export default function(value, part, attrs, metadata, ...args) {
   });
 
   if (option) {
-    return this.buildText(option.value, attrs, value);
+    return this._buildText(option.value, attrs, value);
   }
 
   if (defaultOption) {
-    return this.buildText(defaultOption.value, attrs, value);
+    return this._buildText(defaultOption.value, attrs, value);
   }
 }

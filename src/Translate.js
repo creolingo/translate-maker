@@ -24,6 +24,8 @@ const defaultOptions = {
   filters,
 };
 
+// TODO add || syntax
+
 export default class Translate extends EventEmitter {
   constructor(options = {}, callback = () => {}) {
     super();
@@ -35,9 +37,8 @@ export default class Translate extends EventEmitter {
 
     const { locale, adapter, defaultAdapter: DefaultAdapter } = this._options
     if (isPlainObject(adapter)) {
-      this._options.adapter = new DefaultAdapter({
-        data: adapter,
-      });
+      const newAdapter = this._options.adapter = new DefaultAdapter();
+      newAdapter.rehydrate(adapter);
     }
 
     this._translation = new Translation(this);
@@ -111,13 +112,13 @@ export default class Translate extends EventEmitter {
     if (isPlainObject(path)) {
       const translated = {};
       forOwn(path, (value, key) => {
-        translated[key] = this.get(value, attrs, defaultValue);
+        translated[key] = this.get(value, attrs, defaultValue, value);
       });
 
       return translated;
     }
 
-    return this._translation.get(path, attrs, defaultValue);
+    return this._translation.get(path, attrs, defaultValue, path);
   }
 
   set(name, value) {

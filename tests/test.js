@@ -332,4 +332,34 @@ describe('Translate', () => {
 
     (t.nameFn.get({ user })).should.equal('Zlatko Fedor');
   });
+
+  it('should be able to catch missing event', (done) => {
+    const tt = new Translate({}, (err, translate) => {
+      if (err) {
+        throw err;
+      }
+
+      translate.once('missing', () => done());
+
+      translate.get('missing.translate.path');
+    });
+  });
+
+  it('should be able to catch error event', (done) => {
+    const tt = new Translate({
+      locale: 'sk',
+      adapter: {
+        sk: {
+          badText: 'bad { omg',
+        },
+      },
+    }, (err, translate) => {
+      if (err) {
+        throw err;
+      }
+
+      translate.once('err', () => done());
+      translate.get('badText');
+    });
+  });
 });

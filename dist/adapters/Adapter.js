@@ -32,6 +32,16 @@ var Adapter = (function () {
     value: function set(locale, value, namespace, callback) {
       throw new Error('Implement method set');
     }
+  }, {
+    key: 'dehydrate',
+    value: function dehydrate() {
+      throw new Error('Implement method dehydrate');
+    }
+  }, {
+    key: 'rehydrate',
+    value: function rehydrate(state) {
+      throw new Error('Implement method rehydrate');
+    }
   }]);
 
   return Adapter;

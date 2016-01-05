@@ -6,10 +6,10 @@ export default function(value, part, attrs, metadata, ...args) {
 
   forEach(args, (param) => {
     const { from, to } = param;
-    const paramValue = this.resolveValue(from, attrs);
+    const paramValue = this._resolveValue(from, attrs);
 
     set(params, to, paramValue);
   });
 
-  return this.resolveValue(part, params);
+  return this._resolveValue(part, params);
 }

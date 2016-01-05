@@ -60,9 +60,9 @@ exports['default'] = function (value, part, attrs, metadata) {
   });
 
   if (option) {
-    return this.buildText(option.value, attrs, smartValue);
+    return this._buildText(option.value, attrs, smartValue);
   } else if (defaultOption) {
-    return this.buildText(defaultOption.value, attrs, smartValue);
+    return this._buildText(defaultOption.value, attrs, smartValue);
   }
 };
 

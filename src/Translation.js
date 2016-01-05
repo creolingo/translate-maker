@@ -10,8 +10,6 @@ import Mode from './constants/Mode';
 
 const EMPTY_TEXT = '';
 
-// TODO add or syntax
-
 function resolveVariable(obj, path) {
   const value = get(obj, path);
 
@@ -58,7 +56,7 @@ export default class Translation {
     return this.get();
   }
 
-  resolveValue(item = {}, attrs = {}) {
+  _resolveValue(item = {}, attrs = {}) {
     const { type, path } = item;
     const root = this._root;
     const options = this.getOptions();
@@ -92,7 +90,7 @@ export default class Translation {
     }
   }
 
-  buildText(obj, attrs, smartValue) {
+  _buildText(obj, attrs, smartValue) {
     if (!obj || obj.type !== 'main') {
       return void 0;
     }
@@ -107,18 +105,18 @@ export default class Translation {
         return smartValue;
       }
 
-      const value = this.resolveValue(part, attrs);
+      const value = this._resolveValue(part, attrs);
       if (!filters || !filters.length) {
         return value || EMPTY_TEXT;
       }
 
       return reduce(filters, (reducedValue, filter) => {
-        return this.applyFilter(reducedValue, part, attrs, filter);
+        return this._applyFilter(reducedValue, part, attrs, filter);
       }, value);
     }).join('');
   }
 
-  applyFilter(value, part, attrs, filter) {
+  _applyFilter(value, part, attrs, filter) {
     const root = this._root;
     const filterFn = root.getFilter(filter.type);
     const args = filter.args || [];
@@ -128,7 +126,7 @@ export default class Translation {
       : value;
   }
 
-  process(value, attrs = {}) {
+  _process(value, attrs = {}, path) {
     if (!value) {
       return value;
     }
@@ -136,30 +134,30 @@ export default class Translation {
     const cache = this.getOptions().cache;
     if (cache.has(value)) {
       const data = cache.get(value);
-      return this.buildText(data, attrs);
+      return this._buildText(data, attrs);
     }
 
     try {
       const data = parser.parse(value);
       cache.set(value, data);
-      return this.buildText(data, attrs);
+      return this._buildText(data, attrs);
     } catch (err) {
-      // TODO get info about unparsable translation text
+      this._root.emit('err', err, path, value, attrs);
       return void 0;
     }
   }
 
-  get(path, attrs = {}, defaultValue) {
+  get(path, attrs = {}, defaultValue, fullPath) {
     if (typeof attrs === 'string') {
-      return this.get(path, {}, attrs);
+      return this.get(path, {}, attrs, fullPath);
     }
 
     if (typeof defaultValue === 'undefined') {
-      return this.get(path, attrs, 'Missing translation for path: ' + path);
+      return this.get(path, attrs, 'Missing translation for path: ' + path, fullPath);
     }
 
     if (isPlainObject(path)) {
-      return this.get(null, path, defaultValue);
+      return this.get(null, path, defaultValue, fullPath);
     }
 
     if (path) {
@@ -171,19 +169,19 @@ export default class Translation {
 
         const translation = this[name];
         if (!translation) {
-          // TODO get info about missing reference translation
-          return this.process(defaultValue, attrs);
+          this._root.emit('missing', fullPath, attrs, defaultValue);
+          return this._process(defaultValue, attrs, fullPath);
         }
 
-        return translation.get(newPath, attrs, defaultValue);
+        return translation.get(newPath, attrs, defaultValue, fullPath);
       }
 
       if (!this[path]) {
-        // TODO get info about missing reference translation
-        return this.process(defaultValue, attrs);
+        this._root.emit('missing', fullPath, attrs, defaultValue);
+        return this._process(defaultValue, attrs, fullPath);
       }
 
-      return this[path].get(null, attrs, defaultValue);
+      return this[path].get(null, attrs, defaultValue, fullPath);
     }
 
     const value = this._value;
@@ -193,7 +191,7 @@ export default class Translation {
       return defaultChild ? defaultChild.get(attrs) : void 0;
     }
 
-    return this.process(value, attrs);
+    return this._process(value, attrs, fullPath);
   }
 
   set(name, value, obj) {
