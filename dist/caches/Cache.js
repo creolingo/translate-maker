@@ -44,6 +44,16 @@ var Cache = (function () {
     value: function clear() {
       throw new Error('Implement method clear');
     }
+  }, {
+    key: 'dehydrate',
+    value: function dehydrate() {
+      throw new Error('Implement method dehydrate');
+    }
+  }, {
+    key: 'rehydrate',
+    value: function rehydrate(state) {
+      throw new Error('Implement method rehydrate');
+    }
   }]);
 
   return Cache;

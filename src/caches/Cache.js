@@ -22,4 +22,12 @@ export default class Cache {
   clear() {
     throw new Error('Implement method clear');
   }
+
+  dehydrate() {
+    throw new Error('Implement method dehydrate');
+  }
+
+  rehydrate(state) {
+    throw new Error('Implement method rehydrate');
+  }
 }

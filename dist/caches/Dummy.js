@@ -47,6 +47,16 @@ var Dummy = (function (_Cache) {
     value: function clear() {
       return true;
     }
+  }, {
+    key: 'dehydrate',
+    value: function dehydrate() {
+      return void 0;
+    }
+  }, {
+    key: 'rehydrate',
+    value: function rehydrate(state) {
+      return void 0;
+    }
   }]);
 
   return Dummy;

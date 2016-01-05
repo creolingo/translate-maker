@@ -53,6 +53,16 @@ var Memory = (function (_Cache) {
       this._data = {};
       return true;
     }
+  }, {
+    key: 'dehydrate',
+    value: function dehydrate() {
+      return this._data;
+    }
+  }, {
+    key: 'rehydrate',
+    value: function rehydrate(state) {
+      this._data = state;
+    }
   }]);
 
   return Memory;

@@ -24,4 +24,12 @@ export default class Memory extends Cache {
     this._data = {};
     return true;
   }
+
+  dehydrate() {
+    return this._data;
+  }
+
+  rehydrate(state) {
+    this._data = state;
+  }
 }

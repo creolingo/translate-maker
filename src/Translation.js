@@ -10,6 +10,28 @@ import Mode from './constants/Mode';
 
 const EMPTY_TEXT = '';
 
+// TODO add or syntax
+
+function resolveVariable(obj, path) {
+  const value = get(obj, path);
+
+  if (typeof value === 'function') {
+    const pos = path.indexOf('.');
+    if (pos === -1) {
+      return value();
+    }
+
+    const pathBefore = path.substr(0, pos);
+    const fnName = path.substr(pos + 1);
+
+
+    const parentObj = get(obj, pathBefore);
+    return parentObj[fnName]();
+  }
+
+  return value;
+}
+
 export default class Translation {
   constructor(root, name, value) {
     const isDefault = name && startsWith(name, '_');
@@ -46,7 +68,7 @@ export default class Translation {
       if (options.references && type === 'variable') {
         return root.get(path, attrs);
       } else if (options.variables && type === 'reference') {
-        return get(attrs, path);
+        return resolveVariable(attrs, path);
       }
 
       return void 0;
@@ -55,7 +77,7 @@ export default class Translation {
     if (options.references && type === 'reference') {
       return root.get(path, attrs);
     } else if (options.variables && type === 'variable') {
-      return get(attrs, path);
+      return resolveVariable(attrs, path);
     } else if (options.combinations && type === 'combination') {
       const referencePath = path[0].path;
       const variablePath = path[1].path;

@@ -16,4 +16,12 @@ export default class Dummy extends Cache {
   clear() {
     return true;
   }
+
+  dehydrate() {
+    return void 0;
+  }
+
+  rehydrate(state) {
+    return void 0;
+  }
 }

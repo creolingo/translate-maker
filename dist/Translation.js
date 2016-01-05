@@ -52,6 +52,27 @@ var _constantsMode2 = _interopRequireDefault(_constantsMode);
 
 var EMPTY_TEXT = '';
 
+// TODO add or syntax
+
+function resolveVariable(obj, path) {
+  var value = (0, _lodashObjectGet2['default'])(obj, path);
+
+  if (typeof value === 'function') {
+    var pos = path.indexOf('.');
+    if (pos === -1) {
+      return value();
+    }
+
+    var pathBefore = path.substr(0, pos);
+    var fnName = path.substr(pos + 1);
+
+    var parentObj = (0, _lodashObjectGet2['default'])(obj, pathBefore);
+    return parentObj[fnName]();
+  }
+
+  return value;
+}
+
 var Translation = (function () {
   function Translation(root, name, value) {
     var _this = this;
@@ -100,7 +121,7 @@ var Translation = (function () {
         if (options.references && type === 'variable') {
           return root.get(path, attrs);
         } else if (options.variables && type === 'reference') {
-          return (0, _lodashObjectGet2['default'])(attrs, path);
+          return resolveVariable(attrs, path);
         }
 
         return void 0;
@@ -109,7 +130,7 @@ var Translation = (function () {
       if (options.references && type === 'reference') {
         return root.get(path, attrs);
       } else if (options.variables && type === 'variable') {
-        return (0, _lodashObjectGet2['default'])(attrs, path);
+        return resolveVariable(attrs, path);
       } else if (options.combinations && type === 'combination') {
         var referencePath = path[0].path;
         var variablePath = path[1].path;

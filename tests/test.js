@@ -308,4 +308,28 @@ describe('Translate', () => {
     result.first.should.equal('Zlatko Fedor');
     result.second.should.equal('About Zlatkove');
   });
+
+  it('should be able to get translation by function', () => {
+    function getLastName() {
+      return 'Fedor';
+    }
+
+    (t.name.get({
+      lastName: getLastName,
+    })).should.equal('Zlatko Fedor');
+  });
+
+  it('should be able to get complex translation by function', () => {
+    const user = {
+      _lastName: 'Fedor',
+
+      lastName: function() {
+        return this._lastName;
+      }
+    };
+
+    user.lastName().should.equal('Fedor');
+
+    (t.nameFn.get({ user })).should.equal('Zlatko Fedor');
+  });
 });

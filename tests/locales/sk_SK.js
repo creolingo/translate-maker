@@ -81,5 +81,6 @@ export default {
     trunc: `Trunc this {$value | trunc, 7, '..'}`,
     upperCase: 'This is {$value | upperCase }',
     lowerCase: 'This is {$value | lowerCase }',
-  }
+  },
+  nameFn: 'Zlatko {$user.lastName}', // external variable
 };
