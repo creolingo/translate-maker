@@ -181,6 +181,23 @@ var Translate = (function (_EventEmitter) {
   }, {
     key: 'get',
     value: function get(path, attrs) {
+      var _this3 = this;
+
+      if ((0, _lodashLangIsPlainObject2['default'])(path)) {
+        var _ret = (function () {
+          var translated = {};
+          (0, _lodashObjectForOwn2['default'])(path, function (value, key) {
+            translated[key] = _this3.get(value, attrs);
+          });
+
+          return {
+            v: translated
+          };
+        })();
+
+        if (typeof _ret === 'object') return _ret.v;
+      }
+
       return this._translation.get(path, attrs);
     }
   }, {
@@ -201,11 +218,11 @@ var Translate = (function (_EventEmitter) {
   }, {
     key: 'setFilter',
     value: function setFilter(type, fn) {
-      var _this3 = this;
+      var _this4 = this;
 
       if ((0, _lodashLangIsPlainObject2['default'])(type)) {
         (0, _lodashObjectForOwn2['default'])(type, function (filter, filterType) {
-          _this3.setFilter(filterType, filter);
+          _this4.setFilter(filterType, filter);
         });
 
         return;

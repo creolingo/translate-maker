@@ -108,6 +108,15 @@ export default class Translate extends EventEmitter {
   }
 
   get(path, attrs) {
+    if (isPlainObject(path)) {
+      const translated = {};
+      forOwn(path, (value, key) => {
+        translated[key] = this.get(value, attrs);
+      });
+
+      return translated;
+    }
+
     return this._translation.get(path, attrs);
   }
 

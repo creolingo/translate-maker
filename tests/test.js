@@ -288,4 +288,16 @@ describe('Translate', () => {
       done();
     });
   });
+
+  it('should be able to translate whole object', () => {
+    const result = t.get({
+      first: 'name',
+      second: 'about',
+    }, {
+      lastName: 'Fedor'
+    });
+
+    result.first.should.equal('Zlatko Fedor');
+    result.second.should.equal('About Zlatkove');
+  });
 });
