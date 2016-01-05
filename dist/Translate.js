@@ -180,14 +180,14 @@ var Translate = (function (_EventEmitter) {
     }
   }, {
     key: 'get',
-    value: function get(path, attrs) {
+    value: function get(path, attrs, defaultValue) {
       var _this3 = this;
 
       if ((0, _lodashLangIsPlainObject2['default'])(path)) {
         var _ret = (function () {
           var translated = {};
           (0, _lodashObjectForOwn2['default'])(path, function (value, key) {
-            translated[key] = _this3.get(value, attrs);
+            translated[key] = _this3.get(value, attrs, defaultValue);
           });
 
           return {
@@ -198,7 +198,7 @@ var Translate = (function (_EventEmitter) {
         if (typeof _ret === 'object') return _ret.v;
       }
 
-      return this._translation.get(path, attrs);
+      return this._translation.get(path, attrs, defaultValue);
     }
   }, {
     key: 'set',

@@ -186,11 +186,19 @@ var Translation = (function () {
     }
   }, {
     key: 'get',
-    value: function get(path) {
-      var attrs = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    value: function get(path, attrs, defaultValue) {
+      if (attrs === undefined) attrs = {};
+
+      if (typeof attrs === 'string') {
+        return this.get(path, {}, attrs);
+      }
+
+      if (typeof defaultValue === 'undefined') {
+        return this.get(path, attrs, 'Missing translation for path: ' + path);
+      }
 
       if ((0, _lodashLangIsPlainObject2['default'])(path)) {
-        return this.get(null, path);
+        return this.get(null, path, defaultValue);
       }
 
       if (path) {
@@ -203,18 +211,18 @@ var Translation = (function () {
           var translation = this[_name];
           if (!translation) {
             // TODO get info about missing reference translation
-            return void 0;
+            return this.process(defaultValue, attrs);
           }
 
-          return translation.get(newPath, attrs);
+          return translation.get(newPath, attrs, defaultValue);
         }
 
         if (!this[path]) {
           // TODO get info about missing reference translation
-          return void 0;
+          return this.process(defaultValue, attrs);
         }
 
-        return this[path].get(null, attrs);
+        return this[path].get(null, attrs, defaultValue);
       }
 
       var value = this._value;

@@ -160,11 +160,19 @@ describe('Translate', () => {
 
 
   it('should be not able to get non existing translation', () => {
-    should(t.get('notation.test')).equal(void 0);
+    should(t.get('notation.test')).equal('Missing translation for path: notation.test');
   });
 
   it('should be not able to get non existing translation', () => {
-    should(t.get('dot.notation.testNonExist')).equal(void 0);
+    should(t.get('dot.notation.testNonExist')).equal('Missing translation for path: dot.notation.testNonExist');
+  });
+
+  it('should be able to get default value for non existing translation', () => {
+    should(t.get('notation.test', 'Default value')).equal('Default value');
+  });
+
+  it('should be able to get default value for non existing translation with attrs', () => {
+    should(t.get('notation.test', { name: 'Zlatko'}, 'Default value {$name}')).equal('Default value Zlatko');
   });
 
   it('should be not able to get null', () => {

@@ -107,17 +107,17 @@ export default class Translate extends EventEmitter {
     this.emit('locale', locale);
   }
 
-  get(path, attrs) {
+  get(path, attrs, defaultValue) {
     if (isPlainObject(path)) {
       const translated = {};
       forOwn(path, (value, key) => {
-        translated[key] = this.get(value, attrs);
+        translated[key] = this.get(value, attrs, defaultValue);
       });
 
       return translated;
     }
 
-    return this._translation.get(path, attrs);
+    return this._translation.get(path, attrs, defaultValue);
   }
 
   set(name, value) {

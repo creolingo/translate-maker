@@ -127,9 +127,17 @@ export default class Translation {
     }
   }
 
-  get(path, attrs = {}) {
+  get(path, attrs = {}, defaultValue) {
+    if (typeof attrs === 'string') {
+      return this.get(path, {}, attrs);
+    }
+
+    if (typeof defaultValue === 'undefined') {
+      return this.get(path, attrs, 'Missing translation for path: ' + path);
+    }
+
     if (isPlainObject(path)) {
-      return this.get(null, path);
+      return this.get(null, path, defaultValue);
     }
 
     if (path) {
@@ -142,18 +150,18 @@ export default class Translation {
         const translation = this[name];
         if (!translation) {
           // TODO get info about missing reference translation
-          return void 0;
+          return this.process(defaultValue, attrs);
         }
 
-        return translation.get(newPath, attrs);
+        return translation.get(newPath, attrs, defaultValue);
       }
 
       if (!this[path]) {
         // TODO get info about missing reference translation
-        return void 0;
+        return this.process(defaultValue, attrs);
       }
 
-      return this[path].get(null, attrs);
+      return this[path].get(null, attrs, defaultValue);
     }
 
     const value = this._value;
