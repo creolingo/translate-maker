@@ -23,6 +23,7 @@ Star this project on [GitHub][github-url].
 [default-references-hash]: https://github.com/CherrySoftware/translate-maker#default-variants
 [default-translations-hash]: https://github.com/CherrySoftware/translate-maker#default-translations
 [functions-hash]: https://github.com/CherrySoftware/translate-maker#functions
+[object-translations-hash]: https://github.com/CherrySoftware/translate-maker#object-translations
 
 # Installation
 
@@ -46,7 +47,7 @@ npm install translate-maker
 - Resource adapters (Memory, File, XHR)
 - Cache modules (with support for dehydration / rehydration)
 - Integrates with [React](https://github.com/CherrySoftware/react-translate-maker) and [Angular](https://github.com/CherrySoftware/angular-translate-maker)
-- And much more ([functions][functions-hash] etc..)
+- And much more ([functions][functions-hash], [object translations][object-translations-hash] etc..)
 
 # Support us
 
@@ -171,6 +172,32 @@ const result = t.get('greeting', {
   user: user
 });
 console.log(result); // => Hi Zlatko
+```
+
+### Object translations
+
+Sometimes you want to translate whole object at once. For example all options for tag select.
+
+```js
+import Translate from 'translate-maker';
+
+const t = new Translate();
+t.set({
+  options: {
+    left: 'Go Left',
+    top: 'Go Top',
+    right: 'Go Right',
+    bottom: 'Go Bottom'
+  }
+});
+
+const options = {
+  left: 'options.left',
+  right: 'options.right',
+};
+
+const result = t.get(options);
+console.log(result); // => { left: 'Go Left', right: 'Go Right' }
 ```
 
 ### Reference translation
