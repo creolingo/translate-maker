@@ -16,7 +16,13 @@ Star this project on [GitHub][github-url].
 [github-url]: https://github.com/CherrySoftware/translate-maker
 
 [combinations-hash]: https://github.com/CherrySoftware/translate-maker#combination-external-variables-and-references
-
+[filters-hash]: https://github.com/CherrySoftware/translate-maker#filters-1
+[references-hash]: https://github.com/CherrySoftware/translate-maker#reference-translation
+[variables-hash]: https://github.com/CherrySoftware/translate-maker#external-variables
+[nested-hash]: https://github.com/CherrySoftware/translate-maker#nested-external-variables
+[default-references-hash]: https://github.com/CherrySoftware/translate-maker#default-variants
+[default-translations-hash]: https://github.com/CherrySoftware/translate-maker#default-translations
+[functions-hash]: https://github.com/CherrySoftware/translate-maker#functions
 
 # Installation
 
@@ -30,17 +36,17 @@ npm install translate-maker
 
 - Build on standards ([ICU Message syntax](http://userguide.icu-project.org/formatparse/messages), [Unicode CLDR](http://cldr.unicode.org/))
 - Support for 190+ languages
-- Runs in the browser and Node.js
+- Runs in the browser (IE 6+) and Node.js
 - JSON Structure
-- Nested and reference translations
-- Variables
+- [Variables][variables-hash] and [references][references-hash]
+- [Nested][nested-hash] objects
 - [Conditioned][combinations-hash] translations (Plural, Gender etc...)
-- Filters capitalize, upperCase, lowerCase etc... and custom filters
-- Default translations
-- Resource adapters (File, Memory, XHR)
+- [Filters][filters-hash] capitalize, upperCase, lowerCase etc... and custom filters
+- [Default][default-translations-hash] translations and [Default][default-references-hash] references
+- Resource adapters (Memory, File, XHR)
 - Cache modules (with support for dehydration / rehydration)
 - Integrates with [React](https://github.com/CherrySoftware/react-translate-maker) and [Angular](https://github.com/CherrySoftware/angular-translate-maker)
-- And much more
+- And much more ([functions][functions-hash] etc..)
 
 # Support us
 
@@ -140,6 +146,31 @@ const result2 = t.greeting.get({
   user: user
 });
 console.log(result2); // => Good morning Zlatko Fedor
+```
+
+### Functions
+
+You can use functions in external variables
+
+```js
+import Translate from 'translate-maker';
+
+const t = new Translate();
+t.set({
+  greeting: 'Hi {$user.getName}',
+});
+
+const user = {
+  _name: 'Zlatko',
+  getName: function() {
+    return this._name;
+  }
+};
+
+const result = t.get('greeting', {
+  user: user
+});
+console.log(result); // => Hi Zlatko
 ```
 
 ### Reference translation
@@ -253,6 +284,25 @@ console.log(result); // => Good morning
 // you can use object notation
 const result2 = t.greeting.get();
 console.log(result2); // => Good morning
+```
+
+### Default translation
+
+You can use default translation if your translation is missing.
+
+Each translation is available with object notation.
+```js
+import Translate from 'translate-maker';
+
+const t = new Translate();
+
+const result = t.get('greeting', 'Hi, how are you?');
+console.log(result); // => Hi, how are you?
+
+const result2 = t.get('greeting', {
+  name: 'Zlatko'
+},'Hi {$name}, how are you?');
+console.log(result2); // => Hi Zlatko, how are you?
 ```
 
 ### Combination external variables and references

@@ -18,6 +18,11 @@ var _Memory = require('./Memory');
 
 var _Memory2 = _interopRequireDefault(_Memory);
 
+var _XHR = require('./XHR');
+
+var _XHR2 = _interopRequireDefault(_XHR);
+
 exports.Adapter = _Adapter2['default'];
 exports.File = _File2['default'];
 exports.Memory = _Memory2['default'];
+exports.XHR = _XHR2['default'];

@@ -9,6 +9,7 @@ function request(url, parse, callback) {
     xhr.onreadystatechange = () => {
       if (xhr.readyState > 3) {
         callback(null, parse(x.responseText));
+      }
     };
     xhr.send(data);
   } catch (e) {
@@ -31,6 +32,7 @@ const defaultOptions = {
   path: void 0,
   getPath,
   parse: JSON.parse,
+  request,
   ext: '.json',
 };
 
@@ -55,7 +57,7 @@ export default class XHR extends Adapter {
     const fileName = `${locale}${options.ext || ''}`;
     const path = options.getPath(options, namespace, fileName);
 
-    request(path, options.parse, callback);
+    options.request(path, options.parse, callback);
   }
 
   set(locale, value, namespace, callback) {
