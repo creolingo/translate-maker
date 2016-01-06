@@ -15,7 +15,7 @@ Star this project on [GitHub][github-url].
 [coveralls-url]: https://coveralls.io/r/CherrySoftware/translate-maker?branch=master
 [github-url]: https://github.com/CherrySoftware/translate-maker
 
-[combinations-hash]: https://github.com/CherrySoftware/translate-maker#combination-external-variables-and-references
+[conditioned-hash]: https://github.com/CherrySoftware/translate-maker#conditional-translation
 [filters-hash]: https://github.com/CherrySoftware/translate-maker#filters-1
 [references-hash]: https://github.com/CherrySoftware/translate-maker#reference-translation
 [variables-hash]: https://github.com/CherrySoftware/translate-maker#external-variables
@@ -40,7 +40,7 @@ npm install translate-maker
 - JSON Structure
 - [Variables][variables-hash] and [references][references-hash]
 - [Nested][nested-hash] objects
-- [Conditioned][combinations-hash] translations (Plural, Gender etc...)
+- [Conditioned][conditioned-hash] translations (Plural, Gender etc...)
 - [Filters][filters-hash] capitalize, upperCase, lowerCase etc... and custom filters
 - [Default][default-translations-hash] translations and [Default][default-references-hash] references
 - Resource adapters (Memory, File, XHR)
