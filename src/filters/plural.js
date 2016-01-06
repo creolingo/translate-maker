@@ -21,27 +21,33 @@ export default function(value, part, attrs, metadata, ...args) {
     ? numberValue - offset
     : value;
 
+
+  // try to find exact value
+  const exactKey = `=${numberValue}`;
+
+  let option = null;
   let defaultOption = null;
-  const option = find(args, (arg) => {
+  const exactOption = find(args, (arg) => {
     if (arg.type !== 'pair') {
       return false;
     }
 
-    if (!arg.key || arg.key === 'other') {
+    const key = typeof arg.key === 'string'
+      ? arg.key.toLowerCase()
+      : arg.key;
+
+    if (!key || key === 'other') {
       defaultOption = arg;
-      return false;
+    } else if (key === exactKey) {
+      return true;
+    } else if (key === pluralValue) {
+      option = arg;
     }
-
-    const key = typeof arg.key === 'string' ? arg.key.toLowerCase() : arg.key;
-    if (key[0] === '=') {
-      const keyValue = Number(key.substr(1));
-      return keyValue === numberValue;
-    }
-
-    return key === pluralValue;
   });
 
-  if (option) {
+  if (exactOption) {
+    return this._buildText(exactOption.value, attrs, smartValue);
+  } else if (option) {
     return this._buildText(option.value, attrs, smartValue);
   } else if (defaultOption) {
     return this._buildText(defaultOption.value, attrs, smartValue);
