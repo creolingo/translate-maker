@@ -8,6 +8,10 @@ import MemoryCache from './caches/Memory';
 import EventEmitter from 'events';
 import Mode from './constants/Mode';
 
+function defaultValue(path, attrs) {
+  return `Missing default translation for: ${path}`;
+}
+
 const defaultOptions = {
   locale: null, // current locale
   locales: null, // available locales
@@ -21,6 +25,7 @@ const defaultOptions = {
   references: true,
   variables: true,
   combinations: true,
+  defaultValue,
   filters,
 };
 

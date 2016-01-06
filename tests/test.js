@@ -160,11 +160,11 @@ describe('Translate', () => {
 
 
   it('should be not able to get non existing translation', () => {
-    should(t.get('notation.test')).equal('Missing translation for path: notation.test');
+    should(t.get('notation.test')).equal('Missing default translation for: notation.test');
   });
 
   it('should be not able to get non existing translation', () => {
-    should(t.get('dot.notation.testNonExist')).equal('Missing translation for path: dot.notation.testNonExist');
+    should(t.get('dot.notation.testNonExist')).equal('Missing default translation for: dot.notation.testNonExist');
   });
 
   it('should be able to get default value for non existing translation', () => {
@@ -361,6 +361,27 @@ describe('Catch event', () => {
       }
 
       translate.once('err', () => done());
+      translate.get('badText');
+    });
+  });
+
+  it('should be able to catch missingdefault event', (done) => {
+    const tt = new Translate({
+      locale: 'sk',
+      adapter: {
+        sk: {
+          badText: 'bad { omg',
+        },
+      },
+    }, (err, translate) => {
+      if (err) {
+        throw err;
+      }
+
+      translate.once('missingdefault', (path) => {
+        path.should.equal('badText');
+        done();
+      });
       translate.get('badText');
     });
   });

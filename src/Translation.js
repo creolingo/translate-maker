@@ -148,12 +148,24 @@ export default class Translation {
   }
 
   get(path, attrs = {}, defaultValue, fullPath) {
+    const options = this.getOptions();
+
     if (typeof attrs === 'string') {
       return this.get(path, {}, attrs, fullPath);
     }
 
     if (typeof defaultValue === 'undefined') {
-      return this.get(path, attrs, 'Missing translation for path: ' + path, fullPath);
+      if (path && path === fullPath) {
+        this._root.emit('missingdefault', fullPath, attrs);
+      }
+
+      if (options.defaultValue) {
+        const value = typeof options.defaultValue === 'function'
+          ? options.defaultValue(fullPath, attrs)
+          : options.defaultValue;
+
+        return this.get(path, attrs, value, fullPath);
+      }
     }
 
     if (isPlainObject(path)) {
@@ -161,7 +173,6 @@ export default class Translation {
     }
 
     if (path) {
-      const options = this.getOptions();
       const pos = path.indexOf('.');
       if (options.dotNotation && pos !== -1) {
         const name = path.substr(0, pos);
