@@ -1,5 +1,5 @@
 import should from 'should';
-import Translate, { Plural, Gender, Adapters, Mode } from '../src';
+import Translate, { Plural, Gender, Adapters, Caches, Mode } from '../src';
 import keymirror from 'keymirror';
 
 describe('Translate', () => {
@@ -332,7 +332,9 @@ describe('Translate', () => {
 
     (t.nameFn.get({ user })).should.equal('Zlatko Fedor');
   });
+});
 
+describe('Catch event', () => {
   it('should be able to catch missing event', (done) => {
     const tt = new Translate({}, (err, translate) => {
       if (err) {
@@ -361,5 +363,118 @@ describe('Translate', () => {
       translate.once('err', () => done());
       translate.get('badText');
     });
+  });
+});
+
+describe('Dummy cache', () => {
+  let cache = null;
+  let t = null;
+
+  it('should be able to create instance', () => {
+    cache = new Caches.Dummy({});
+  });
+
+  it('should be able to use cache', (done) => {
+    t = new Translate({
+      cache,
+      locale: 'sk',
+      adapter: {
+        sk: {
+          test: '123',
+        },
+        en: {
+          test: '222',
+        }
+      }
+    }, (err, translate) => {
+      if (err) {
+        throw err;
+      }
+
+      translate.test.get().should.equal('123');
+      translate.test.get().should.equal('123');
+
+      done();
+    });
+  });
+
+  it('should be able to change locale', (done) => {
+    t.setLocale('en', (err) => {
+      if (err) throw err;
+
+      t.test.get().should.equal('222');
+      t.test.get().should.equal('222');
+
+      done();
+    });
+  });
+
+  it('should be able to use dehydrate', () => {
+    const cache = t.getCache();
+    const data = cache.dehydrate();
+
+    should(data).equal(void 0);
+  });
+
+  it('should be able to use rehydrate', () => {
+    const cache = t.getCache();
+    cache.rehydrate({});
+  });
+});
+
+describe('Memory cache', () => {
+  let cache = null;
+  let t = null;
+
+  it('should be able to create instance', () => {
+    cache = new Caches.Memory({});
+  });
+
+  it('should be able to use cache', (done) => {
+    t = new Translate({
+      cache,
+      locale: 'sk',
+      adapter: {
+        sk: {
+          test: '123',
+        },
+        en: {
+          test: '222',
+        }
+      }
+    }, (err, translate) => {
+      if (err) {
+        throw err;
+      }
+
+      translate.test.get().should.equal('123');
+      translate.test.get().should.equal('123');
+
+      done();
+    });
+  });
+
+  it('should be able to change locale', (done) => {
+    t.setLocale('en', (err) => {
+      if (err) throw err;
+
+      t.test.get().should.equal('222');
+      t.test.get().should.equal('222');
+
+      done();
+    });
+  });
+
+  it('should be able to use dehydrate and rehydrate', () => {
+    const cache = t.getCache();
+    const data = cache.dehydrate();
+
+    should(data).not.equal(void 0);
+    data['222'].should.not.equal(void 0);
+
+    cache.rehydrate(data);
+
+    t.test.get().should.equal('222');
+    t.test.get().should.equal('222');
   });
 });

@@ -133,6 +133,10 @@ export default class Translate extends EventEmitter {
     return this.getOptions().adapter;
   }
 
+  getCache() {
+    return this.getOptions().cache;
+  }
+
   setFilter(type, fn) {
     if (isPlainObject(type)) {
       forOwn(type, (filter, filterType) => {
