@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.2.39",
+  "version": "0.2.40",
   "description": "Universal translation library",
   "main": "dist/index.js",
   "keywords": [
@@ -46,7 +46,7 @@
     "keymirror": "^0.1.1",
     "lodash": "^3.10.1",
     "make-plural": "^3.0.3",
-    "locale": "^0.0.20"
+    "locale-id": "^0.0.8"
   },
   "devDependencies": {
     "babel": "^5.8.34",
@@ -65,6 +65,6 @@
     "should": "^8.0.2",
     "coveralls": "^2.11.6",
     "isparta": "^3.5.3",
-    "cldr": "papandreou/node-cldr#4b4b0f5c2f9b54d5df5ac0e72ec7eac8ca7ef9d5"
+    "cldr": "^3.4.1"
   }
 }

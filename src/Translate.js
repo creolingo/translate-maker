@@ -38,6 +38,10 @@ export default class Translate extends EventEmitter {
     this._options = {
       ...defaultOptions,
       ...options,
+      filters: {
+        ...filters, // available filters
+        ...options.filters, // add user filters
+      },
     };
 
     const { locale, adapter, defaultAdapter: DefaultAdapter } = this._options

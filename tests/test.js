@@ -332,6 +332,54 @@ describe('Translate', () => {
 
     (t.nameFn.get({ user })).should.equal('Zlatko Fedor');
   });
+
+  it('should be able to use correct plural', (done) => {
+    const t = new Translate({
+      locale: 'sk_SK',
+      adapter: {
+        en_US: {
+          test: `{$count, plural,
+            one {# item}
+            few {# bug}
+            =7  {# seven}
+            =3  {# three}
+                {# items}
+          }`,
+        },
+        sk_SK: {
+          test: `{$count, plural,
+            one {# polozka}
+            few {# polozky}
+            =7  {# sedem}
+            =3  {# tri}
+                {# poloziek}
+          }`,
+        }
+      },
+    }, (err , translate) => {
+      if (err) {
+        throw err;
+      }
+
+      translate.test.get({ count: 0 }).should.equal('0 poloziek');
+      translate.test.get({ count: 1 }).should.equal('1 polozka');
+      translate.test.get({ count: 2 }).should.equal('2 polozky');
+      translate.test.get({ count: 6 }).should.equal('6 poloziek');
+      translate.test.get({ count: 7 }).should.equal('7 sedem');
+      translate.test.get({ count: 3 }).should.equal('3 tri');
+
+      translate.setLocale('en_US', () => {
+        translate.test.get({ count: 0 }).should.equal('0 items');
+        translate.test.get({ count: 1 }).should.equal('1 item');
+        translate.test.get({ count: 2 }).should.equal('2 items');
+        translate.test.get({ count: 6 }).should.equal('6 items');
+        translate.test.get({ count: 7 }).should.equal('7 seven');
+        translate.test.get({ count: 3 }).should.equal('3 three');
+        done();
+      });
+
+    });
+  });
 });
 
 describe('Catch event', () => {
