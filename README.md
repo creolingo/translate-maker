@@ -1,6 +1,6 @@
 # Translate Maker
 
-Universal javascript translation library.
+Universal internationalization (i18n) open source library.
 Star this project on [GitHub][github-url].
 
 [![NPM version][npm-image]][npm-url]
