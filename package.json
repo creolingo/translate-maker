@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.2.42",
+  "version": "0.2.43",
   "description": "Universal internationalization (i18n) open source library",
   "main": "dist/index.js",
   "keywords": [
