@@ -138,12 +138,16 @@ export default class Translate extends EventEmitter {
     return this._options;
   }
 
-  getAdapter() {
-    return this.getOptions().adapter;
+  getLocale() {
+    return this.getOptions().locale;
   }
 
   getCache() {
     return this.getOptions().cache;
+  }
+
+  getAdapter() {
+    return this.getOptions().adapter;
   }
 
   setFilter(type, fn) {
