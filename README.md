@@ -550,7 +550,7 @@ import Translate from 'translate-maker';
 
 const t = new Translate();
 t.set({
-  followers: `{$user.name} has {$user.followers, plural
+  followers: `{$user.name} has {$user.followers, plural,
     zero  {no followers}
     one   {{$user.followers} follower}
     other {{$user.followers} followers}
@@ -575,7 +575,7 @@ import Translate from 'translate-maker';
 
 const t = new Translate();
 t.set({
-  followers: `{$user.name} has {$user.followers, plural
+  followers: `{$user.name} has {$user.followers, plural,
     zero {no followers}
     one  {# follower}
          {# followers}
@@ -613,7 +613,7 @@ import Translate, { Plural } from 'translate-maker';
 
 const t = new Translate();
 t.set({
-  followers: `{$user.name} has {$user.followers, plural
+  followers: `{$user.name} has {$user.followers, plural,
     ${Plural.ZERO} {no followers}
     ${Plural.ONE}  {# follower}
                    {# followers}
