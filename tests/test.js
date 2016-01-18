@@ -14,7 +14,7 @@ describe('Translate', () => {
   });
 
   it('should be able to load locale', (done) => {
-    t.setLocale('sk_SK', done);
+    t.setLocale('en_US', done);
   });
 
   it('set simple translation property', () => {
@@ -156,6 +156,48 @@ describe('Translate', () => {
         followers: 1,
       },
     }).should.equal('Zlatko has 1 follower');
+  });
+
+  it('should be able to use ordinal', () => {
+    const user = {
+      position: 15,
+    };
+
+    t.ordinal.get({
+      position: 1,
+    }).should.equal('Take the 1st right');
+
+    t.ordinal.get({
+      position: 2,
+    }).should.equal('Take the 2nd right');
+
+    t.ordinal.get({
+      position: 3,
+    }).should.equal('Take the 3rd right');
+
+    t.ordinal.get({
+      position: 4,
+    }).should.equal('Take the 4th right');
+
+    t.ordinal.get({
+      position: 11,
+    }).should.equal('Take the 11th right');
+
+    t.ordinal.get({
+      position: 21,
+    }).should.equal('Take the 21st right');
+
+    t.ordinal.get({
+      position: 22,
+    }).should.equal('Take the 22nd right');
+
+    t.ordinal.get({
+      position: 33,
+    }).should.equal('Take the 33rd right');
+
+    t.ordinal.get({
+      position: 44,
+    }).should.equal('Take the 44th right');
   });
 
 

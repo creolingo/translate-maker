@@ -1,7 +1,6 @@
 # Translate Maker
 
 Universal internationalization (i18n) open source library.
-Star this project on [GitHub][github-url].
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
@@ -41,12 +40,14 @@ npm install translate-maker
 - JSON Structure
 - [Variables][variables-hash] and [references][references-hash]
 - [Nested][nested-hash] objects
-- [Conditioned][conditioned-hash] translations (Plural, Gender etc...)
+- [Conditioned][conditioned-hash] translations (Plural, Gender, Ordinal etc...)
 - [Filters][filters-hash] capitalize, upperCase, lowerCase etc... and custom filters
 - [Default][default-translations-hash] translations and [Default][default-references-hash] references
 - Resource adapters (Memory, File, XHR)
 - Cache modules (with support for dehydration / rehydration)
 - Integrates with [React](https://github.com/CherrySoftware/react-translate-maker) and [Angular](https://github.com/CherrySoftware/angular-translate-maker)
+- Webpack support
+- [Automatic extraction](https://github.com/CherrySoftware/babel-plugin-react-translate-maker) of translations from modules that use [react-translate-maker](https://github.com/CherrySoftware/react-translate-maker)
 - And much more ([functions][functions-hash], [object translations][object-translations-hash] etc..)
 
 # Support us
@@ -652,6 +653,32 @@ const result = t.get('working', {
   user2: user2
 });
 console.log(result); // => Boy Zlatko is working with girl Livia
+```
+
+### Ordinal example
+
+```js
+import Translate from 'translate-maker';
+
+const t = new Translate();
+t.set({
+  takeRight: `Take the {$position, ordinal,
+    one {#st}
+    two {#nd}
+    few {#rd}
+        {#th}
+  } right`
+});
+
+const result = t.get('followers', {
+  position: 2
+});
+console.log(result); // => Take the 2nd right
+
+const result2 = t.get('followers', {
+  position: 11
+});
+console.log(result2); // => Take the 11th right
 ```
 
 ### Filters
