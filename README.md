@@ -691,6 +691,7 @@ You can use one of the predefined filters:
  * [escape](https://lodash.com/docs#escape)
  * lowerCase
  * plural
+ * ordinal
  * select {$gender | select, male {Boy}, female {Girl}, {Girl/Boy}}
  * [trim](https://lodash.com/docs#trim)
  * [trunc](https://lodash.com/docs#trunc) {$name | trunc, 6, '...'}

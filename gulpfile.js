@@ -6,11 +6,8 @@ import coveralls from 'gulp-coveralls';
 import path from 'path';
 import { Instrumenter } from 'isparta';
 import peg from 'gulp-peg';
-//import prepareCLDR from './src/prepareCLDR';
 
-const babelConfig = {
-  stage: 0,
-};
+//import prepareCLDR from './src/prepareCLDR';
 
 gulp.task('prepare-cldr', () => {
   //prepareCLDR();
@@ -36,7 +33,7 @@ gulp.task('pre-test', () => {
 
 gulp.task('test', ['pre-test'], () => {
   return gulp.src('./tests/**/*.js')
-    .pipe(babel(babelConfig))
+    .pipe(babel())
     .pipe(mocha({
       timeout: 20000,
       reporter: 'spec',
@@ -60,7 +57,7 @@ gulp.task('coveralls', ['test'], () => {
 
 gulp.task('build', ['compile-peg', 'prepare-cldr'], () => {
   return gulp.src('./src/**/*.{js,jsx}')
-    .pipe(babel(babelConfig))
+    .pipe(babel())
     .pipe(gulp.dest('./dist'));
 });
 

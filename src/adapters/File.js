@@ -44,7 +44,7 @@ export default class File extends Adapter {
     const filePath = options.getPath(options, namespace, fileName);
 
     const data = require(filePath);
-    callback(null, data);
+    callback(null, data['default'] ? data['default'] : data);
   }
 
   set(locale, value, namespace, callback) {
