@@ -83,4 +83,10 @@ export default {
     lowerCase: 'This is {$value | lowerCase }',
   },
   nameFn: 'Zlatko {$user.lastName}', // external variable
+  ordinal: `Take the {$position, ordinal,
+    one {#st}
+    two {#nd}
+    few {#rd}
+        {#th}
+  } right`,
 };
