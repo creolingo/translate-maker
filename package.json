@@ -33,14 +33,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CherrySoftware/translate-maker.git"
+    "url": "https://github.com/CherryProjects/translate-maker.git"
   },
   "author": "Zlatko Fedor <zlatkofedor@cherrysro.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/CherrySoftware/translate-maker/issues"
+    "url": "https://github.com/CherryProjects/translate-maker/issues"
   },
-  "homepage": "https://github.com/CherrySoftware/translate-maker",
+  "homepage": "https://github.com/CherryProjects/translate-maker",
   "dependencies": {
     "events": "^1.1.0",
     "keymirror": "^0.1.1",

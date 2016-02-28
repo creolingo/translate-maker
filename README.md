@@ -8,21 +8,21 @@ Universal internationalization (i18n) open source library.
 
 [npm-image]: https://img.shields.io/npm/v/translate-maker.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/translate-maker
-[travis-image]: https://img.shields.io/travis/CherrySoftware/translate-maker/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/CherrySoftware/translate-maker
-[coveralls-image]: https://img.shields.io/coveralls/CherrySoftware/translate-maker/master.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/CherrySoftware/translate-maker?branch=master
-[github-url]: https://github.com/CherrySoftware/translate-maker
+[travis-image]: https://img.shields.io/travis/CherryProjects/translate-maker/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/CherryProjects/translate-maker
+[coveralls-image]: https://img.shields.io/coveralls/CherryProjects/translate-maker/master.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/CherryProjects/translate-maker?branch=master
+[github-url]: https://github.com/CherryProjects/translate-maker
 
-[conditioned-hash]: https://github.com/CherrySoftware/translate-maker#conditional-translation
-[filters-hash]: https://github.com/CherrySoftware/translate-maker#filters-1
-[references-hash]: https://github.com/CherrySoftware/translate-maker#reference-translation
-[variables-hash]: https://github.com/CherrySoftware/translate-maker#external-variables
-[nested-hash]: https://github.com/CherrySoftware/translate-maker#nested-external-variables
-[default-references-hash]: https://github.com/CherrySoftware/translate-maker#default-variants
-[default-translations-hash]: https://github.com/CherrySoftware/translate-maker#default-translations
-[functions-hash]: https://github.com/CherrySoftware/translate-maker#functions
-[object-translations-hash]: https://github.com/CherrySoftware/translate-maker#object-translations
+[conditioned-hash]: https://github.com/CherryProjects/translate-maker#conditional-translation
+[filters-hash]: https://github.com/CherryProjects/translate-maker#filters-1
+[references-hash]: https://github.com/CherryProjects/translate-maker#reference-translation
+[variables-hash]: https://github.com/CherryProjects/translate-maker#external-variables
+[nested-hash]: https://github.com/CherryProjects/translate-maker#nested-external-variables
+[default-references-hash]: https://github.com/CherryProjects/translate-maker#default-variants
+[default-translations-hash]: https://github.com/CherryProjects/translate-maker#default-translations
+[functions-hash]: https://github.com/CherryProjects/translate-maker#functions
+[object-translations-hash]: https://github.com/CherryProjects/translate-maker#object-translations
 
 # Installation
 
@@ -45,9 +45,9 @@ npm install translate-maker
 - [Default][default-translations-hash] translations and [Default][default-references-hash] references
 - Resource adapters (Memory, File, XHR)
 - Cache modules (with support for dehydration / rehydration)
-- Integrates with [React](https://github.com/CherrySoftware/react-translate-maker) and [Angular](https://github.com/CherrySoftware/angular-translate-maker)
+- Integrates with [React](https://github.com/CherryProjects/react-translate-maker) and [Angular](https://github.com/CherryProjects/angular-translate-maker)
 - Webpack support
-- [Automatic extraction](https://github.com/CherrySoftware/babel-plugin-react-translate-maker) of translations from modules that use [react-translate-maker](https://github.com/CherrySoftware/react-translate-maker)
+- [Automatic extraction](https://github.com/CherryProjects/babel-plugin-react-translate-maker) of translations from modules that use [react-translate-maker](https://github.com/CherryProjects/react-translate-maker)
 - And much more ([functions][functions-hash], [object translations][object-translations-hash] etc..)
 
 # Support us
