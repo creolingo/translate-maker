@@ -3,15 +3,16 @@ import Adapter from './Adapter';
 function request(url, parse, callback) {
   try {
     const xhr = new (XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
-    xhr.open('GET', url, 1);
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = () => {
       if (xhr.readyState > 3) {
-        callback(null, parse(x.responseText));
+        callback(null, parse(xhr.responseText));
       }
     };
-    xhr.send(data);
+
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send();
   } catch (e) {
     callback(e);
   }

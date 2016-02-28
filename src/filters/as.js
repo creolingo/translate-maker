@@ -1,5 +1,5 @@
-import set from 'lodash/object/set';
-import forEach from 'lodash/collection/forEach';
+import set from 'lodash/set';
+import forEach from 'lodash/forEach';
 
 export default function(value, part, attrs, metadata, ...args) {
   const params = {};

@@ -1,4 +1,4 @@
-import escape from 'lodash/string/escape';
+import escape from 'lodash/escape';
 
 export default function(value) {
   return escape(value);

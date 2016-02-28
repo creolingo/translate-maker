@@ -1,10 +1,10 @@
-import isPlainObject from 'lodash/lang/isPlainObject';
-import startsWith from 'lodash/string/startsWith';
-import find from 'lodash/collection/find';
-import reject from 'lodash/collection/reject';
-import get from 'lodash/object/get';
-import reduce from 'lodash/collection/reduce';
-import forOwn from 'lodash/object/forOwn';
+import isPlainObject from 'lodash/isPlainObject';
+import startsWith from 'lodash/startsWith';
+import find from 'lodash/find';
+import reject from 'lodash/reject';
+import get from 'lodash/get';
+import reduce from 'lodash/reduce';
+import forOwn from 'lodash/forOwn';
 import parser from './parser/parser';
 import Mode from './constants/Mode';
 

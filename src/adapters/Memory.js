@@ -1,6 +1,6 @@
 import Adapter from './Adapter';
-import get from 'lodash/object/get';
-import set from 'lodash/object/set';
+import get from 'lodash/get';
+import set from 'lodash/set';
 
 const defaultOptions = {
   data: {},

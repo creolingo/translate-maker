@@ -1,8 +1,8 @@
 import Translation from './Translation';
 import * as filters from './filters';
-import isPlainObject from 'lodash/lang/isPlainObject';
-import keys from 'lodash/object/keys';
-import forOwn from 'lodash/object/forOwn';
+import isPlainObject from 'lodash/isPlainObject';
+import keys from 'lodash/keys';
+import forOwn from 'lodash/forOwn';
 import MemoryAdapter from './adapters/Memory';
 import MemoryCache from './caches/Memory';
 import EventEmitter from 'events';

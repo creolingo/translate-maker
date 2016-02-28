@@ -1,4 +1,4 @@
-import trim from 'lodash/string/trim';
+import trim from 'lodash/trim';
 
 export default function(value) {
   return trim(value);

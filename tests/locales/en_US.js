@@ -78,7 +78,7 @@ export default {
   filter: {
     trim: 'Trim this {$value | trim}',
     trim2: 'Trim this {$value, trim}',
-    trunc: `Trunc this {$value | trunc, 7, '..'}`,
+    trunc: `Trunc this {$value | truncate, 7, '..'}`,
     upperCase: 'This is {$value | upperCase }',
     lowerCase: 'This is {$value | lowerCase }',
   },

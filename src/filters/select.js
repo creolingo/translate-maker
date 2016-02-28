@@ -1,4 +1,4 @@
-import find from 'lodash/collection/find';
+import find from 'lodash/find';
 
 export default function(value, part, attrs, metadata, ...args) {
   let defaultOption = null;

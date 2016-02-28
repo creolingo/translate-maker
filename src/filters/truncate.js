@@ -1,7 +1,7 @@
-import trunc from 'lodash/string/trunc';
+import truncate from 'lodash/truncate';
 
 export default function(value, part, attrs, metadata, length = 30, omission = '...') {
-  return trunc(value, {
+  return truncate(value, {
     length,
     omission,
   });
