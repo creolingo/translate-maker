@@ -7,6 +7,10 @@ export default function getInstance(options) {
     return instance;
   }
 
+  if (!options) {
+    throw new Error('You need to initialize singleton instance first. Call getInstance with options');
+  }
+
   instance = new Translate(options);
   return instance;
 }
