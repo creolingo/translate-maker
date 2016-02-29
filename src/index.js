@@ -8,6 +8,10 @@ import Mode from './constants/Mode';
 import * as Adapters from './adapters';
 import * as Caches from './caches';
 
+import getInstance from './getInstance';
+
+export { getInstance };
+
 // export constants
 export { Plural, Gender, Mode };
 
