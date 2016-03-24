@@ -3,7 +3,7 @@ import Adapter from './Adapter';
 export function defaultResolvePath(locale, namespace, options) {
   const { ext, path } = options;
 
-  const fileName = `${locale}${ext || ''}`;
+  const fileName = ext ? `${locale}${ext}` : locale;
 
   const namespacePath = namespace
     ? '/' + namespace.replace('.', '/')
@@ -13,7 +13,7 @@ export function defaultResolvePath(locale, namespace, options) {
     ? `${namespacePath}/${fileName}`
     : fileName;
 
-  return namespaceFilePath
+  return path
     ? `${path}/${namespaceFilePath}`
     : namespaceFilePath;
 }
