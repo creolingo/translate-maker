@@ -1,27 +1,35 @@
 import Adapter from './Adapter';
 
-function getPath(options, namespace, fileName) {
-  if (!namespace) {
-    return `${options.path}/${fileName}`;
-  }
+export function defaultResolvePath(locale, namespace, options) {
+  const { ext, path } = options;
 
-  const mainPath = options.namespacePath || options.path;
-  const directory = namespace.replace('.', '/'); // replace com.data => com/data
+  const fileName = `${locale}${ext || ''}`;
 
-  return `${mainPath}/${directory}/${fileName}`;
+  const namespacePath = namespace
+    ? '/' + namespace.replace('.', '/')
+    : '';
+
+  const namespaceFilePath = namespacePath
+    ? `${namespacePath}/${fileName}`
+    : fileName;
+
+  return namespaceFilePath
+    ? `${path}/${namespaceFilePath}`
+    : namespaceFilePath;
 }
 
 const defaultOptions = {
   path: void 0,
-  getFile: void 0,
-  getPath,
-  ext: '.js',
+  ext: void 0,
+  getData: void 0,
+  setData: void 0,
+  resolvePath: defaultResolvePath,
 };
 
 export default class File extends Adapter {
   constructor(options = {}) {
-    if (!options.path && !options.getFile) {
-      throw new Error('You need to set path or getFile');
+    if (!options.getData) {
+      throw new Error('You need to set getData');
     }
 
     super({
@@ -36,18 +44,25 @@ export default class File extends Adapter {
     }
 
     const options = this.getOptions();
-    if (options.getFile) {
-      return callback(null, options.getFile(locale, namespace));
-    }
+    const { resolvePath, getData } = options;
+    const path = resolvePath(locale, namespace, options);
 
-    const fileName = `${locale}${options.ext || ''}`;
-    const filePath = options.getPath(options, namespace, fileName);
-
-    const data = require(filePath);
-    callback(null, data['default'] ? data['default'] : data);
+    return getData(path, callback);
   }
 
   set(locale, value, namespace, callback) {
-    throw new Error('File adapter is read only');
+    if (typeof namespace === 'function') {
+      return this.set(locale, value, null, namespace);
+    }
+
+    const options = this.getOptions();
+    const { resolvePath, setData } = options;
+    if (!setData) {
+      return callback(new Error('You need to set option setData'));
+    }
+
+    const path = resolvePath(locale, namespace, options);
+
+    return setData(path, value, callback);
   }
 }

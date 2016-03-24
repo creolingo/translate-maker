@@ -1,6 +1,7 @@
 import Adapter from './Adapter';
+import { defaultResolvePath } from './File';
 
-function request(url, parse, callback) {
+function defaultGetData(url, parse, callback) {
   try {
     const xhr = new (XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
     xhr.onreadystatechange = () => {
@@ -18,23 +19,13 @@ function request(url, parse, callback) {
   }
 }
 
-function getPath(options, namespace, fileName) {
-  if (!namespace) {
-    return `${options.path}/${fileName}`;
-  }
-
-  const mainPath = options.namespacePath || options.path;
-  const directory = namespace.replace('.', '/'); // replace com.data => com/data
-
-  return `${mainPath}/${directory}/${fileName}`;
-}
-
 const defaultOptions = {
   path: void 0,
-  getPath,
+  resolvePath: defaultResolvePath,
   parse: JSON.parse,
-  request,
   ext: '.json',
+  getData: defaultGetData,
+  setData: void 0,
 };
 
 export default class XHR extends Adapter {
@@ -55,13 +46,17 @@ export default class XHR extends Adapter {
     }
 
     const options = this.getOptions();
-    const fileName = `${locale}${options.ext || ''}`;
-    const path = options.getPath(options, namespace, fileName);
+    const { resolvePath, getData, parse } = options;
+    const path = resolvePath(locale, namespace, options);
 
-    options.request(path, options.parse, callback);
+    return getData(path, parse, callback);
   }
 
   set(locale, value, namespace, callback) {
+    if (typeof namespace === 'function') {
+      return this.set(locale, value, null, namespace);
+    }
+
     throw new Error('XHR adapter is read only');
   }
 }

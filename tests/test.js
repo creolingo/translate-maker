@@ -2,6 +2,11 @@ import should from 'should';
 import Translate, { Plural, Gender, Adapters, Caches, Mode } from '../src';
 import keymirror from 'keymirror';
 
+function getData(path, callback) {
+  const file = require(path);
+  callback(null, file && file.default ? file.default : file);
+}
+
 describe('Translate', () => {
   let t = null;
 
@@ -9,6 +14,7 @@ describe('Translate', () => {
     t = new Translate({
       adapter: new Adapters.File({
         path: __dirname + '/locales',
+        getData,
       }),
     }, done);
   });

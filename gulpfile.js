@@ -13,26 +13,26 @@ gulp.task('prepare-cldr', () => {
   //prepareCLDR();
 });
 
-gulp.task('compile-peg', () => {
-  return gulp.src(['src/**/*.peg'])
+gulp.task('compile-peg', () =>
+  gulp.src(['src/**/*.peg'])
     .pipe(peg({
       exportVar: 'module.exports',
     }))
-    .pipe(gulp.dest('./src'));
-});
+    .pipe(gulp.dest('./src'))
+);
 
-gulp.task('pre-test', () => {
-  return gulp.src(['src/**/*.js', '!src/parser/**'])
+gulp.task('pre-test', () =>
+  gulp.src(['src/**/*.js', '!src/parser/**'])
     .pipe(istanbul({
       dir: './coverage',
       instrumenter: Instrumenter,
       includeUntested: true,
     }))
-    .pipe(istanbul.hookRequire());
-});
+    .pipe(istanbul.hookRequire())
+);
 
-gulp.task('test', ['pre-test'], () => {
-  return gulp.src('./tests/**/*.js')
+gulp.task('test', ['pre-test'], () =>
+  gulp.src('./tests/**/*.js')
     .pipe(babel())
     .pipe(mocha({
       timeout: 20000,
@@ -41,10 +41,10 @@ gulp.task('test', ['pre-test'], () => {
     .pipe(istanbul.writeReports())
     .pipe(istanbul.enforceThresholds({
       thresholds: {
-        global: 80,
+        global: 79,
       },
-    }));
-});
+    }))
+);
 
 gulp.task('coveralls', ['test'], () => {
   if (!process.env.CI) {
@@ -55,11 +55,11 @@ gulp.task('coveralls', ['test'], () => {
     .pipe(coveralls());
 });
 
-gulp.task('build', ['compile-peg', 'prepare-cldr'], () => {
-  return gulp.src('./src/**/*.{js,jsx}')
+gulp.task('build', ['compile-peg', 'prepare-cldr'], () =>
+  gulp.src('./src/**/*.{js,jsx}')
     .pipe(babel())
-    .pipe(gulp.dest('./dist'));
-});
+    .pipe(gulp.dest('./dist'))
+);
 
 gulp.doneCallback = (err) => {
   process.exit(err ? 1 : 0);

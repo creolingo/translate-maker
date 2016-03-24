@@ -33,7 +33,7 @@ export default class Memory extends Adapter {
 
     const path = this.getPath(locale, namespace);
 
-    callback(null, get(this._data, path));
+    return callback(null, get(this._data, path));
   }
 
   set(locale, value, namespace, callback) {
@@ -49,7 +49,7 @@ export default class Memory extends Adapter {
 
     set(this._data, path, value);
 
-    callback(null);
+    return callback(null);
   }
 
   dehydrate() {
