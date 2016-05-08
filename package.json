@@ -1,14 +1,13 @@
 {
   "name": "translate-maker",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Universal internationalization (i18n) open source library",
   "main": "dist/index.js",
   "files": [
-    "*.md",
-    "dist",
-    "umd",
-    "src",
-    "tests"
+    "dist/",
+    "package.json",
+    "README.md",
+    "LICENSE"
   ],
   "keywords": [
     "translate",
@@ -24,12 +23,6 @@
     "react",
     "angular",
     "ember"
-  ],
-  "files": [
-    "dist/",
-    "package.json",
-    "README.md",
-    "LICENSE"
   ],
   "scripts": {
     "prepublish": "npm run build",
