@@ -3,6 +3,13 @@
   "version": "0.4.4",
   "description": "Universal internationalization (i18n) open source library",
   "main": "dist/index.js",
+  "files": [
+    "*.md",
+    "dist",
+    "umd",
+    "src",
+    "tests"
+  ],
   "keywords": [
     "translate",
     "locale",
