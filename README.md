@@ -24,14 +24,6 @@ Universal internationalization (i18n) open source library.
 [functions-hash]: https://github.com/CherryProjects/translate-maker#functions
 [object-translations-hash]: https://github.com/CherryProjects/translate-maker#object-translations
 
-# Installation
-
-Install via npm.
-
-```sh
-npm install translate-maker
-```
-
 # Features
 
 - Build on standards ([ICU Message syntax](http://userguide.icu-project.org/formatparse/messages), [Unicode CLDR](http://cldr.unicode.org/))
