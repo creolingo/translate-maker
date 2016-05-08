@@ -5,6 +5,9 @@
   "main": "dist/index.js",
   "files": [
     "dist/",
+    "umd/",
+    "tests/",
+    "src/",
     "package.json",
     "README.md",
     "LICENSE"
