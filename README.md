@@ -54,6 +54,34 @@ npm install translate-maker
 
 Star this project on [GitHub][github-url].
 
+# Installation
+
+Using [npm](https://www.npmjs.com/):
+
+```sh
+$ npm install --save translate-maker
+```
+
+Then with a module bundler like [webpack](https://webpack.github.io/) that supports either CommonJS or ES2015 modules, use as you would anything else:
+
+```js
+// using an ES6 transpiler, like babel
+import Translate from 'translate-maker';
+
+// not using an ES6 transpiler
+var Translate = require('translate-maker').Translate;
+```
+
+### UMD
+The UMD build is also available on [npmcdn](https://npmcdn.com):
+
+```html
+<script src="https://npmcdn.com/translate-maker/umd/TranslateMaker.min.js"></script>
+```
+
+You can find the library on `window.TranslateMaker`.
+
+
 # Usage
 
 ### Basic

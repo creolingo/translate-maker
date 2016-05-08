@@ -22,4 +22,5 @@ export { Adapters, Caches };
 export { Translation };
 
 // export main class
+export { Translate };
 export default Translate;
