@@ -112,9 +112,9 @@ export default class Translate extends EventEmitter {
     };
 
     this._clear();
-    this.load((...a)=>{
+    this.load((...args)=>{
       this.emit('locale', locale);
-      callback(...a);
+      callback(...args);
     });
 
   }
