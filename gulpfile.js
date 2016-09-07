@@ -48,7 +48,7 @@ gulp.task('test', ['pre-test'], () =>
 
 gulp.task('coveralls', ['test'], () => {
   if (!process.env.CI) {
-    return void 0;
+    return undefined;
   }
 
   return gulp.src(path.join(__dirname, 'coverage/lcov.info'))
@@ -60,7 +60,3 @@ gulp.task('build', ['compile-peg', 'prepare-cldr'], () =>
     .pipe(babel())
     .pipe(gulp.dest('./dist'))
 );
-
-gulp.doneCallback = (err) => {
-  process.exit(err ? 1 : 0);
-};
