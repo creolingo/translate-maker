@@ -65,10 +65,10 @@ var Translate = require('translate-maker').Translate;
 ```
 
 ### UMD
-The UMD build is also available on [npmcdn](https://npmcdn.com):
+The UMD build is also available on [unpkg](https://unpkg.com):
 
 ```html
-<script src="https://npmcdn.com/translate-maker/umd/TranslateMaker.min.js"></script>
+<script src="https://unpkg.com/translate-maker/umd/TranslateMaker.min.js"></script>
 ```
 
 You can find the library on `window.TranslateMaker`.
