@@ -594,4 +594,25 @@ describe('Memory cache', () => {
     t.test.get().should.equal('222');
     t.test.get().should.equal('222');
   });
+
+  it('should be able to use cache', () => {
+    const t = new Translate();
+
+    t.set({
+        en_US: {
+            menu: {
+                title: "Welcome!"
+            }
+        },
+        de_DE: {
+            menu: {
+                title: "Willkommen!"
+            }
+        }
+    });
+
+    const translated = t.get("de_DE.menu.title");
+    console.log(translated);
+  });
+
 });

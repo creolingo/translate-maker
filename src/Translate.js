@@ -133,7 +133,11 @@ export default class Translate extends EventEmitter {
   }
 
   set(name, value) {
-    return this._translation.set(name, value, this);
+    const result = this._translation.set(name, value, this);
+
+    this.emit('changed');
+
+    return result;
   }
 
   getOptions() {
