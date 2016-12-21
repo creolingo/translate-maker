@@ -2,7 +2,7 @@ import Cache from './Cache';
 
 export default class Dummy extends Cache {
   get(key) {
-    return void 0;
+    return undefined;
   }
 
   has(key) {
@@ -18,10 +18,10 @@ export default class Dummy extends Cache {
   }
 
   dehydrate() {
-    return void 0;
+    return undefined;
   }
 
   rehydrate(state) {
-    return void 0;
+    return undefined;
   }
 }

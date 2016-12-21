@@ -1,17 +1,17 @@
 export default class Adapter {
   constructor(options = {}) {
-    this._options = options;
+    this.options = options;
   }
 
   getOptions() {
-    return this._options;
+    return this.options;
   }
 
-  get(locale, namespace, callback) {
+  async get(locale, namespace) {
     throw new Error('Implement method get');
   }
 
-  set(locale, value, namespace, callback) {
+  async set(locale, value, namespace) {
     throw new Error('Implement method set');
   }
 

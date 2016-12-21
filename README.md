@@ -1,6 +1,6 @@
 # Translate Maker
 
-Universal internationalization (i18n) open source library.
+Lightweight translation module. Internationalize your great project.
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
@@ -26,9 +26,9 @@ Universal internationalization (i18n) open source library.
 
 # Features
 
-- Build on standards ([ICU Message syntax](http://userguide.icu-project.org/formatparse/messages), [Unicode CLDR](http://cldr.unicode.org/))
+- Build on standards ([ICU Message syntax](http://userguide.icu-project.org/formatparse/messages), [Unicode CLDR](http://cldr.unicode.org/)), ES6 and promises
 - Support for 190+ languages
-- Runs in the browser (IE 6+) and Node.js
+- Runs in the browser and Node.js
 - JSON Structure
 - [Variables][variables-hash] and [references][references-hash]
 - [Nested][nested-hash] objects
@@ -106,19 +106,6 @@ const result = t.get('greeting');
 console.log(result); // => Good morning
 ```
 
-### Basic get with object notation
-
-Each translation is available with object notation.
-```js
-import Translate from 'translate-maker';
-
-const t = new Translate();
-t.set('greeting', 'Good morning');
-
-const result = t.greeting.get();
-console.log(result); // => Good morning
-```
-
 ### External variables
 
 You can use your own variables from your code. Use the dollar syntax { $name }.
@@ -135,11 +122,6 @@ const result = t.get('greeting', {
   name: 'Zlatko'
 });
 console.log(result); // => Good morning Zlatko
-
-const result2 = t.greeting.get({
-  name: 'Zlatko'
-});
-console.log(result2); // => Good morning Zlatko
 ```
 
 ### Nested external variables
@@ -163,11 +145,6 @@ const result = t.get('greeting', {
   user: user
 });
 console.log(result); // => Good morning Zlatko Fedor
-
-const result2 = t.greeting.get({
-  user: user
-});
-console.log(result2); // => Good morning Zlatko Fedor
 ```
 
 ### Functions
@@ -238,12 +215,6 @@ const result = t.get('greeting', {
   name: 'Zlatko'
 });
 console.log(result); // => Good morning Zlatko
-
-// you can use object notation
-const result2 = t.greeting.get({
-  name: 'Zlatko'
-});
-console.log(result2); // => Good morning Zlatko
 ```
 
 ### Multiple variants
@@ -270,12 +241,6 @@ const result = t.get('greeting.afternoon', {
   name: 'Zlatko'
 });
 console.log(result); // => Good afternoon Zlatko
-
-// you can use object notation
-const result2 = t.greeting.evening.get({
-  name: 'Zlatko'
-});
-console.log(result2); // => Good evening Zlatko
 ```
 
 ### Default variants
@@ -300,10 +265,6 @@ t.set({
 
 const result = t.get('greeting');
 console.log(result); // => Good morning
-
-// you can use object notation
-const result2 = t.greeting.get();
-console.log(result2); // => Good morning
 ```
 
 ### Default variants for references
@@ -328,10 +289,6 @@ t.set({
 
 const result = t.get('greeting');
 console.log(result); // => Good morning
-
-// you can use object notation
-const result2 = t.greeting.get();
-console.log(result2); // => Good morning
 ```
 
 ### Default translation
@@ -379,13 +336,6 @@ const result = t.get('greeting', {
   user: user
 });
 console.log(result); // => Good afternoon Zlatko
-
-// you can use object notation
-const result2 = t.greeting.get({
-  daypartVariant: 'evening',
-  user: user
-});
-console.log(result2); // => Good evening Zlatko
 ```
 
 ### Escape variable notation

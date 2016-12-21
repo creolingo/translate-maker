@@ -8,9 +8,8 @@ function getValue(data, key, defaultValue) {
   return option ? option.value : defaultValue;
 }
 
-export default function(value, part, attrs, metadata, ...args) {
-  const root = this._root;
-  const locale = root.getOptions().locale;
+export default function ordinal(value, part, attrs, metadata, ...args) {
+  const locale = this.getOptions().locale;
   const numberValue = Number(value);
 
   const plural = getPlural(locale, 'en');
@@ -45,10 +44,10 @@ export default function(value, part, attrs, metadata, ...args) {
   });
 
   if (exactOption) {
-    return this._buildText(exactOption.value, attrs, smartValue);
+    return this.buildText(exactOption.value, attrs, smartValue);
   } else if (option) {
-    return this._buildText(option.value, attrs, smartValue);
+    return this.buildText(option.value, attrs, smartValue);
   } else if (defaultOption) {
-    return this._buildText(defaultOption.value, attrs, smartValue);
+    return this.buildText(defaultOption.value, attrs, smartValue);
   }
 }

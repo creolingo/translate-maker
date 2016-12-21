@@ -10,4 +10,16 @@ import escape from './escape';
 import upperCase from './upperCase';
 import lowerCase from './lowerCase';
 
-export { capitalize, as, select, plural, ordinal, camelCase, trim, truncate, escape, upperCase, lowerCase };
+export default {
+  capitalize,
+  as,
+  select,
+  plural,
+  ordinal,
+  camelCase,
+  trim,
+  truncate,
+  escape,
+  upperCase,
+  lowerCase,
+};

@@ -18,14 +18,6 @@ export function defaultResolvePath(locale, namespace, options) {
     : namespaceFilePath;
 }
 
-const defaultOptions = {
-  path: void 0,
-  ext: void 0,
-  getData: void 0,
-  setData: void 0,
-  resolvePath: defaultResolvePath,
-};
-
 export default class File extends Adapter {
   constructor(options = {}) {
     if (!options.getData) {
@@ -33,36 +25,36 @@ export default class File extends Adapter {
     }
 
     super({
-      ...defaultOptions,
+      path: undefined,
+      ext: undefined,
+      getData: undefined,
+      setData: undefined,
+      resolvePath: defaultResolvePath,
       ...options,
     });
   }
 
-  get(locale, namespace, callback) {
-    if (typeof namespace === 'function') {
-      return this.get(locale, null, namespace);
-    }
-
+  async get(locale, namespace) {
     const options = this.getOptions();
     const { resolvePath, getData } = options;
     const path = resolvePath(locale, namespace, options);
 
-    return getData(path, callback);
+    return await getData(path);
   }
 
-  set(locale, value, namespace, callback) {
+  async set(locale, value, namespace) {
     if (typeof namespace === 'function') {
-      return this.set(locale, value, null, namespace);
+      return await this.set(locale, value, null, namespace);
     }
 
     const options = this.getOptions();
     const { resolvePath, setData } = options;
     if (!setData) {
-      return callback(new Error('You need to set option setData'));
+      throw new Error('You need to set option setData');
     }
 
     const path = resolvePath(locale, namespace, options);
 
-    return setData(path, value, callback);
+    return await setData(path, value);
   }
 }

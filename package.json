@@ -1,7 +1,7 @@
 {
   "name": "translate-maker",
-  "version": "0.4.8",
-  "description": "Universal internationalization (i18n) open source library",
+  "version": "0.5.0",
+  "description": "Lightweight translation module. Internationalize your great project.",
   "main": "dist/index.js",
   "files": [
     "dist/",
@@ -41,35 +41,36 @@
     "type": "git",
     "url": "https://github.com/CherryProjects/translate-maker.git"
   },
-  "author": "Zlatko Fedor <zlatkofedor@cherrysro.com>",
+  "author": "Zlatko Fedor <zlatkofedor@cherryprojects.com>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/CherryProjects/translate-maker/issues"
   },
   "homepage": "https://github.com/CherryProjects/translate-maker",
   "dependencies": {
+    "debug": "^2.3.2",
     "events": "^1.1.1",
     "keymirror": "^0.1.1",
-    "lodash": "^4.15.0",
-    "make-plural": "^3.0.6",
+    "lodash": "^4.17.2",
+    "make-plural": "^4.0.1",
     "locale-id": "^1.0.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.14.0",
-    "babel-core": "^6.14.0",
-    "babel-eslint": "^6.1.2",
-    "babel-loader": "^6.2.5",
-    "babel-plugin-transform-class-properties": "^6.11.5",
-    "babel-preset-es2015": "^6.14.0",
-    "babel-preset-stage-0": "^6.5.0",
-    "babel-preset-stage-1": "^6.13.0",
-    "cross-env": "^2.0.1",
-    "eslint": "^3.4.0",
-    "eslint-config-airbnb": "^10.0.1",
-    "eslint-loader": "^1.5.0",
-    "eslint-plugin-react": "^6.2.0",
-    "eslint-plugin-jsx-a11y": "^2.2.1",
-    "eslint-plugin-import": "^1.14.0",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-class-properties": "^6.19.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "babel-preset-stage-1": "^6.16.0",
+    "cross-env": "^3.1.3",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-react": "^6.8.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-import": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-mocha": "^3.0.1",
     "gulp-babel": "^6.1.2",
@@ -77,10 +78,10 @@
     "gulp-istanbul": "^1.1.1",
     "gulp-coveralls": "^0.1.4",
     "gulp-peg": "^0.2.0",
-    "should": "^11.1.0",
-    "coveralls": "^2.11.12",
+    "should": "^11.1.2",
+    "coveralls": "^2.11.15",
     "isparta": "^4.0.0",
     "cldr": "^3.5.2",
-    "webpack": "^1.13.2"
+    "webpack": "^1.14.0"
   }
 }

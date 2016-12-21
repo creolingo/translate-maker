@@ -4,32 +4,32 @@ export default class Memory extends Cache {
   constructor(options = {}) {
     super(options);
 
-    this._data = {};
+    this.data = {};
   }
 
   get(key) {
-    return this._data[key];
+    return this.data[key];
   }
 
   has(key) {
-    return !!this._data[key];
+    return !!this.data[key];
   }
 
   set(key, value) {
-    this._data[key] = value;
+    this.data[key] = value;
     return true;
   }
 
   clear() {
-    this._data = {};
+    this.data = {};
     return true;
   }
 
   dehydrate() {
-    return this._data;
+    return this.data;
   }
 
   rehydrate(state) {
-    this._data = state;
+    this.data = state;
   }
 }

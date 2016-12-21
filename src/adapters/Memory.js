@@ -1,62 +1,49 @@
-import Adapter from './Adapter';
 import get from 'lodash/get';
 import set from 'lodash/set';
-
-const defaultOptions = {
-  data: {},
-};
+import Adapter from './Adapter';
 
 export default class Memory extends Adapter {
   constructor(options = {}) {
+    const { data = {}, ...rest } = options;
+
     super({
-      ...defaultOptions,
-      ...options,
+      ...rest,
     });
 
-    this._data = {};
+    this.data = data;
   }
 
-  getPath(locale, namespace) {
+  static getPath(locale, namespace) {
     return namespace
       ? `${namespace}.${locale}`
       : locale;
   }
 
-  get(locale, namespace, callback) {
-    if (typeof namespace === 'function') {
-      return this.get(locale, void 0, namespace);
-    }
-
+  async get(locale, namespace) {
     if (!locale) {
-      return callback(new Error('Locale is undefined'));
+      throw new Error('Locale is undefined');
     }
 
-    const path = this.getPath(locale, namespace);
+    const path = Memory.getPath(locale, namespace);
 
-    return callback(null, get(this._data, path));
+    return get(this.data, path);
   }
 
-  set(locale, value, namespace, callback) {
-    if (typeof namespace === 'function') {
-      return this.set(locale, value, void 0, namespace);
-    }
-
+  async set(locale, value, namespace) {
     if (!locale) {
-      return callback(new Error('Locale is undefined'));
+      throw new Error('Locale is undefined');
     }
 
-    const path = this.getPath(locale, namespace);
+    const path = Memory.getPath(locale, namespace);
 
-    set(this._data, path, value);
-
-    return callback(null);
+    return set(this.data, path, value);
   }
 
   dehydrate() {
-    return { ...this._data };
+    return { ...this.data };
   }
 
   rehydrate(state) {
-    this._data = state;
+    this.data = state;
   }
 }

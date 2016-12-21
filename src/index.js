@@ -1,26 +1,17 @@
-import Translate from './Translate';
-import Translation from './Translation';
+export default from './Translate';
 
-import Plural from './constants/Plural';
-import Gender from './constants/Gender';
-import Mode from './constants/Mode';
+export Translate from './Translate';
+export getInstance from './getInstance';
 
-import * as Adapters from './adapters';
-import * as Caches from './caches';
+export Plural from './constants/Plural';
+export Gender from './constants/Gender';
+export Mode from './constants/Mode';
 
-import getInstance from './getInstance';
+export Adapter from './adapters/Adapter';
+export FileAdapter from './adapters/File';
+export MemoryAdapter from './adapters/Memory';
+export XHRAdapter from './adapters/XHR';
 
-export { getInstance };
-
-// export constants
-export { Plural, Gender, Mode };
-
-// export modules
-export { Adapters, Caches };
-
-// export classes
-export { Translation };
-
-// export main class
-export { Translate };
-export default Translate;
+export Cache from './caches/Cache';
+export DummyCache from './caches/Dummy';
+export MemoryCache from './caches/Memory';

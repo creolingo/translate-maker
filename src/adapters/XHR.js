@@ -1,32 +1,25 @@
 import Adapter from './Adapter';
 import { defaultResolvePath } from './File';
 
-function defaultGetData(url, parse, callback) {
-  try {
-    const xhr = new (XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState > 3) {
-        callback(null, parse(xhr.responseText));
-      }
-    };
+async function defaultGetData(url, parse) {
+  return new Promise((resolve, reject) => {
+    try {
+      const xhr = new (XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState > 3) {
+          resolve(parse(xhr.responseText));
+        }
+      };
 
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send();
-  } catch (e) {
-    callback(e);
-  }
+      xhr.open('GET', url, true);
+      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhr.send();
+    } catch (e) {
+      reject(e);
+    }
+  });
 }
-
-const defaultOptions = {
-  path: void 0,
-  resolvePath: defaultResolvePath,
-  parse: JSON.parse,
-  ext: '.json',
-  getData: defaultGetData,
-  setData: void 0,
-};
 
 export default class XHR extends Adapter {
   constructor(options = {}) {
@@ -35,26 +28,31 @@ export default class XHR extends Adapter {
     }
 
     super({
-      ...defaultOptions,
+      path: undefined,
+      resolvePath: defaultResolvePath,
+      parse: JSON.parse,
+      ext: '.json',
+      getData: defaultGetData,
+      setData: undefined,
       ...options,
     });
   }
 
-  get(locale, namespace, callback) {
+  async get(locale, namespace) {
     if (typeof namespace === 'function') {
-      return this.get(locale, null, namespace);
+      return await this.get(locale, null, namespace);
     }
 
     const options = this.getOptions();
     const { resolvePath, getData, parse } = options;
     const path = resolvePath(locale, namespace, options);
 
-    return getData(path, parse, callback);
+    return await getData(path, parse);
   }
 
-  set(locale, value, namespace, callback) {
+  async set(locale, value, namespace) {
     if (typeof namespace === 'function') {
-      return this.set(locale, value, null, namespace);
+      return await this.set(locale, value, null, namespace);
     }
 
     throw new Error('XHR adapter is read only');

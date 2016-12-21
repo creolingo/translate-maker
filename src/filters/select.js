@@ -1,6 +1,6 @@
 import find from 'lodash/find';
 
-export default function(value, part, attrs, metadata, ...args) {
+export default function select(value, part, attrs, metadata, ...args) {
   let defaultOption = null;
   const option = find(args, (arg) => {
     if (arg.type !== 'pair') {
@@ -16,10 +16,12 @@ export default function(value, part, attrs, metadata, ...args) {
   });
 
   if (option) {
-    return this._buildText(option.value, attrs, value);
+    return this.buildText(option.value, attrs, value);
   }
 
   if (defaultOption) {
-    return this._buildText(defaultOption.value, attrs, value);
+    return this.buildText(defaultOption.value, attrs, value);
   }
+
+  return undefined;
 }

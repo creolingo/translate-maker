@@ -1,3 +1,3 @@
-export default function(value) {
+export default (value) => {
   return typeof value === 'string' ? value.toUpperCase() : value;
-}
+};

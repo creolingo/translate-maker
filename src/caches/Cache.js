@@ -1,10 +1,10 @@
 export default class Cache {
   constructor(options = {}) {
-    this._options = options;
+    this.options = options;
   }
 
   getOptions() {
-    return { ...this._options };
+    return { ...this.options };
   }
 
   get(key) {

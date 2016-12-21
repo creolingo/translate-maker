@@ -1,26 +1,35 @@
 import should from 'should';
-import Translate, { Plural, Gender, Adapters, Caches, Mode } from '../src';
+import Translate, {
+  Plural,
+  Gender,
+  FileAdapter,
+  MemoryAdapter,
+  Caches,
+  Mode,
+  DummyCache,
+  MemoryCache,
+} from '../src';
 import keymirror from 'keymirror';
 
-function getData(path, callback) {
+async function getData(path) {
   const file = require(path);
-  callback(null, file && file.default ? file.default : file);
+  return file && file.default ? file.default : file;
 }
 
 describe('Translate', () => {
   let t = null;
 
-  it('should be able to create instance', (done) => {
+  it('should be able to create instance', () => {
     t = new Translate({
-      adapter: new Adapters.File({
+      adapter: new FileAdapter({
         path: __dirname + '/locales',
         getData,
       }),
-    }, done);
+    });
   });
 
-  it('should be able to load locale', (done) => {
-    t.setLocale('en_US', done);
+  it('should be able to load locale', async () => {
+    await t.setLocale('en_US');
   });
 
   it('set simple translation property', () => {
@@ -32,40 +41,20 @@ describe('Translate', () => {
     t.get('name', { lastName: 'Fedor'}).should.equal('Zlatko Fedor');
   });
 
-  it('get simple translation with variable by object', () => {
-    t.name.get({ lastName: 'Fedor'}).should.equal('Zlatko Fedor');
-  });
-
   it('get simple translation with complex variable', () => {
     t.get('nameComplex.long').should.equal('Zlatko Fedor');
-  });
-
-  it('get simple translation with complex variable by object', () => {
-    t.nameComplex.long.get().should.equal('Zlatko Fedor');
   });
 
   it('get simple translation with default complex variable', () => {
     t.get('nameComplex.short').should.equal('Zlatik');
   });
 
-  it('get simple translation with default complex variable by object', () => {
-    t.nameComplex.short.get().should.equal('Zlatik');
-  });
-
   it('get simple translation with local translation', () => {
     t.get('about').should.equal('About Zlatkove');
   });
 
-  it('get simple translation with local translation by object', () => {
-    t.about.get().should.equal('About Zlatkove');
-  });
-
   it('get simple translation with default local translation', () => {
     t.get('aboutDefault').should.equal('About Zlatik');
-  });
-
-  it('get simple translation with default local translation by object', () => {
-    t.aboutDefault.get().should.equal('About Zlatik');
   });
 
   it('get array translation', () => {
@@ -82,7 +71,7 @@ describe('Translate', () => {
   });
 
   it('get translation with variable and reference', () => {
-    t.greeting.get({
+    t.get('greeting', {
       daypart: 'evening',
       user: {
         firstName: 'Zlatko',
@@ -91,7 +80,7 @@ describe('Translate', () => {
   });
 
   it('should be able to escape variable notation', () => {
-    t.escaped.get().should.equal('Good {dayparts.$daypartVariant} {$user.firstName}');
+    t.get('escaped').should.equal('Good {dayparts.$daypartVariant} {$user.firstName}');
   });
 
 
@@ -130,7 +119,7 @@ describe('Translate', () => {
   });
 
   it('should be able to get translation by dot notation', () => {
-    t.dot.notation.test.get({
+    t.get('dot.notation.test', {
       name: 'Zlatko',
     }).should.equal('Hello dot notation Zlatko');
   });
@@ -141,7 +130,7 @@ describe('Translate', () => {
       followers: 15,
     };
 
-    t.followers.get({
+    t.get('followers', {
       user,
     }).should.equal('Zlatko has 15 followers');
   });
@@ -152,11 +141,11 @@ describe('Translate', () => {
       followers: 15,
     };
 
-    t.followersSmart.get({
+    t.get('followersSmart', {
       user,
     }).should.equal('Zlatko has 15 followers');
 
-    t.followersSmart.get({
+    t.get('followersSmart', {
       user: {
         name: 'Zlatko',
         followers: 1,
@@ -169,39 +158,39 @@ describe('Translate', () => {
       position: 15,
     };
 
-    t.ordinal.get({
+    t.get('ordinal', {
       position: 1,
     }).should.equal('Take the 1st right');
 
-    t.ordinal.get({
+    t.get('ordinal', {
       position: 2,
     }).should.equal('Take the 2nd right');
 
-    t.ordinal.get({
+    t.get('ordinal', {
       position: 3,
     }).should.equal('Take the 3rd right');
 
-    t.ordinal.get({
+    t.get('ordinal', {
       position: 4,
     }).should.equal('Take the 4th right');
 
-    t.ordinal.get({
+    t.get('ordinal', {
       position: 11,
     }).should.equal('Take the 11th right');
 
-    t.ordinal.get({
+    t.get('ordinal', {
       position: 21,
     }).should.equal('Take the 21st right');
 
-    t.ordinal.get({
+    t.get('ordinal', {
       position: 22,
     }).should.equal('Take the 22nd right');
 
-    t.ordinal.get({
+    t.get('ordinal', {
       position: 33,
     }).should.equal('Take the 33rd right');
 
-    t.ordinal.get({
+    t.get('ordinal', {
       position: 44,
     }).should.equal('Take the 44th right');
   });
@@ -224,11 +213,7 @@ describe('Translate', () => {
   });
 
   it('should be not able to get null', () => {
-    should(t.get(null)).equal(void 0);
-  });
-
-  it('should be able to get translation by toString', () => {
-    (t.nameComplex + '').should.equal('Zlatik');
+    should(t.get(null)).equal(undefined);
   });
 
   it('should not be able to get empty variable', () => {
@@ -240,7 +225,7 @@ describe('Translate', () => {
   });
 
   it('should be able to pass ICU test', () => {
-    t.ICU.get({
+    t.get('ICU', {
       gender_of_host: 'male',
       num_guests: 3,
       host: 'Zlatko',
@@ -297,52 +282,44 @@ describe('Translate', () => {
     })).equal('This is UPPERCASE');
   });
 
-  it('should be able to load namespace', (done) => {
-    t.load('widget', done);
+  it('should be able to load namespace', async () => {
+    await t.loadNamespace('widget');
   });
 
   it('should be able to use namespace translation', () => {
-    should(t.widget.test.get()).equal('widget test');
+    should(t.get('widget.test')).equal('widget test');
   });
 
-  it('should be able to init default adapter with data', (done) => {
-    const t = new Translate({
-      locale: 'sk',
-      adapter: {
+  it('should be able to init default adapter with data', async () => {
+    const translate = new Translate({
+      data: {
         sk: {
           test: '123',
-        }
+        },
       },
-    }, (err , translate) => {
-      if (err) {
-        throw err;
-      }
-
-      translate.test.get().should.equal('123');
-      done();
     });
+
+    await translate.setLocale('sk');
+
+    translate.get('test').should.equal('123');
   });
 
-  it('should be able to use ICU mode', (done) => {
+  it('should be able to use ICU mode', async () => {
     const t = new Translate({
       mode: Mode.ICU,
-      locale: 'sk',
-      adapter: {
+      data: {
         sk: {
           icu: 'ICU',
           test: 'Hello {name} {$icu}',
         }
       },
-    }, (err , translate) => {
-      if (err) {
-        throw err;
-      }
-
-      translate.test.get({
-        name: 'Zlatko'
-      }).should.equal('Hello Zlatko ICU');
-      done();
     });
+
+    await t.setLocale('sk');
+
+    t.get('test', {
+      name: 'Zlatko'
+    }).should.equal('Hello Zlatko ICU');
   });
 
   it('should be able to translate whole object', () => {
@@ -362,9 +339,9 @@ describe('Translate', () => {
       return 'Fedor';
     }
 
-    (t.name.get({
+    t.get('name', {
       lastName: getLastName,
-    })).should.equal('Zlatko Fedor');
+    }).should.equal('Zlatko Fedor');
   });
 
   it('should be able to get complex translation by function', () => {
@@ -378,13 +355,12 @@ describe('Translate', () => {
 
     user.lastName().should.equal('Fedor');
 
-    (t.nameFn.get({ user })).should.equal('Zlatko Fedor');
+    t.get('nameFn', { user }).should.equal('Zlatko Fedor');
   });
 
-  it('should be able to use correct plural', (done) => {
+  it('should be able to use correct plural', async () => {
     const t = new Translate({
-      locale: 'sk_SK',
-      adapter: {
+      data: {
         en_US: {
           test: `{$count, plural,
             one {# item}
@@ -404,98 +380,83 @@ describe('Translate', () => {
           }`,
         }
       },
-    }, (err , translate) => {
-      if (err) {
-        throw err;
-      }
-
-      translate.test.get({ count: 0 }).should.equal('0 poloziek');
-      translate.test.get({ count: 1 }).should.equal('1 polozka');
-      translate.test.get({ count: 2 }).should.equal('2 polozky');
-      translate.test.get({ count: 6 }).should.equal('6 poloziek');
-      translate.test.get({ count: 7 }).should.equal('7 sedem');
-      translate.test.get({ count: 3 }).should.equal('3 tri');
-
-      translate.setLocale('en_US', () => {
-        translate.test.get({ count: 0 }).should.equal('0 items');
-        translate.test.get({ count: 1 }).should.equal('1 item');
-        translate.test.get({ count: 2 }).should.equal('2 items');
-        translate.test.get({ count: 6 }).should.equal('6 items');
-        translate.test.get({ count: 7 }).should.equal('7 seven');
-        translate.test.get({ count: 3 }).should.equal('3 three');
-        done();
-      });
-
     });
+
+    await t.setLocale('sk_SK');
+    t.get('test', { count: 0 }).should.equal('0 poloziek');
+    t.get('test', { count: 1 }).should.equal('1 polozka');
+    t.get('test', { count: 2 }).should.equal('2 polozky');
+    t.get('test', { count: 6 }).should.equal('6 poloziek');
+    t.get('test', { count: 7 }).should.equal('7 sedem');
+    t.get('test', { count: 3 }).should.equal('3 tri');
+
+    await t.setLocale('en_US');
+    t.get('test', { count: 0 }).should.equal('0 items');
+    t.get('test', { count: 1 }).should.equal('1 item');
+    t.get('test', { count: 2 }).should.equal('2 items');
+    t.get('test', { count: 6 }).should.equal('6 items');
+    t.get('test', { count: 7 }).should.equal('7 seven');
+    t.get('test', { count: 3 }).should.equal('3 three');
   });
 });
 
 describe('Catch event', () => {
   it('should be able to catch missing event', (done) => {
-    const tt = new Translate({}, (err, translate) => {
-      if (err) {
-        throw err;
-      }
+    const tt = new Translate();
+    tt.once('missing', () => done());
 
-      translate.once('missing', () => done());
-
-      translate.get('missing.translate.path');
-    });
+    tt.get('missing.translate.path');
   });
 
   it('should be able to catch error event', (done) => {
     const tt = new Translate({
-      locale: 'sk',
-      adapter: {
+      data: {
         sk: {
           badText: 'bad { omg',
         },
       },
-    }, (err, translate) => {
-      if (err) {
-        throw err;
-      }
+    });
 
-      translate.once('err', () => done());
-      translate.get('badText');
+    tt.once('err', () => done());
+
+    tt.setLocale('sk').then(() => {
+      tt.get('badText');
     });
   });
 
   it('should be able to catch missingdefault event', (done) => {
     const tt = new Translate({
-      locale: 'sk',
-      adapter: {
+      data: {
         sk: {
           badText: 'bad { omg',
         },
       },
-    }, (err, translate) => {
-      if (err) {
-        throw err;
-      }
+    });
 
-      translate.once('missingdefault', (path) => {
-        path.should.equal('badText');
-        done();
-      });
-      translate.get('badText');
+    tt.once('missingdefault', (path) => {
+      path.should.equal('badText');
+      done();
+    });
+
+    tt.setLocale('sk').then(() => {
+      tt.get('badText');
     });
   });
 });
 
 describe('Dummy cache', () => {
+
   let cache = null;
   let t = null;
 
   it('should be able to create instance', () => {
-    cache = new Caches.Dummy({});
+    cache = new DummyCache();
   });
 
-  it('should be able to use cache', (done) => {
+  it('should be able to use cache', async () => {
     t = new Translate({
       cache,
-      locale: 'sk',
-      adapter: {
+      data: {
         sk: {
           test: '123',
         },
@@ -503,34 +464,25 @@ describe('Dummy cache', () => {
           test: '222',
         }
       }
-    }, (err, translate) => {
-      if (err) {
-        throw err;
-      }
-
-      translate.test.get().should.equal('123');
-      translate.test.get().should.equal('123');
-
-      done();
     });
+
+    await t.setLocale('sk');
+
+    t.get('test').should.equal('123');
+    t.get('test').should.equal('123');
   });
 
-  it('should be able to change locale', (done) => {
-    t.setLocale('en', (err) => {
-      if (err) throw err;
-
-      t.test.get().should.equal('222');
-      t.test.get().should.equal('222');
-
-      done();
-    });
+  it('should be able to change locale', async () => {
+    await t.setLocale('en');
+    t.get('test').should.equal('222');
+    t.get('test').should.equal('222');
   });
 
   it('should be able to use dehydrate', () => {
     const cache = t.getCache();
     const data = cache.dehydrate();
 
-    should(data).equal(void 0);
+    should(data).equal(undefined);
   });
 
   it('should be able to use rehydrate', () => {
@@ -544,14 +496,13 @@ describe('Memory cache', () => {
   let t = null;
 
   it('should be able to create instance', () => {
-    cache = new Caches.Memory({});
+    cache = new MemoryCache();
   });
 
-  it('should be able to use cache', (done) => {
+  it('should be able to use cache', async () => {
     t = new Translate({
       cache,
-      locale: 'sk',
-      adapter: {
+      data: {
         sk: {
           test: '123',
         },
@@ -559,40 +510,32 @@ describe('Memory cache', () => {
           test: '222',
         }
       }
-    }, (err, translate) => {
-      if (err) {
-        throw err;
-      }
-
-      translate.test.get().should.equal('123');
-      translate.test.get().should.equal('123');
-
-      done();
     });
+
+    await t.setLocale('sk');
+
+    t.get('test').should.equal('123');
+    t.get('test').should.equal('123');
   });
 
-  it('should be able to change locale', (done) => {
-    t.setLocale('en', (err) => {
-      if (err) throw err;
+  it('should be able to change locale', async () => {
+    await t.setLocale('en');
 
-      t.test.get().should.equal('222');
-      t.test.get().should.equal('222');
-
-      done();
-    });
+    t.get('test').should.equal('222');
+    t.get('test').should.equal('222');
   });
 
   it('should be able to use dehydrate and rehydrate', () => {
     const cache = t.getCache();
     const data = cache.dehydrate();
 
-    should(data).not.equal(void 0);
-    data['222'].should.not.equal(void 0);
+    should(data).not.equal(undefined);
+    data['222'].should.not.equal(undefined);
 
     cache.rehydrate(data);
 
-    t.test.get().should.equal('222');
-    t.test.get().should.equal('222');
+    t.get('test').should.equal('222');
+    t.get('test').should.equal('222');
   });
 
   it('should be able to use cache', () => {
@@ -612,7 +555,6 @@ describe('Memory cache', () => {
     });
 
     const translated = t.get("de_DE.menu.title");
-    console.log(translated);
+    translated.should.equal('Willkommen!');
   });
-
 });

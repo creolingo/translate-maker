@@ -1,4 +1,4 @@
-import plurals from 'make-plural/plurals';
+import plurals from 'make-plural';
 import parseLocale from 'locale-id';
 
 let cachePlural = null;

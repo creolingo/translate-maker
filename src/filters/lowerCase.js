@@ -1,3 +1,5 @@
-export default function(value) {
-  return typeof value === 'string' ? value.toLowerCase() : value;
-}
+export default (value) => {
+  return typeof value === 'string'
+    ? value.toLowerCase()
+    : value;
+};
