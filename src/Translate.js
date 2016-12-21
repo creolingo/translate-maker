@@ -71,7 +71,8 @@ export default class Translate extends EventEmitter {
 
     const adapter = this.getAdapter();
     const data = await adapter.get(locale, namespace);
-    if (options.locale !== locale) {
+    const sameLocale = options.locale === locale;
+    if (!sameLocale) {
       this.clear();
 
       this.options = {
@@ -86,7 +87,9 @@ export default class Translate extends EventEmitter {
       this.set(data);
     }
 
-    this.emit('locale', locale, namespace);
+    if (!sameLocale) {
+      this.emit('locale', locale, namespace);
+    }
 
     return data;
   }
