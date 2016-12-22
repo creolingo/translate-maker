@@ -1,4 +1,5 @@
 import isPlainObject from 'lodash/isPlainObject';
+import parseLocale from 'locale-id';
 import EventEmitter from 'events';
 import Tree from './Tree';
 import baseFilters from './filters';
@@ -147,6 +148,16 @@ export default class Translate extends EventEmitter {
 
   getLocale() {
     return this.getOptions().locale;
+  }
+
+  getLanguage() {
+    const locale = this.getLocale();
+    if (locale) {
+      const l = parseLocale(locale);
+      return l && l.language;
+    }
+
+    return locale;
   }
 
   getCache() {
