@@ -188,7 +188,9 @@ export default class Tree {
 
   getDefaultValue(defaultValue, ...args) {
     const options = this.getOptions();
-    const process = defaultValue || options.defaultValue;
+    const process = typeof defaultValue !== 'undefined'
+      ? defaultValue
+      : options.defaultValue;
 
     return typeof process === 'function'
       ? process(...args)
