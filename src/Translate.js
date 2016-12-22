@@ -59,39 +59,55 @@ export default class Translate extends EventEmitter {
     this.tree = new Tree(this);
   }
 
-  async setLocale(locale, namespace) {
-    if (!locale) {
-      throw new Error('Locale is undefined');
+  async waitForLocale() {
+    if (!this.setLocalePromise) {
+      return;
     }
 
-    const options = this.getOptions();
-    if (options.locales && options.locales.indexOf(locale) === -1) {
-      throw new Error('Locale is not allowed. Setup locales');
-    }
 
-    const adapter = this.getAdapter();
-    const data = await adapter.get(locale, namespace);
-    const sameLocale = options.locale === locale;
-    if (!sameLocale) {
-      this.clear();
+    await this.setLocalePromise;
+  }
 
-      this.options = {
-        ...options,
-        locale,
-      };
-    }
+  setLocale(locale, namespace) {
+    this.setLocalePromise = new Promise((resolve, reject) => {
+      if (!locale) {
+        reject(new Error('Locale is undefined'));
+        return;
+      }
 
-    if (namespace) {
-      this.set(namespace, data);
-    } else {
-      this.set(data);
-    }
+      const options = this.getOptions();
+      if (options.locales && options.locales.indexOf(locale) === -1) {
+        reject(new Error('Locale is not allowed. Setup locales'));
+        return;
+      }
 
-    if (!sameLocale) {
-      this.emit('locale', locale, namespace);
-    }
+      const adapter = this.getAdapter();
+      adapter.get(locale, namespace).then((data) => {
+        const sameLocale = options.locale === locale;
+        if (!sameLocale) {
+          this.clear();
 
-    return data;
+          this.options = {
+            ...options,
+            locale,
+          };
+        }
+
+        if (namespace) {
+          this.set(namespace, data);
+        } else {
+          this.set(data);
+        }
+
+        if (!sameLocale) {
+          this.emit('locale', locale, namespace);
+        }
+
+        resolve(data);
+      }, reject);
+    });
+
+    return this.setLocalePromise;
   }
 
   async loadNamespace(namespace) {
