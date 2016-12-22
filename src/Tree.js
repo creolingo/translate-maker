@@ -127,7 +127,7 @@ export default class Tree {
       cache.set(value, data);
       return this.buildText(data, attrs);
     } catch (err) {
-      log(err.message);
+      log(`Problem on path ${path}: ${err.message}`);
       this.emit('err', err, path, value, attrs);
       return undefined;
     }
