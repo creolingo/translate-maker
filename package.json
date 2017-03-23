@@ -1,6 +1,6 @@
 {
   "name": "translate-maker",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "description": "Lightweight translation module. Internationalize your great project.",
   "main": "dist/index.js",
   "files": [
@@ -48,7 +48,9 @@
   },
   "homepage": "https://github.com/CherryProjects/translate-maker",
   "jest": {
-    "modulePathIgnorePatterns": ["__tests__/locales/.*"]
+    "modulePathIgnorePatterns": [
+      "__tests__/locales/.*"
+    ]
   },
   "dependencies": {
     "debug": "^2.6.3",
