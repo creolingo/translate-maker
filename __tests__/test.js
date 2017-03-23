@@ -1,4 +1,3 @@
-import should from 'should';
 import Translate, {
   Plural,
   Gender,
@@ -38,27 +37,27 @@ describe('Translate', () => {
   });
 
   it('get simple translation with variable', () => {
-    t.get('name', { lastName: 'Fedor'}).should.equal('Zlatko Fedor');
+    expect(t.get('name', { lastName: 'Fedor'})).toBe('Zlatko Fedor');
   });
 
   it('get simple translation with complex variable', () => {
-    t.get('nameComplex.long').should.equal('Zlatko Fedor');
+    expect(t.get('nameComplex.long')).toBe('Zlatko Fedor');
   });
 
   it('get simple translation with default complex variable', () => {
-    t.get('nameComplex.short').should.equal('Zlatik');
+    expect(t.get('nameComplex.short')).toBe('Zlatik');
   });
 
   it('get simple translation with local translation', () => {
-    t.get('about').should.equal('About Zlatkove');
+    expect(t.get('about')).toBe('About Zlatkove');
   });
 
   it('get simple translation with default local translation', () => {
-    t.get('aboutDefault').should.equal('About Zlatik');
+    expect(t.get('aboutDefault')).toBe('About Zlatik');
   });
 
   it('get array translation', () => {
-    t.get('user.crashed', {
+    expect(t.get('user.crashed', {
       user1: {
         gender: Gender.MALE,
         firstName: 'Adam',
@@ -67,25 +66,25 @@ describe('Translate', () => {
         firstName: 'Lisa',
         gender: Gender.FEMALE,
       },
-    }).should.equal('Adam spadol a Lisa spadla');
+    })).toBe('Adam spadol a Lisa spadla');
   });
 
   it('get translation with variable and reference', () => {
-    t.get('greeting', {
+    expect(t.get('greeting', {
       daypart: 'evening',
       user: {
         firstName: 'Zlatko',
       },
-    }).should.equal('Good evening Zlatko');
+    })).toBe('Good evening Zlatko');
   });
 
   it('should be able to escape variable notation', () => {
-    t.get('escaped').should.equal('Good {dayparts.$daypartVariant} {$user.firstName}');
+    expect(t.get('escaped')).toBe('Good {dayparts.$daypartVariant} {$user.firstName}');
   });
 
 
   it('should be able to use conditioned translation with complex variables', () => {
-    t.get('working', {
+    expect(t.get('working', {
       user1: {
         gender: 'male',
         name: 'Zlatko',
@@ -94,9 +93,9 @@ describe('Translate', () => {
         gender: 'female',
         name: 'Livia',
       }
-    }).should.equal('Boy Zlatko working with girl Livia');
+    })).toBe('Boy Zlatko working with girl Livia');
 
-    t.get('working', {
+    expect(t.get('working', {
       user1: {
         gender: 'male',
         name: 'Zlatko',
@@ -104,9 +103,9 @@ describe('Translate', () => {
       user2: {
         name: 'Livia',
       }
-    }).should.equal('Boy Zlatko working with boy or girl named Livia');
+    })).toBe('Boy Zlatko working with boy or girl named Livia');
 
-    t.get('working2', {
+    expect(t.get('working2', {
       user1: {
         gender: 'male',
         name: 'Zlatko',
@@ -115,13 +114,13 @@ describe('Translate', () => {
         gender: 'female',
         name: 'Livia',
       }
-    }).should.equal('Boy Zlatko working with girl Livia');
+    })).toBe('Boy Zlatko working with girl Livia');
   });
 
   it('should be able to get translation by dot notation', () => {
-    t.get('dot.notation.test', {
+    expect(t.get('dot.notation.test', {
       name: 'Zlatko',
-    }).should.equal('Hello dot notation Zlatko');
+    })).toBe('Hello dot notation Zlatko');
   });
 
   it('should be able to use plural', () => {
@@ -130,9 +129,9 @@ describe('Translate', () => {
       followers: 15,
     };
 
-    t.get('followers', {
+    expect(t.get('followers', {
       user,
-    }).should.equal('Zlatko has 15 followers');
+    })).toBe('Zlatko has 15 followers');
   });
 
   it('should be able to use plural with smart variable', () => {
@@ -141,16 +140,16 @@ describe('Translate', () => {
       followers: 15,
     };
 
-    t.get('followersSmart', {
+    expect(t.get('followersSmart', {
       user,
-    }).should.equal('Zlatko has 15 followers');
+    })).toBe('Zlatko has 15 followers');
 
-    t.get('followersSmart', {
+    expect(t.get('followersSmart', {
       user: {
         name: 'Zlatko',
         followers: 1,
       },
-    }).should.equal('Zlatko has 1 follower');
+    })).toBe('Zlatko has 1 follower');
   });
 
   it('should be able to use ordinal', () => {
@@ -158,91 +157,91 @@ describe('Translate', () => {
       position: 15,
     };
 
-    t.get('ordinal', {
+    expect(t.get('ordinal', {
       position: 1,
-    }).should.equal('Take the 1st right');
+    })).toBe('Take the 1st right');
 
-    t.get('ordinal', {
+    expect(t.get('ordinal', {
       position: 2,
-    }).should.equal('Take the 2nd right');
+    })).toBe('Take the 2nd right');
 
-    t.get('ordinal', {
+    expect(t.get('ordinal', {
       position: 3,
-    }).should.equal('Take the 3rd right');
+    })).toBe('Take the 3rd right');
 
-    t.get('ordinal', {
+    expect(t.get('ordinal', {
       position: 4,
-    }).should.equal('Take the 4th right');
+    })).toBe('Take the 4th right');
 
-    t.get('ordinal', {
+    expect(t.get('ordinal', {
       position: 11,
-    }).should.equal('Take the 11th right');
+    })).toBe('Take the 11th right');
 
-    t.get('ordinal', {
+    expect(t.get('ordinal', {
       position: 21,
-    }).should.equal('Take the 21st right');
+    })).toBe('Take the 21st right');
 
-    t.get('ordinal', {
+    expect(t.get('ordinal', {
       position: 22,
-    }).should.equal('Take the 22nd right');
+    })).toBe('Take the 22nd right');
 
-    t.get('ordinal', {
+    expect(t.get('ordinal', {
       position: 33,
-    }).should.equal('Take the 33rd right');
+    })).toBe('Take the 33rd right');
 
-    t.get('ordinal', {
+    expect(t.get('ordinal', {
       position: 44,
-    }).should.equal('Take the 44th right');
+    })).toBe('Take the 44th right');
   });
 
 
   it('should be not able to get non existing translation', () => {
-    should(t.get('notation.test')).equal('Missing default translation for: notation.test');
+    expect(t.get('notation.test')).toBe('Missing default translation for: notation.test');
   });
 
   it('should be not able to get non existing translation', () => {
-    should(t.get('dot.notation.testNonExist')).equal('Missing default translation for: dot.notation.testNonExist');
+    expect(t.get('dot.notation.testNonExist')).toBe('Missing default translation for: dot.notation.testNonExist');
   });
 
   it('should be able to get default value for non existing translation', () => {
-    should(t.get('notation.test', 'Default value')).equal('Default value');
+    expect(t.get('notation.test', 'Default value')).toBe('Default value');
   });
 
   it('should be able to get default value for non existing translation with attrs', () => {
-    should(t.get('notation.test', { name: 'Zlatko'}, 'Default value {$name}')).equal('Default value Zlatko');
+    expect(t.get('notation.test', { name: 'Zlatko'}, 'Default value {$name}')).toBe('Default value Zlatko');
   });
 
   it('should be not able to get null', () => {
-    should(t.get(null)).equal(undefined);
+    expect(t.get(null)).toBe(undefined);
   });
 
   it('should not be able to get empty variable', () => {
-    should(t.get('emptyVariable')).equal('This is empty {} variable');
+    expect(t.get('emptyVariable')).toBe('This is empty {} variable');
   });
 
   it('should not be able to get empty variable', () => {
-    should(t.get('emptyExternalVariable')).equal('This is empty {$} external variable');
+    expect(t.get('emptyExternalVariable')).toBe('This is empty {$} external variable');
   });
 
   it('should be able to pass ICU test', () => {
-    t.get('ICU', {
+    expect(t.get('ICU', {
       gender_of_host: 'male',
       num_guests: 3,
       host: 'Zlatko',
       guest: 'Livia',
-    }).should.equal('Zlatko invites Livia and 2 other people to his party.');
+    })).toBe('Zlatko invites Livia and 2 other people to his party.');
   });
 
   it('should not be able to translate plural without pairs', () => {
-    should(t.get('pluralWithoutPairs')).equal('');
+    expect(t.get('pluralWithoutPairs')).toBe('');
   });
 
   it('should not be able to translate select without pairs', () => {
-    should(t.get('selectWithoutPairs')).equal('');
+    expect(t.get('selectWithoutPairs')).toBe('');
   });
 
   it('should not be able to translate bad translation', () => {
-    should(t.get('badTranslation')).equal(void 0);
+    expect(t.get('badTranslation')).toBe(undefined);
   });
 
   it('should be able to use own filter', () => {
@@ -251,35 +250,35 @@ describe('Translate', () => {
     }
 
     t.setFilter('test', test);
-    should(t.get('customFilter')).equal('This is test');
+    expect(t.get('customFilter')).toBe('This is test');
   });
 
   it('should be able to use trim', () => {
-    should(t.get('filter.trim', {
+    expect(t.get('filter.trim', {
       value: '   text   ',
-    })).equal('Trim this text');
+    })).toBe('Trim this text');
 
-    should(t.get('filter.trim2', {
+    expect(t.get('filter.trim2', {
       value: '   text   ',
-    })).equal('Trim this text');
+    })).toBe('Trim this text');
   });
 
   it('should be able to use trunc', () => {
-    should(t.get('filter.trunc', {
+    expect(t.get('filter.trunc', {
       value: '123456789123456789',
-    })).equal('Trunc this 12345..');
+    })).toBe('Trunc this 12345..');
   });
 
   it('should be able to use lowerCase', () => {
-    should(t.get('filter.lowerCase', {
+    expect(t.get('filter.lowerCase', {
       value: 'LoWERCASe',
-    })).equal('This is lowercase');
+    })).toBe('This is lowercase');
   });
 
   it('should be able to use upperCase', () => {
-    should(t.get('filter.upperCase', {
+    expect(t.get('filter.upperCase', {
       value: 'upperCase',
-    })).equal('This is UPPERCASE');
+    })).toBe('This is UPPERCASE');
   });
 
   it('should be able to load namespace', async () => {
@@ -287,7 +286,7 @@ describe('Translate', () => {
   });
 
   it('should be able to use namespace translation', () => {
-    should(t.get('widget.test')).equal('widget test');
+    expect(t.get('widget.test')).toBe('widget test');
   });
 
   it('should be able to init default adapter with data', async () => {
@@ -301,7 +300,7 @@ describe('Translate', () => {
 
     await translate.setLocale('sk');
 
-    translate.get('test').should.equal('123');
+    expect(translate.get('test')).toBe('123');
   });
 
   it('should be able to use ICU mode', async () => {
@@ -317,9 +316,9 @@ describe('Translate', () => {
 
     await t.setLocale('sk');
 
-    t.get('test', {
+    expect(t.get('test', {
       name: 'Zlatko'
-    }).should.equal('Hello Zlatko ICU');
+    })).toBe('Hello Zlatko ICU');
   });
 
   it('should be able to translate whole object', () => {
@@ -330,8 +329,8 @@ describe('Translate', () => {
       lastName: 'Fedor'
     });
 
-    result.first.should.equal('Zlatko Fedor');
-    result.second.should.equal('About Zlatkove');
+    expect(result.first).toBe('Zlatko Fedor');
+    expect(result.second).toBe('About Zlatkove');
   });
 
   it('should be able to get translation by function', () => {
@@ -339,9 +338,9 @@ describe('Translate', () => {
       return 'Fedor';
     }
 
-    t.get('name', {
+    expect(t.get('name', {
       lastName: getLastName,
-    }).should.equal('Zlatko Fedor');
+    })).toBe('Zlatko Fedor');
   });
 
   it('should be able to get complex translation by function', () => {
@@ -353,9 +352,9 @@ describe('Translate', () => {
       }
     };
 
-    user.lastName().should.equal('Fedor');
+    expect(user.lastName()).toBe('Fedor');
 
-    t.get('nameFn', { user }).should.equal('Zlatko Fedor');
+    expect(t.get('nameFn', { user })).toBe('Zlatko Fedor');
   });
 
   it('should be able to use correct plural', async () => {
@@ -383,20 +382,20 @@ describe('Translate', () => {
     });
 
     await t.setLocale('sk_SK');
-    t.get('test', { count: 0 }).should.equal('0 poloziek');
-    t.get('test', { count: 1 }).should.equal('1 polozka');
-    t.get('test', { count: 2 }).should.equal('2 polozky');
-    t.get('test', { count: 6 }).should.equal('6 poloziek');
-    t.get('test', { count: 7 }).should.equal('7 sedem');
-    t.get('test', { count: 3 }).should.equal('3 tri');
+    expect(t.get('test', { count: 0 })).toBe('0 poloziek');
+    expect(t.get('test', { count: 1 })).toBe('1 polozka');
+    expect(t.get('test', { count: 2 })).toBe('2 polozky');
+    expect(t.get('test', { count: 6 })).toBe('6 poloziek');
+    expect(t.get('test', { count: 7 })).toBe('7 sedem');
+    expect(t.get('test', { count: 3 })).toBe('3 tri');
 
     await t.setLocale('en_US');
-    t.get('test', { count: 0 }).should.equal('0 items');
-    t.get('test', { count: 1 }).should.equal('1 item');
-    t.get('test', { count: 2 }).should.equal('2 items');
-    t.get('test', { count: 6 }).should.equal('6 items');
-    t.get('test', { count: 7 }).should.equal('7 seven');
-    t.get('test', { count: 3 }).should.equal('3 three');
+    expect(t.get('test', { count: 0 })).toBe('0 items');
+    expect(t.get('test', { count: 1 })).toBe('1 item');
+    expect(t.get('test', { count: 2 })).toBe('2 items');
+    expect(t.get('test', { count: 6 })).toBe('6 items');
+    expect(t.get('test', { count: 7 })).toBe('7 seven');
+    expect(t.get('test', { count: 3 })).toBe('3 three');
   });
 });
 
@@ -434,7 +433,7 @@ describe('Catch event', () => {
     });
 
     tt.once('missingdefault', (path) => {
-      path.should.equal('badText');
+      expect(path).toBe('badText');
       done();
     });
 
@@ -445,7 +444,6 @@ describe('Catch event', () => {
 });
 
 describe('Dummy cache', () => {
-
   let cache = null;
   let t = null;
 
@@ -468,21 +466,21 @@ describe('Dummy cache', () => {
 
     await t.setLocale('sk');
 
-    t.get('test').should.equal('123');
-    t.get('test').should.equal('123');
+    expect(t.get('test')).toBe('123');
+    expect(t.get('test')).toBe('123');
   });
 
   it('should be able to change locale', async () => {
     await t.setLocale('en');
-    t.get('test').should.equal('222');
-    t.get('test').should.equal('222');
+    expect(t.get('test')).toBe('222');
+    expect(t.get('test')).toBe('222');
   });
 
   it('should be able to use dehydrate', () => {
     const cache = t.getCache();
     const data = cache.dehydrate();
 
-    should(data).equal(undefined);
+    expect(data).toBe(undefined);
   });
 
   it('should be able to use rehydrate', () => {
@@ -514,47 +512,117 @@ describe('Memory cache', () => {
 
     await t.setLocale('sk');
 
-    t.get('test').should.equal('123');
-    t.get('test').should.equal('123');
+    expect(t.get('test')).toBe('123');
+    expect(t.get('test')).toBe('123');
   });
 
   it('should be able to change locale', async () => {
     await t.setLocale('en');
 
-    t.get('test').should.equal('222');
-    t.get('test').should.equal('222');
+    expect(t.get('test')).toBe('222');
+    expect(t.get('test')).toBe('222');
   });
 
   it('should be able to use dehydrate and rehydrate', () => {
     const cache = t.getCache();
     const data = cache.dehydrate();
 
-    should(data).not.equal(undefined);
-    data['222'].should.not.equal(undefined);
+    expect(data).not.toBe(undefined);
+    expect(data['222']).not.toBe(undefined);
 
     cache.rehydrate(data);
 
-    t.get('test').should.equal('222');
-    t.get('test').should.equal('222');
+    expect(t.get('test')).toBe('222');
+    expect(t.get('test')).toBe('222');
   });
 
   it('should be able to use cache', () => {
     const t = new Translate();
 
     t.set({
-        en_US: {
-            menu: {
-                title: "Welcome!"
-            }
+      en_US: {
+        menu: {
+          title: "Welcome!"
         },
-        de_DE: {
-            menu: {
-                title: "Willkommen!"
-            }
-        }
+      },
+      de_DE: {
+        menu: {
+          title: "Willkommen!"
+        },
+      },
     });
 
-    const translated = t.get("de_DE.menu.title");
-    translated.should.equal('Willkommen!');
+    const translated = t.get('de_DE.menu.title');
+    expect(translated).toBe('Willkommen!');
+  });
+});
+
+describe('Async namespaces', () => {
+  it('should be able to create instance', async () => {
+    const t = new Translate({
+      adapter: new FileAdapter({
+        path: __dirname + '/locales',
+        getData,
+      }),
+    });
+
+    t.setLocale('en_US');
+
+    await t.setLocale('en_US', 'widget');
+
+    expect(t.get('widget.test')).toBe('widget test');
+  });
+
+  it('should be able to change locale', async () => {
+    const t = new Translate({
+      adapter: new FileAdapter({
+        path: __dirname + '/locales',
+        getData,
+      }),
+    });
+
+    t.setLocale('en_US');
+
+    t.setLocale('en_US', 'widget');
+
+    t.setLocale('sk_SK');
+
+    await t.setLocale('sk_SK', 'widget');
+
+    expect(t.get('widget.test')).toBe('widget test sk');
+  });
+
+  it('should be able to use loadNamespace', async () => {
+    const t = new Translate({
+      adapter: new FileAdapter({
+        path: __dirname + '/locales',
+        getData,
+      }),
+    });
+
+    t.setLocale('en_US');
+
+    await t.loadNamespace('widget');
+
+    expect(t.get('widget.test')).toBe('widget test');
+  });
+
+  it('should be able to change locale', async () => {
+    const t = new Translate({
+      adapter: new FileAdapter({
+        path: __dirname + '/locales',
+        getData,
+      }),
+    });
+
+    t.setLocale('en_US');
+
+    t.loadNamespace('widget');
+
+    t.setLocale('sk_SK');
+
+    await t.loadNamespace('widget');
+
+    expect(t.get('widget.test')).toBe('widget test sk');
   });
 });

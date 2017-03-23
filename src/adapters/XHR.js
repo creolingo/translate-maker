@@ -40,19 +40,19 @@ export default class XHR extends Adapter {
 
   async get(locale, namespace) {
     if (typeof namespace === 'function') {
-      return await this.get(locale, null, namespace);
+      return this.get(locale, null, namespace);
     }
 
     const options = this.getOptions();
     const { resolvePath, getData, parse } = options;
     const path = resolvePath(locale, namespace, options);
 
-    return await getData(path, parse);
+    return getData(path, parse);
   }
 
   async set(locale, value, namespace) {
     if (typeof namespace === 'function') {
-      return await this.set(locale, value, null, namespace);
+      return this.set(locale, value, null, namespace);
     }
 
     throw new Error('XHR adapter is read only');

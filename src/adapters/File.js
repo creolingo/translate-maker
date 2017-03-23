@@ -39,12 +39,12 @@ export default class File extends Adapter {
     const { resolvePath, getData } = options;
     const path = resolvePath(locale, namespace, options);
 
-    return await getData(path);
+    return getData(path);
   }
 
   async set(locale, value, namespace) {
     if (typeof namespace === 'function') {
-      return await this.set(locale, value, null, namespace);
+      return this.set(locale, value, null, namespace);
     }
 
     const options = this.getOptions();
@@ -55,6 +55,6 @@ export default class File extends Adapter {
 
     const path = resolvePath(locale, namespace, options);
 
-    return await setData(path, value);
+    return setData(path, value);
   }
 }

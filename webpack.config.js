@@ -1,4 +1,4 @@
-var webpack = require('webpack')
+const webpack = require('webpack');
 
 module.exports = {
   output: {
@@ -9,9 +9,11 @@ module.exports = {
   externals: [],
 
   module: {
-    loaders: [
-      { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
-    ],
+    rules: [{
+      test: /\.js$/,
+      loader: 'babel-loader',
+      exclude: /node_modules/,
+    }],
   },
 
   node: {
@@ -19,7 +21,6 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),

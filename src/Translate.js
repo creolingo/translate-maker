@@ -62,24 +62,29 @@ export default class Translate extends EventEmitter {
 
   async waitForLocale() {
     if (!this.setLocalePromise) {
-      return;
+      return undefined;
     }
 
-
-    await this.setLocalePromise;
+    return this.setLocalePromise;
   }
 
-  setLocale(locale, namespace) {
-    this.setLocalePromise = new Promise((resolve, reject) => {
-      if (!locale) {
-        reject(new Error('Locale is undefined'));
+  async setLocale(locale, namespace) {
+    const currentPromise = this.setLocalePromise;
+    this.setLocalePromise = new Promise(async (resolve, reject) => {
+      try {
+        await currentPromise;
+      } catch (e) {
+        reject(e);
         return;
+      }
+
+      if (!locale) {
+        throw new Error('Locale is undefined');
       }
 
       const options = this.getOptions();
       if (options.locales && options.locales.indexOf(locale) === -1) {
-        reject(new Error('Locale is not allowed. Setup locales'));
-        return;
+        throw new Error('Locale is not allowed. Setup locales');
       }
 
       const adapter = this.getAdapter();
@@ -112,9 +117,11 @@ export default class Translate extends EventEmitter {
   }
 
   async loadNamespace(namespace) {
-    const options = this.getOptions();
+    // we need to wait for async setLocale
+    await this.setLocalePromise;
 
-    return await this.setLocale(options.locale, namespace);
+    const options = this.getOptions();
+    return this.setLocale(options.locale, namespace);
   }
 
   get(path, attrs, defaultValue) {
