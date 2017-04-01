@@ -1,3 +1,5 @@
+import 'regenerator-runtime/runtime';
+
 export default from './Translate';
 
 export Translate from './Translate';
