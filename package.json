@@ -1,8 +1,8 @@
 {
   "name": "translate-maker",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "description": "Lightweight translation module. Internationalize your great project.",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "files": [
     "dist/",
     "umd/",

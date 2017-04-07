@@ -21,5 +21,5 @@ gulp.task('compile-peg', () =>
 gulp.task('build', ['compile-peg', 'prepare-cldr'], () =>
   gulp.src('./src/**/*.{js,jsx}')
     .pipe(babel())
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('./lib'))
 );
