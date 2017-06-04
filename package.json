@@ -1,8 +1,9 @@
 {
   "name": "translate-maker",
-  "version": "0.5.14",
+  "version": "0.5.15",
   "description": "Lightweight translation module. Internationalize your great project.",
   "main": "lib/index.js",
+  "esnext": "./src/index.js",
   "keywords": [
     "translate",
     "locale",
