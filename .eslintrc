@@ -1,6 +1,10 @@
 {
-  "extends": "airbnb",
   "parser": "babel-eslint",
+  "extends": ["airbnb", "plugin:jest/recommended"],
+  "env": {
+    "jest": true
+  },
   "rules": {
+    "no-else-return": ["error", { "allowElseIf": true }]
   }
 }

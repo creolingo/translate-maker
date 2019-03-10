@@ -7,19 +7,19 @@ export default class Adapter {
     return this.options;
   }
 
-  async get(locale, namespace) {
+  async get(locale, namespace) { // eslint-disable-line
     throw new Error('Implement method get');
   }
 
-  async set(locale, value, namespace) {
+  async set(locale, value, namespace) { // eslint-disable-line
     throw new Error('Implement method set');
   }
 
-  dehydrate() {
+  dehydrate() { // eslint-disable-line
     throw new Error('Implement method dehydrate');
   }
 
-  rehydrate(state) {
+  rehydrate(state) { // eslint-disable-line
     throw new Error('Implement method rehydrate');
   }
 }

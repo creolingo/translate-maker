@@ -4,7 +4,8 @@ import { defaultResolvePath } from './File';
 async function defaultGetData(url, parse) {
   return new Promise((resolve, reject) => {
     try {
-      const xhr = new (XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
+      const XHRClass = window.XMLHttpRequest || window.ActiveXObject;
+      const xhr = new XHRClass('MSXML2.XMLHTTP.3.0');
       xhr.onreadystatechange = () => {
         if (xhr.readyState > 3) {
           resolve(parse(xhr.responseText));

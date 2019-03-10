@@ -7,27 +7,27 @@ export default class Cache {
     return { ...this.options };
   }
 
-  get(key) {
+  get(key) { // eslint-disable-line
     throw new Error('Implement method get');
   }
 
-  has(key) {
+  has(key) { // eslint-disable-line
     throw new Error('Implement method has');
   }
 
-  set(key, value) {
+  set(key, value) { // eslint-disable-line
     throw new Error('Implement method set');
   }
 
-  clear() {
+  clear() { // eslint-disable-line
     throw new Error('Implement method clear');
   }
 
-  dehydrate() {
+  dehydrate() { // eslint-disable-line
     throw new Error('Implement method dehydrate');
   }
 
-  rehydrate(state) {
+  rehydrate(state) { // eslint-disable-line
     throw new Error('Implement method rehydrate');
   }
 }

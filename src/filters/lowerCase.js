@@ -1,5 +1,7 @@
 export default (value) => {
-  return typeof value === 'string'
-    ? value.toLowerCase()
-    : value;
+  if (typeof value === 'string') {
+    return value.toLowerCase();
+  }
+
+  return value;
 };

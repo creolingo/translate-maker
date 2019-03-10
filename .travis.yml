@@ -1,12 +1,15 @@
 language: node_js
 node_js:
-    - "5"
     - "6"
     - "7"
-script: npm test
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+script: npm test:coverage
 notifications:
     email:
         recipients:
-            - zlatkofedor@cherrysro.com
+            - zfedor@gmail.com
         on_success: change
         on_failure: always

@@ -1,3 +1,7 @@
 export default (value) => {
-  return typeof value === 'string' ? value.toUpperCase() : value;
+  if (typeof value === 'string') {
+    return value.toUpperCase();
+  }
+
+  return value;
 };

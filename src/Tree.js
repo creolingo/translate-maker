@@ -1,3 +1,4 @@
+// @flow
 import isPlainObject from 'lodash/isPlainObject';
 import get from 'lodash/get';
 import reduce from 'lodash/reduce';
@@ -21,7 +22,6 @@ function resolveVariable(obj, path) {
     const pathBefore = path.substr(0, pos);
     const fnName = path.substr(pos + 1);
 
-
     const parentObj = get(obj, pathBefore);
     return parentObj[fnName]();
   }
@@ -42,32 +42,33 @@ export default class Tree {
 
   resolveValue(item = {}, attrs = {}) {
     const { type, path } = item;
-    const options = this.getOptions();
+    const {
+      mode,
+      references,
+      variables,
+      combinations,
+    } = this.getOptions();
 
-    if (options.mode === Mode.ICU) {
+    if (mode === Mode.ICU) {
       // ICU is without combinations
-      if (options.references && type === 'variable') {
+      if (references && type === 'variable') {
         return this.get(path, attrs);
-      } else if (options.variables && type === 'reference') {
+      } else if (variables && type === 'reference') {
         return resolveVariable(attrs, path);
       }
 
       return undefined;
     }
 
-    if (options.references && type === 'reference') {
+    if (references && type === 'reference') {
       return this.get(path, attrs);
-    } else if (options.variables && type === 'variable') {
+    } else if (variables && type === 'variable') {
       return resolveVariable(attrs, path);
-    } else if (options.combinations && type === 'combination') {
+    } else if (combinations && type === 'combination') {
       const referencePath = path[0].path;
       const variablePath = path[1].path;
-
       const varToRef = get(attrs, variablePath);
-
-      const refPath = varToRef
-        ? `${referencePath}.${varToRef}`
-        : referencePath;
+      const refPath = varToRef ? `${referencePath}.${varToRef}` : referencePath;
 
       return this.get(refPath, attrs);
     }
@@ -80,34 +81,36 @@ export default class Tree {
       return undefined;
     }
 
-    return obj.values.map((part) => {
-      const { filters } = part;
-      if (part.type === 'text') {
-        return part.value;
-      }
+    return obj.values
+      .map((part) => {
+        const { filters } = part;
+        if (part.type === 'text') {
+          return part.value;
+        }
 
-      if (part.type === 'smart') {
-        return smartValue;
-      }
+        if (part.type === 'smart') {
+          return smartValue;
+        }
 
-      const value = this.resolveValue(part, attrs);
-      if (!filters || !filters.length) {
-        return value || EMPTY_TEXT;
-      }
+        const value = this.resolveValue(part, attrs);
+        if (!filters || !filters.length) {
+          return value || EMPTY_TEXT;
+        }
 
-      return reduce(filters, (reducedValue, filter) => {
-        return this.applyFilter(reducedValue, part, attrs, filter);
-      }, value);
-    }).join('');
+        return reduce(
+          filters,
+          (reducedValue, filter) => this.applyFilter(reducedValue, part, attrs, filter),
+          value,
+        );
+      })
+      .join('');
   }
 
   applyFilter(value, part, attrs, filter) {
     const filterFn = this.translate.getFilter(filter.type);
     const args = filter.args || [];
 
-    return filterFn
-      ? filterFn.call(this, value, part, attrs, filter.metadata, ...args)
-      : value;
+    return filterFn ? filterFn.call(this, value, part, attrs, filter.metadata, ...args) : value;
   }
 
   process(value, attrs = {}, path) {
@@ -143,15 +146,11 @@ export default class Tree {
     }
 
     const isDefault = path[0] === '_';
-    const currentPath = isDefault
-      ? path.substr(1)
-      : path;
+    const currentPath = isDefault ? path.substr(1) : path;
 
     if (isDefault) {
       const pos = currentPath.indexOf('.');
-      const defaultChild = pos !== -1
-        ? currentPath.substr(0, pos)
-        : currentPath;
+      const defaultChild = pos !== -1 ? currentPath.substr(0, pos) : currentPath;
 
       if (data.defaultChild && data.defaultChild !== defaultChild) {
         throw new Error(`Default children is already set: ${data.defaultChild} ${defaultChild}`);
@@ -192,12 +191,10 @@ export default class Tree {
       ? defaultValue
       : options.defaultValue;
 
-    return typeof process === 'function'
-      ? process(...args)
-      : process;
+    return typeof process === 'function' ? process(...args) : process;
   }
 
-  get(path, attrs, defaultValue) {
+  get(path: string, attrs?: Object, defaultValue?: string) {
     // user can skip attrs and use it as defaultValue
     if (typeof attrs === 'string') {
       return this.get(path, {}, attrs);
@@ -216,7 +213,6 @@ export default class Tree {
     }
 
     const value = child && child.value;
-
     if (typeof value !== 'undefined') {
       return this.process(value, attrs, path);
     }

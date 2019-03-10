@@ -3,13 +3,13 @@ import getPlural from '../utils/getPlural';
 
 function getValue(data, key, defaultValue) {
   const items = data || [];
-  const option = find(items, (item) => item.key === key);
+  const option = find(items, item => item.key === key);
 
   return option ? option.value : defaultValue;
 }
 
 export default function ordinal(value, part, attrs, metadata, ...args) {
-  const locale = this.getOptions().locale;
+  const { locale } = this.getOptions();
   const numberValue = Number(value);
 
   const plural = getPlural(locale, 'en');
@@ -41,6 +41,8 @@ export default function ordinal(value, part, attrs, metadata, ...args) {
     } else if (key === pluralValue) {
       option = arg;
     }
+
+    return undefined;
   });
 
   if (exactOption) {
@@ -50,4 +52,6 @@ export default function ordinal(value, part, attrs, metadata, ...args) {
   } else if (defaultOption) {
     return this.buildText(defaultOption.value, attrs, smartValue);
   }
+
+  return undefined;
 }

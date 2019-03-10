@@ -1,7 +1,7 @@
 import set from 'lodash/set';
 import forEach from 'lodash/forEach';
 
-export default function(value, part, attrs, metadata, ...args) {
+export default function as(value, part, attrs, metadata, ...args) {
   const params = {};
 
   forEach(args, (param) => {

@@ -1,4 +1,5 @@
-import { Gender, Plural } from '../../src';
+import Gender from '../constants/Gender';
+import Plural from '../constants/Plural';
 
 export default {
   name: 'Zlatko {$lastName}', // external variable

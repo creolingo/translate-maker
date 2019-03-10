@@ -1,5 +1,7 @@
+coverage
+node_modules
+.DS_Store
+package-lock.json
 dist
 lib
-node_modules
-coverage
-umd
+module

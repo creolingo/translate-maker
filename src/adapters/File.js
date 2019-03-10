@@ -6,7 +6,7 @@ export function defaultResolvePath(locale, namespace, options) {
   const fileName = ext ? `${locale}${ext}` : locale;
 
   const namespacePath = namespace
-    ? '/' + namespace.replace('.', '/')
+    ? `/${namespace.replace('.', '/')}`
     : '';
 
   const namespaceFilePath = namespacePath

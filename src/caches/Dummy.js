@@ -1,27 +1,27 @@
 import Cache from './Cache';
 
 export default class Dummy extends Cache {
-  get(key) {
+  get(key) { // eslint-disable-line
     return undefined;
   }
 
-  has(key) {
+  has(key) { // eslint-disable-line
     return false;
   }
 
-  set(key, value) {
+  set(key, value) { // eslint-disable-line
     return true;
   }
 
-  clear() {
+  clear() { // eslint-disable-line
     return true;
   }
 
-  dehydrate() {
+  dehydrate() { // eslint-disable-line
     return undefined;
   }
 
-  rehydrate(state) {
+  rehydrate(state) { // eslint-disable-line
     return undefined;
   }
 }

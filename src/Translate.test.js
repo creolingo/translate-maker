@@ -1,3 +1,4 @@
+import keymirror from 'keymirror';
 import Translate, {
   Plural,
   Gender,
@@ -7,12 +8,13 @@ import Translate, {
   Mode,
   DummyCache,
   MemoryCache,
-} from '../src';
-import keymirror from 'keymirror';
+} from './index';
 
 async function getData(path) {
   const file = require(path);
-  return file && file.default ? file.default : file;
+  return file && file.default
+    ? file.default
+    : file;
 }
 
 describe('Translate', () => {
@@ -21,7 +23,7 @@ describe('Translate', () => {
   it('should be able to create instance', () => {
     t = new Translate({
       adapter: new FileAdapter({
-        path: __dirname + '/locales',
+        path: `${__dirname}/locales`,
         getData,
       }),
     });
@@ -37,7 +39,7 @@ describe('Translate', () => {
   });
 
   it('get simple translation with variable', () => {
-    expect(t.get('name', { lastName: 'Fedor'})).toBe('Zlatko Fedor');
+    expect(t.get('name', { lastName: 'Fedor' })).toBe('Zlatko Fedor');
   });
 
   it('get simple translation with complex variable', () => {
@@ -92,7 +94,7 @@ describe('Translate', () => {
       user2: {
         gender: 'female',
         name: 'Livia',
-      }
+      },
     })).toBe('Boy Zlatko working with girl Livia');
 
     expect(t.get('working', {
@@ -102,7 +104,7 @@ describe('Translate', () => {
       },
       user2: {
         name: 'Livia',
-      }
+      },
     })).toBe('Boy Zlatko working with boy or girl named Livia');
 
     expect(t.get('working2', {
@@ -113,7 +115,7 @@ describe('Translate', () => {
       user2: {
         gender: 'female',
         name: 'Livia',
-      }
+      },
     })).toBe('Boy Zlatko working with girl Livia');
   });
 
@@ -310,14 +312,14 @@ describe('Translate', () => {
         sk: {
           icu: 'ICU',
           test: 'Hello {name} {$icu}',
-        }
+        },
       },
     });
 
     await t.setLocale('sk');
 
     expect(t.get('test', {
-      name: 'Zlatko'
+      name: 'Zlatko',
     })).toBe('Hello Zlatko ICU');
   });
 
@@ -326,7 +328,7 @@ describe('Translate', () => {
       first: 'name',
       second: 'about',
     }, {
-      lastName: 'Fedor'
+      lastName: 'Fedor',
     });
 
     expect(result.first).toBe('Zlatko Fedor');
@@ -349,7 +351,7 @@ describe('Translate', () => {
 
       lastName: function() {
         return this._lastName;
-      }
+      },
     };
 
     expect(user.lastName()).toBe('Fedor');
@@ -377,7 +379,7 @@ describe('Translate', () => {
             =3  {# tri}
                 {# poloziek}
           }`,
-        }
+        },
       },
     });
 
@@ -460,8 +462,8 @@ describe('Dummy cache', () => {
         },
         en: {
           test: '222',
-        }
-      }
+        },
+      },
     });
 
     await t.setLocale('sk');
@@ -506,8 +508,8 @@ describe('Memory cache', () => {
         },
         en: {
           test: '222',
-        }
-      }
+        },
+      },
     });
 
     await t.setLocale('sk');
@@ -542,12 +544,12 @@ describe('Memory cache', () => {
     t.set({
       en_US: {
         menu: {
-          title: "Welcome!"
+          title: 'Welcome!',
         },
       },
       de_DE: {
         menu: {
-          title: "Willkommen!"
+          title: 'Willkommen!',
         },
       },
     });
@@ -561,7 +563,7 @@ describe('Async namespaces', () => {
   it('should be able to create instance', async () => {
     const t = new Translate({
       adapter: new FileAdapter({
-        path: __dirname + '/locales',
+        path: `${__dirname}/locales`,
         getData,
       }),
     });
@@ -576,15 +578,13 @@ describe('Async namespaces', () => {
   it('should be able to change locale', async () => {
     const t = new Translate({
       adapter: new FileAdapter({
-        path: __dirname + '/locales',
+        path: `${__dirname}/locales`,
         getData,
       }),
     });
 
     t.setLocale('en_US');
-
     t.setLocale('en_US', 'widget');
-
     t.setLocale('sk_SK');
 
     await t.setLocale('sk_SK', 'widget');
@@ -595,7 +595,7 @@ describe('Async namespaces', () => {
   it('should be able to use loadNamespace', async () => {
     const t = new Translate({
       adapter: new FileAdapter({
-        path: __dirname + '/locales',
+        path: `${__dirname}/locales`,
         getData,
       }),
     });
@@ -610,15 +610,13 @@ describe('Async namespaces', () => {
   it('should be able to change locale', async () => {
     const t = new Translate({
       adapter: new FileAdapter({
-        path: __dirname + '/locales',
+        path: `${__dirname}/locales`,
         getData,
       }),
     });
 
     t.setLocale('en_US');
-
     t.loadNamespace('widget');
-
     t.setLocale('sk_SK');
 
     await t.loadNamespace('widget');

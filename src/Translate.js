@@ -20,7 +20,12 @@ export default class Translate extends EventEmitter {
       throw new Error('You need to use instance of adapter or data option');
     }
 
-    const { locale, namespace, data, ...rest } = options;
+    const {
+      locale,
+      namespace,
+      data,
+      ...rest
+    } = options;
 
     if (locale || namespace) {
       throw new Error('Use method setLocale instead of option locale and namespace');
@@ -177,8 +182,7 @@ export default class Translate extends EventEmitter {
 
   setFilter(type, fn) {
     if (isPlainObject(type)) {
-      Object.keys(type).forEach(filterType =>
-        this.setFilter(filterType, type[filterType]));
+      Object.keys(type).forEach(filterType => this.setFilter(filterType, type[filterType]));
       return;
     }
 
