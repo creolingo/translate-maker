@@ -6,7 +6,7 @@ node_js:
     - "9"
     - "10"
     - "11"
-script: npm test:coverage
+script: npm run test:coverage
 notifications:
     email:
         recipients:
