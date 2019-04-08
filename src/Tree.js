@@ -8,8 +8,6 @@ import Mode from './constants/Mode';
 
 const log = debug('translate-maker');
 
-const EMPTY_TEXT = '';
-
 function resolveVariable(obj, path) {
   const value = get(obj, path);
 
@@ -94,7 +92,7 @@ export default class Tree {
 
         const value = this.resolveValue(part, attrs);
         if (!filters || !filters.length) {
-          return value || EMPTY_TEXT;
+          return value;
         }
 
         return reduce(
