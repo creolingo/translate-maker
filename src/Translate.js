@@ -57,6 +57,19 @@ export default class Translate extends EventEmitter {
     }
   }
 
+  hasFilter(name: string): boolean {
+    return !!this.options.filters[name];
+  }
+
+  addFilter(name: string, filter: Function): void {
+    const { filters } = this.options;
+
+    this.options.filters = {
+      ...filters,
+      [name]: filter,
+    };
+  }
+
   clear() {
     const { cache } = this.getOptions();
     if (cache) {
