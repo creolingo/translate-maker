@@ -6,6 +6,7 @@ import baseFilters from './filters';
 import MemoryAdapter from './adapters/Memory';
 import MemoryCache from './caches/Memory';
 import Mode from './constants/Mode';
+import join from './utils/join';
 
 function baseDefaultValue(path) {
   return `Missing default translation for: ${path}`;
@@ -129,7 +130,7 @@ export default class Translate extends EventEmitter {
     return this.setLocale(options.locale, namespace);
   }
 
-  get(path, attrs, defaultValue) {
+  get(path, attrs, defaultValue, pure) {
     if (path === undefined || path === null) {
       return undefined;
     }
@@ -143,7 +144,8 @@ export default class Translate extends EventEmitter {
       return translated;
     }
 
-    return this.tree.get(path, attrs, defaultValue);
+    const items = this.tree.get(path, attrs, defaultValue);
+    return pure ? items : join(items);
   }
 
   set(path, value) {

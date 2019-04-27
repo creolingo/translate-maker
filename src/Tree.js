@@ -5,6 +5,7 @@ import reduce from 'lodash/reduce';
 import debug from 'debug';
 import parser from './parser/parser';
 import Mode from './constants/Mode';
+import join from './utils/join';
 
 const log = debug('translate-maker');
 
@@ -100,15 +101,18 @@ export default class Tree {
           (reducedValue, filter) => this.applyFilter(reducedValue, part, attrs, filter),
           value,
         );
-      })
-      .join('');
+      });
   }
 
   applyFilter(value, part, attrs, filter) {
     const filterFn = this.translate.getFilter(filter.type);
     const args = filter.args || [];
 
-    return filterFn ? filterFn.call(this, value, part, attrs, filter.metadata, ...args) : value;
+    const filterInput = join(value);
+
+    return filterFn
+      ? filterFn.call(this, filterInput, part, attrs, filter.metadata, ...args)
+      : value;
   }
 
   process(value, attrs = {}, path) {
